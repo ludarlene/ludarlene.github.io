@@ -225,6 +225,15 @@
             object-fit: cover;
             margin-bottom: 1rem;
             background-color: rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .project-image img {
+            max-width: 100%;
+            height: auto;
+            display: block;
         }
         
         .large-span {
@@ -357,7 +366,9 @@
             <!-- Recent Project -->
             <div class="bento-item recent-project glow-blue">
                 <h3>Latest Project</h3>
-                <div class="project-image"><img src="img/ev_platform.png" alt="ev_platform"></div>
+                <div class="project-image">
+                    <img src="img/ev_platform.png" alt="ev_platform">
+                </div>
                 <p>Battery Swapping System: A platform for battery swapping system, including a mobile app and 2 web platforms. The app is used by the users to get information about battery swapping, and the web platform is used by the admin and the operator to manage the system.</p>
             </div>
             
