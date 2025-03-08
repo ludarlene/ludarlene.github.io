@@ -273,12 +273,82 @@
             gap: 0.5rem;
         }
         
+        .contact-info a {
+            color: var(--accent-purple);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+        
+        .contact-info a:hover {
+            opacity: 1;
+        }
+        
         .footer {
             grid-column: span 4;
             text-align: center;
             padding-top: 1rem;
             color: var(--text-secondary);
             font-size: 0.9rem;
+        }
+
+        @media screen and (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .hero, .about, .recent-project, .skills, .large-span, .medium-span {
+                grid-column: span 1;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+                max-width: 100%;
+            }
+
+            body {
+                padding: 1rem;
+            }
+
+            .bento-item {
+                padding: 1.25rem;
+            }
+
+            .skill-tags {
+                justify-content: center;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .stats .number {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
