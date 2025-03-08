@@ -30,6 +30,8 @@
             color: var(--text-primary);
             padding: 2rem;
             min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
         
         .container {
@@ -316,9 +318,23 @@
                 grid-column: span 1;
             }
         }
+
+        .mouse-gradient {
+            position: fixed;
+            pointer-events: none;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+            background: radial-gradient(circle at center, #1605FF, #0B0B0B);
+            filter: blur(50px);
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body>
+    <div class="mouse-gradient"></div>
     <div class="container">
         <header>
             <div class="logo">Darlene.Design</div>
@@ -369,7 +385,7 @@
                 <div class="project-image">
                     <img src="img/ev_platform.png" alt="ev_platform">
                 </div>
-                <p><b></b>Battery Swapping System:</b> A platform for battery swapping system, including a mobile app and 2 web platforms. The app is used by the users to get information about battery swapping, and the web platform is used by the admin and the operator to manage the system.</p>
+                <p><b></b>Battery Swapping System:</b> A platform for battery swapping system, including a mobile app and 2 web consoles. The app is used by the users to get information about battery swapping, and the web platform is used by the admin and the operator to manage the system.</p>
             </div>
             
             <!-- Skills -->
@@ -400,11 +416,11 @@
                 <h3>Contact</h3>
                 <div class="contact-item">
                     <span>✉️</span>
-                    <span>ludarlene@gmail.com</span>
+                    <span><a href="mailto:ludarlene@gmail.com">ludarlene@gmail.com</a></span>
                 </div>
                 <div class="contact-item">
                     <span>📱</span>
-                    <span>+886 988 866  247</span>
+                    <span><a href="tel:+886988866247">+886 988 866 247</a></span>
                 </div>
                 <div class="contact-item">
                     <span>🔗</span>
@@ -418,5 +434,12 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('mousemove', (e) => {
+            const mouseGradient = document.querySelector('.mouse-gradient');
+            mouseGradient.style.left = e.clientX + 'px';
+            mouseGradient.style.top = e.clientY + 'px';
+        });
+    </script>
 </body>
 </html>
