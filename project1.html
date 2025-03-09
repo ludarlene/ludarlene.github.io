@@ -4,129 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darlene Lu | Senior UIUX Designer</title>
-    <style>
-        :root {
-            --bg-primary: #0c0c14;
-            --bg-secondary: #14141f;
-            --text-primary: #f0f0ff;
-            --text-secondary: #b8b8d0;
-            --accent-purple: #9333EA;
-            --accent-pink: #EC4899;
-            --accent-blue: #3B82F6;
-            --glow-purple: rgba(147, 51, 234, 0.5);
-            --glow-pink: rgba(236, 72, 153, 0.5);
-            --glow-blue: rgba(59, 130, 246, 0.5);
-        }
-
-        body {
-            background-color: var(--bg-primary);
-            min-height: 100vh;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .Container {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .Container:hover {
-            transform: translateY(-5px);
-        }
-
-        .Frame427318199, .Frame427318200 {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-        }
-
-        .Frame427318199:hover, .Frame427318200:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0 25px var(--glow-purple);
-        }
-
-        .HeroImage {
-            position: relative;
-            overflow: hidden;
-        }
-
-        .HeroImage::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, 
-                var(--glow-purple) 0%, 
-                transparent 45%,
-                transparent 55%,
-                var(--glow-pink) 100%
-            );
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .HeroImage:hover::after {
-            opacity: 0.3;
-        }
-
-        .mouse-gradient {
-            position: fixed;
-            pointer-events: none;
-            width: 500px;
-            height: 500px;
-            border-radius: 50%;
-            background: radial-gradient(circle at center, 
-                rgba(147, 51, 234, 0.15),
-                rgba(236, 72, 153, 0.15),
-                rgba(59, 130, 246, 0.15)
-            );
-            filter: blur(50px);
-            transform: translate(-50%, -50%);
-            z-index: 0;
-            opacity: 0.5;
-        }
-
-        .neon-circle {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(50px);
-            z-index: 0;
-            opacity: 0.15;
-        }
-
-        .neon-circle.purple {
-            width: 200px;
-            height: 200px;
-            background-color: var(--accent-purple);
-            top: -50px;
-            right: -50px;
-        }
-
-        .neon-circle.pink {
-            width: 150px;
-            height: 150px;
-            background-color: var(--accent-pink);
-            bottom: -30px;
-            left: 20%;
-        }
-
-        .neon-circle.blue {
-            width: 180px;
-            height: 180px;
-            background-color: var(--accent-blue);
-            top: 30%;
-            left: -40px;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div data-layer="Desktop - 1" class="Desktop1" >
-    <div data-layer="Container" class="Container" style="width: 1200px; left: 360px; top: 0px; position: absolute; border-radius: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
+    <div data-layer="Container" class="Container" style="width: 1200px; top: 0px; position: absolute; border-radius: 20px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: inline-flex">
       <div data-layer="Hero Image" class="HeroImage" style="align-self: stretch; height: 300px; padding-left: 381px; padding-right: 381px; padding-top: 137px; padding-bottom: 137px; background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%); border-radius: 24px; background-image: url(./img/HeroImage.png); flex-direction: column; justify-content: center; align-items: center; gap: 8px; display: flex">
         <div data-layer="Project Info" class="ProjectInfo" style="width: 632px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 3px; display: flex">
           <div data-layer="Project Title" class="ProjectTitle" style="align-self: stretch; position: relative; color: white; font-size: 60px; font-family: Roboto Slab; font-weight: 600; word-wrap: break-word">Navigation on Scooter</div>
@@ -225,7 +107,7 @@
             </div>
             <div data-layer="Background Indicator 2" class="BackgroundIndicator2" style="width: 368px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
               <div data-layer="Indicator Title" class="IndicatorTitle" style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">​Background Indicator 2</div>
-              <div data-layer="Indicator Description" class="IndicatorDescription" style="align-self: stretch; height: 64px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word"> It notifies the user by changing the background color before the turning corner. The rider said: the didn't see it and missed the corner.</div>
+              <div data-layer="Indicator Description" class="IndicatorDescription" style="align-self: stretch; height: 64px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word"> It notifies the user by changing the background color before the turning corner. The rider said: the didn’t see it and missed the corner.</div>
             </div>
             <div data-layer="Number Indicator" class="NumberIndicator" style="width: 368px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
               <div data-layer="Indicator Title" class="IndicatorTitle" style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">Number Indicator</div>
@@ -233,7 +115,7 @@
             </div>
             <div data-layer="Background Indicator 1" class="BackgroundIndicator1" style="width: 368px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
               <div data-layer="Indicator Title" class="IndicatorTitle" style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">​Background Indicator 1</div>
-              <div data-layer="Indicator Description" class="IndicatorDescription" style="align-self: stretch; height: 65px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">It decreases the background color for the turning of time. The rider said: the didn't notify it and missed the corner.</div>
+              <div data-layer="Indicator Description" class="IndicatorDescription" style="align-self: stretch; height: 65px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">It decreases the background color for the turning of time. The rider said: the didn’t notify it and missed the corner.</div>
             </div>
           </div>
         </div>
@@ -273,7 +155,7 @@
           <div data-layer="End Result Info" class="EndResultInfo" style="width: 866px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
             <div data-layer="Section Title" class="SectionTitle" style="align-self: stretch; position: relative; color: white; font-size: 14px; font-family: SF Pro; font-weight: 700; text-transform: uppercase; word-wrap: break-word">the  END RESULT</div>
             <div data-layer="Section Title" class="SectionTitle" style="align-self: stretch; position: relative; color: white; font-size: 32px; font-family: SF Pro; font-weight: 700; text-transform: capitalize; word-wrap: break-word">Go to market</div>
-            <div data-layer="End Result Description" class="EndResultDescription" style="align-self: stretch; height: 63px; position: relative; color: white; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">Kymco announced a brain new navigation dashboard for scooter - the noodoe navigation on 2018, It is the first embed scooter navigation system in the world. It archived kymco's scooter selling rate to up to the top in Taiwan in the next quarter.</div>
+            <div data-layer="End Result Description" class="EndResultDescription" style="align-self: stretch; height: 63px; position: relative; color: white; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">Kymco announced a brain new navigation dashboard for scooter - the noodoe navigation on 2018, It is the first embed scooter navigation system in the world. It archived kymco’s scooter selling rate to up to the top in Taiwan in the next quarter.</div>
           </div>
           <img data-layer="show" class="202301254211" style="width: 979px; height: 326px; position: relative; border-radius: 16px" src="./img/show.png" />
         </div>
@@ -281,16 +163,5 @@
     </div>
     <div data-layer="Divider" class="Divider" style="width: 1440px; height: 118px; left: 193px; top: 7568px; position: absolute; opacity: 0.30"></div>
   </div>
-  <div class="mouse-gradient"></div>
-  <div class="neon-circle purple"></div>
-  <div class="neon-circle pink"></div>
-  <div class="neon-circle blue"></div>
-  <script>
-      document.addEventListener('mousemove', (e) => {
-          const mouseGradient = document.querySelector('.mouse-gradient');
-          mouseGradient.style.left = e.clientX + 'px';
-          mouseGradient.style.top = e.clientY + 'px';
-      });
-  </script>
 </body>
 </html>
