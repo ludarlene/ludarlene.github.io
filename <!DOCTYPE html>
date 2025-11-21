@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手繪黑板番茄鐘</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <style>
+        /* 1. Tailwind 自定義配置 */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // 模擬黑板的深綠黑色
+                        'chalkboard': '#384337',
+                        // 模擬粉筆的白色
+                        'chalk': '#F0F2E5',
+                        // 模擬粉筆的紅色
+                        'chalk-red': '#E85B64',
+                        // 模擬粉筆的藍色
+                        'chalk-blue': '#8BC34A',
+                    },
+                    fontFamily: {
+                        // 套用手繪字體
+                        'handwritten': ['Permanent Marker', 'cursive'],
+                    },
+                    // 模擬手繪粗糙線條和多重陰影
+                    boxShadow: {
+                        'chalk-border': '4px 4px 0 0 #F0F2E5, 8px 8px 0 0 #384337',
+                        'chalk-inset': 'inset 2px 2px 0 0 #F0F2E5',
+                        'chalk-button': '3px 3px 0 0 #384337',
+                        'chalk-button-hover': '0 0 0 0 #384337', /* Hover時模擬按下的效果 */
+                    }
+                }
+            }
+        }
+
+        /* 2. 自定義 CSS 樣式 */
+
+        /* 重設預設選取顏色，讓整體更像手繪黑板 */
+        ::selection {
+            background-color: #8BC34A;
+            color: #384337;
+        }
+
+        /* 進度條樣式 */
+        .progress-circle {
+            /* 圓形進度條的基礎樣式 */
+            transition: stroke-dashoffset 1s linear;
+            transform: rotate(-90deg); /* 讓進度條從頂部開始 */
+            transform-origin: 50% 50%;
+        }
+
+        /* 按鈕基礎樣式 - 模擬手繪邊框 */
+        .handwritten-button {
+            border: 4px solid #F0F2E5;
+            transition: all 0.1s ease-in-out;
+            /* 手繪陰影和邊框 */
+            box-shadow: 6px 6px 0 0 #384337;
+        }
+
+        /* 按鈕微互動：按下滑動效果 */
+        .handwritten-button:hover {
+            transform: translate(3px, 3px); /* 輕微移動模擬按鈕被按下的感覺 */
+            box-shadow: 3px 3px 0 0 #384337; /* 陰影變小 */
+        }
+
+        /* 按鈕點擊時的最終效果 */
+        .handwritten-button:active {
+            transform: translate(6px, 6px);
+            box-shadow: 0 0 0 0 #384337; /* 陰影完全消失 */
+        }
+
+        /* 模式切換按鈕的專屬樣式 */
+        .mode-button {
+            border: 2px solid #F0F2E5;
+            box-shadow: none; /* 模式按鈕使用較輕的陰影 */
+        }
+
+        /* 活躍模式按鈕的樣式 */
+        .mode-button.active {
+            background-color: #8BC34A; /* 點亮的粉筆色 */
+            color: #384337;
+            box-shadow: 0 0 10px rgba(240, 242, 229, 0.7); /* 模擬發光 */
+            border-color: #8BC34A;
+        }
+
+        /* 提示文字動畫 */
+        @keyframes pulse-fade {
+            0%, 100% { opacity: 0.8; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.05); }
+        }
+
+        .alert-text {
+            animation: pulse-fade 1.5s infinite ease-in-out;
+        }
+
+    </style>
+</head>
+<body class="bg-chalkboard min-h-screen flex flex-col items-center justify-center font-handwritten text-chalk p-4">
+
+    <div class="w-full max-w-lg mx-auto bg-chalkboard p-8 rounded-xl shadow-2xl">
+
+        <h1 class="text-4xl text-center mb-8 text-chalk-red border-b-4 border-chalk-red pb-2">
+            我的黑板番茄鐘
+        </h1>
+
+        <div class="flex justify-center space-x-4 mb-10">
+            <button id="focus-btn" class="mode-button active px-6 py-2 rounded-full text-lg transition-colors duration-200">
+                ✏️ 專注 (40 分)
+            </button>
+            <button id="break-btn" class="mode-button px-6 py-2 rounded-full text-lg transition-colors duration-200">
+                ☕ 休息 (10 分)
+            </button>
+        </div>
+
+        <div class="relative flex items-center justify-center mb-10">
+            <svg class="w-72 h-72 md:w-96 md:h-96" viewBox="0 0 100 100">
+                <circle class="text-chalk opacity-20" stroke-width="4" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50"/>
+                <circle id="progress-bar" class="progress-circle text-chalk-red" stroke-width="5" stroke="currentColor" fill="transparent" r="45" cx="50" cy="50" style="stroke-dasharray: 282.7; stroke-dashoffset: 0;"/>
+            </svg>
+
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                <div id="timer-display" class="text-8xl md:text-9xl text-chalk drop-shadow-lg" style="letter-spacing: 2px;">
+                    40:00
+                </div>
+                <div id="alert-message" class="text-2xl mt-4 text-chalk-blue hidden alert-text">
+                    🎉 時間到啦！
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-center space-x-6">
+            <button id="start-btn" class="handwritten-button bg-chalk chalk px-8 py-3 text-2xl text-chalkboard hover:bg-chalk-blue">
+                ▶️ 開始
+            </button>
+            <button id="pause-btn" class="handwritten-button bg-chalk chalk px-8 py-3 text-2xl text-chalkboard hover:bg-chalk-blue" disabled>
+                ⏸️ 暫停
+            </button>
+            <button id="reset-btn" class="handwritten-button bg-chalk chalk px-8 py-3 text-2xl text-chalkboard hover:bg-chalk-blue">
+                🔄 重置
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        // --- 設定常量 ---
+        const FOCUS_TIME = 40 * 60; // 40 分鐘
+        const BREAK_TIME = 10 * 60; // 10 分鐘
+        const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * 45; // 圓的周長 (r=45)
+
+        // --- 獲取 DOM 元素 ---
+        const timerDisplay = document.getElementById('timer-display');
+        const progressBar = document.getElementById('progress-bar');
+        const alertMessage = document.getElementById('alert-message');
+        const startBtn = document.getElementById('start-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        const resetBtn = document.getElementById('reset-btn');
+        const focusBtn = document.getElementById('focus-btn');
+        const breakBtn = document.getElementById('break-btn');
+
+        // --- 狀態變數 ---
+        let currentMode = 'focus'; // 'focus' 或 'break'
+        let totalSeconds = FOCUS_TIME;
+        let timeRemaining = FOCUS_TIME;
+        let timerInterval = null; // 儲存計時器實例
+        let isRunning = false;
+
+        // 初始化進度條
+        progressBar.style.strokeDasharray = CIRCLE_CIRCUMFERENCE;
+        progressBar.style.strokeDashoffset = 0;
+
+        /**
+         * 根據剩餘時間更新畫面顯示和進度條。
+         */
+        function updateDisplay() {
+            // 1. 更新時間文字
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            timerDisplay.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            // 2. 更新進度條
+            const progress = (totalSeconds - timeRemaining) / totalSeconds;
+            const offset = progress * CIRCLE_CIRCUMFERENCE;
+            progressBar.style.strokeDashoffset = offset;
+
+            // 3. 更新進度條顏色 (模擬粉筆色切換)
+            progressBar.classList.toggle('text-chalk-red', currentMode === 'focus');
+            progressBar.classList.toggle('text-chalk-blue', currentMode === 'break');
+        }
+
+        /**
+         * 啟動/繼續計時器。
+         */
+        function startTimer() {
+            if (isRunning) return;
+
+            isRunning = true;
+            alertMessage.classList.add('hidden'); // 隱藏提示
+            startBtn.disabled = true;
+            pauseBtn.disabled = false;
+            startBtn.textContent = '▶️ 繼續'; // 啟動後改為「繼續」 (儘管狀態不允許再按)
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+
+                if (timeRemaining < 0) {
+                    clearInterval(timerInterval);
+                    isRunning = false;
+                    timeRemaining = 0;
+                    
+                    // 時間到，顯示提示並自動切換模式
+                    alertMessage.textContent = currentMode === 'focus' ? '🎉 專注時間到！該休息了！' : '⏰ 休息時間到！該專注了！';
+                    alertMessage.classList.remove('hidden');
+
+                    // 播放提示音 (如果需要，可以在這裡加入 Audio API)
+                    
+                    // 自動切換模式
+                    currentMode = currentMode === 'focus' ? 'break' : 'focus';
+                    // 延遲 1 秒後重置，給予用戶提示文字時間
+                    setTimeout(resetTimer, 1000); 
+
+                } else {
+                    updateDisplay();
+                }
+            }, 1000);
+        }
+
+        /**
+         * 暫停計時器。
+         */
+        function pauseTimer() {
+            if (!isRunning) return;
+
+            clearInterval(timerInterval);
+            isRunning = false;
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            startBtn.textContent = '▶️ 繼續'; // 顯示「繼續」
+        }
+
+        /**
+         * 重置計時器。
+         */
+        function resetTimer() {
+            pauseTimer(); // 先確保計時器停止
+            
+            // 根據當前模式設定初始時間
+            totalSeconds = currentMode === 'focus' ? FOCUS_TIME : BREAK_TIME;
+            timeRemaining = totalSeconds;
+            
+            isRunning = false;
+
+            // 更新按鈕和顯示
+            startBtn.disabled = false;
+            pauseBtn.disabled = true;
+            startBtn.textContent = '▶️ 開始';
+            alertMessage.classList.add('hidden');
+            
+            // 更新模式按鈕的視覺狀態
+            focusBtn.classList.toggle('active', currentMode === 'focus');
+            breakBtn.classList.toggle('active', currentMode === 'break');
+
+            updateDisplay();
+        }
+
+        /**
+         * 切換到指定模式。
+         * @param {string} mode - 'focus' 或 'break'
+         */
+        function switchMode(mode) {
+            if (currentMode === mode) return;
+
+            currentMode = mode;
+            resetTimer(); // 切換模式時強制重置
+        }
+
+        // --- 事件監聽 ---
+        startBtn.addEventListener('click', startTimer);
+        pauseBtn.addEventListener('click', pauseTimer);
+        resetBtn.addEventListener('click', () => {
+            // 重置功能：不切換模式，只是重設時間
+            resetTimer(); 
+        });
+
+        focusBtn.addEventListener('click', () => switchMode('focus'));
+        breakBtn.addEventListener('click', () => switchMode('break'));
+
+        // --- 初始啟動 ---
+        resetTimer(); 
+
+    </script>
+
+</body>
+</html>
