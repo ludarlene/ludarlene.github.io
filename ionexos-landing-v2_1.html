@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>IonexOS — The Complete EV Software Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+
+/* ════════════════════════════════════════════
+   DESIGN TOKENS — IonexCore WebKit
+════════════════════════════════════════════ */
+:root {
+  /* Backgrounds */
+  --bg-base:      #07091A;
+  --bg-layer1:    #0B0E25;
+  --bg-layer2:    #0F1430;
+  --bg-layer3:    #131840;
+  --bg-card:      rgba(15, 20, 48, 0.7);
+  --bg-card-hover:rgba(19, 24, 64, 0.9);
+
+  /* Accent – Cyan primary (matches WebKit cyan swatch) */
+  --cyan:         #00C8E0;
+  --cyan-dim:     rgba(0, 200, 224, 0.15);
+  --cyan-glow:    rgba(0, 200, 224, 0.3);
+  --cyan-border:  rgba(0, 200, 224, 0.25);
+
+  /* Secondary accents */
+  --blue:         #3B82F6;
+  --blue-dim:     rgba(59, 130, 246, 0.15);
+  --purple:       #7C5CF6;
+  --purple-dim:   rgba(124, 92, 246, 0.15);
+  --teal:         #00B4C8;
+
+  /* Text */
+  --text-primary:   #E8EEFF;
+  --text-secondary: #6B7DB3;
+  --text-muted:     #374069;
+  --text-label:     #8FA3CC;
+
+  /* Borders */
+  --border:       rgba(59, 82, 140, 0.3);
+  --border-light: rgba(59, 82, 140, 0.15);
+  --border-cyan:  rgba(0, 200, 224, 0.2);
+
+  /* Gradients */
+  --grad-hero:    radial-gradient(ellipse 80% 60% at 50% -5%, rgba(0,200,224,0.12) 0%, transparent 65%);
+  --grad-card:    linear-gradient(135deg, rgba(15,20,48,0.9) 0%, rgba(11,14,37,0.95) 100%);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* Star field background */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 40% 8%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 60%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 70% 25%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 85% 70%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 92% 12%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 60% 90%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(2px 2px at 30% 65%, rgba(0,200,224,0.3) 0%, transparent 100%),
+    radial-gradient(2px 2px at 75% 45%, rgba(59,130,246,0.25) 0%, transparent 100%);
+  pointer-events: none; z-index: 0; opacity: 0.6;
+}
+
+/* ── LAYOUT ── */
+.container { max-width: 1280px; margin: 0 auto; padding: 0 80px; position: relative; z-index: 1; }
+
+/* ════════════════════════════════════
+   NAVIGATION
+════════════════════════════════════ */
+nav {
+  position: sticky; top: 0; z-index: 200;
+  height: 64px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 80px;
+  background: rgba(7, 9, 26, 0.8);
+  backdrop-filter: blur(24px) saturate(200%);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-brand {
+  display: flex; align-items: center; gap: 10px; text-decoration: none;
+}
+.nav-logo-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: linear-gradient(135deg, #00C8E0 0%, #0096CC 100%);
+  display: grid; place-items: center;
+  box-shadow: 0 0 16px rgba(0,200,224,0.4);
+}
+.nav-logo-icon svg { width: 18px; height: 18px; }
+.nav-logo-text {
+  font-weight: 700; font-size: 17px;
+  color: var(--text-primary); letter-spacing: -0.3px;
+}
+.nav-logo-text span { color: var(--cyan); }
+
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+  position: absolute; left: 50%; transform: translateX(-50%);
+}
+.nav-links a {
+  font-size: 14px; font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--text-primary); }
+
+.nav-right { display: flex; gap: 12px; align-items: center; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 20px; border-radius: 8px;
+  font-family: inherit; font-weight: 600; font-size: 13px;
+  cursor: pointer; text-decoration: none;
+  transition: all 0.2s; border: none; white-space: nowrap;
+}
+.btn-ghost {
+  background: transparent; color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { border-color: var(--cyan-border); color: var(--text-primary); }
+
+.btn-cyan {
+  background: linear-gradient(135deg, #00C8E0 0%, #0096CC 100%);
+  color: #07091A;
+  box-shadow: 0 4px 16px rgba(0,200,224,0.3);
+}
+.btn-cyan:hover {
+  box-shadow: 0 6px 24px rgba(0,200,224,0.45);
+  transform: translateY(-1px);
+}
+
+/* ════════════════════════════════════
+   HERO
+════════════════════════════════════ */
+.hero-wrap {
+  background: var(--grad-hero);
+  position: relative; overflow: hidden;
+}
+
+/* Grid lines overlay */
+.hero-wrap::after {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(var(--border-light) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border-light) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 0%, black 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hero {
+  max-width: 1280px; margin: 0 auto;
+  padding: 108px 80px 72px;
+  position: relative; z-index: 1;
+}
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,200,224,0.07);
+  border: 1px solid var(--border-cyan);
+  padding: 5px 14px 5px 6px;
+  border-radius: 100px; margin-bottom: 28px;
+}
+.badge-pill {
+  background: linear-gradient(135deg, #00C8E0, #0096CC);
+  color: #07091A; font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 100px; letter-spacing: 0.5px;
+}
+.badge-text {
+  font-size: 12px; font-weight: 500;
+  color: var(--text-label); letter-spacing: 0.2px;
+}
+
+.hero-headline {
+  font-size: clamp(52px, 5.5vw, 80px);
+  font-weight: 800; letter-spacing: -2.5px;
+  line-height: 1.06; color: var(--text-primary);
+  max-width: 800px; margin-bottom: 24px;
+}
+.hero-headline .hl { color: var(--cyan); }
+.hero-headline .hl-blue { color: var(--blue); }
+
+.hero-sub {
+  font-size: 18px; font-weight: 400;
+  color: var(--text-secondary); max-width: 520px;
+  line-height: 1.75; margin-bottom: 40px;
+}
+
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 72px; }
+
+.btn-lg { padding: 13px 32px; font-size: 15px; border-radius: 10px; }
+.btn-outline {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--cyan-border); color: var(--text-primary); }
+
+/* ── HERO DASHBOARD ── */
+.hero-dashboard {
+  position: relative;
+  border: 1px solid var(--border-cyan);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 0 0 1px rgba(0,200,224,0.08),
+    0 40px 80px rgba(0,0,0,0.6),
+    0 0 60px rgba(0,200,224,0.06);
+  background: var(--bg-layer2);
+}
+.hero-dashboard-glow {
+  position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+  width: 700px; height: 300px;
+  background: radial-gradient(ellipse, rgba(0,200,224,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Window chrome */
+.dash-chrome {
+  background: var(--bg-layer1);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.dash-chrome-dots { display: flex; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dash-url {
+  flex: 1; background: rgba(59,82,140,0.2);
+  border: 1px solid var(--border);
+  border-radius: 6px; padding: 5px 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.dash-url-lock { color: var(--cyan); font-size: 11px; }
+.dash-url-text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--text-muted); letter-spacing: 0.3px;
+}
+.dash-url-badge {
+  margin-left: auto;
+  background: rgba(0,200,224,0.1);
+  border: 1px solid var(--border-cyan);
+  color: var(--cyan); font-size: 9px; font-weight: 700;
+  padding: 2px 8px; border-radius: 4px; letter-spacing: 1px;
+}
+
+/* Dashboard inner */
+.dash-inner {
+  display: flex; height: 420px;
+}
+
+.dash-sidebar {
+  width: 200px; flex-shrink: 0;
+  background: rgba(7,9,26,0.8);
+  border-right: 1px solid var(--border);
+  padding: 20px 0;
+}
+.sidebar-logo {
+  padding: 0 16px 20px;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 8px;
+}
+.sidebar-logo-mark {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: linear-gradient(135deg, #00C8E0, #0096CC);
+  display: grid; place-items: center; font-size: 12px;
+}
+.sidebar-logo-text {
+  font-size: 13px; font-weight: 700; color: var(--text-primary);
+}
+
+.sidebar-nav { padding: 0 8px; }
+.sidebar-item {
+  padding: 8px 10px; border-radius: 7px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 2px; cursor: default;
+}
+.sidebar-item.active {
+  background: rgba(0,200,224,0.1);
+  border: 1px solid rgba(0,200,224,0.15);
+}
+.sidebar-item-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--text-muted); flex-shrink: 0;
+}
+.sidebar-item.active .sidebar-item-dot { background: var(--cyan); box-shadow: 0 0 6px var(--cyan); }
+.sidebar-item-label { font-size: 11px; color: var(--text-muted); }
+.sidebar-item.active .sidebar-item-label { color: var(--cyan); font-weight: 600; }
+
+.dash-content {
+  flex: 1; padding: 20px; overflow: hidden;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.dash-topbar-row {
+  display: flex; justify-content: space-between; align-items: center;
+}
+.dash-page-title { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+.dash-status-badge {
+  display: flex; align-items: center; gap: 6px;
+  background: rgba(0,200,224,0.08); border: 1px solid var(--border-cyan);
+  padding: 4px 12px; border-radius: 100px;
+}
+.status-dot-live {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--cyan); box-shadow: 0 0 6px var(--cyan);
+  animation: blink 1.5s ease-in-out infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+.status-text { font-size: 11px; color: var(--cyan); font-weight: 600; letter-spacing: 0.5px; }
+
+/* KPI row */
+.kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; }
+.kpi {
+  background: linear-gradient(135deg, rgba(15,20,48,0.8) 0%, rgba(11,14,37,0.9) 100%);
+  border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+  position: relative; overflow: hidden;
+}
+.kpi::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent);
+}
+.kpi-label { font-family: 'IBM Plex Mono', monospace; font-size: 9px; color: var(--text-muted); letter-spacing: 1px; margin-bottom: 6px; }
+.kpi-value { font-size: 22px; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.kpi-change { font-size: 9px; margin-top: 4px; }
+.pos { color: var(--cyan); } .neg { color: #F87171; }
+
+/* Charts row */
+.charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 10px; flex: 1; }
+.chart-card {
+  background: rgba(15,20,48,0.5);
+  border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; overflow: hidden;
+}
+.chart-label { font-size: 10px; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 8px; font-family: 'IBM Plex Mono', monospace; }
+.bar-chart { display: flex; align-items: flex-end; gap: 5px; height: 80px; padding-bottom: 4px; }
+.bar-item { flex: 1; border-radius: 3px 3px 0 0; position: relative; }
+.bar-item::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(to top, rgba(0,200,224,0.6), rgba(0,200,224,0.2));
+  border-top: 1px solid rgba(0,200,224,0.8);
+}
+.donut-placeholder {
+  width: 70px; height: 70px; border-radius: 50%;
+  border: 8px solid var(--border);
+  border-top-color: var(--cyan);
+  border-right-color: var(--blue);
+  margin: 4px auto;
+}
+
+/* Event list */
+.event-list { display: flex; flex-direction: column; gap: 5px; }
+.event-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px;
+  background: rgba(15,20,48,0.4);
+  border: 1px solid var(--border-light);
+  border-radius: 6px;
+}
+.ev-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+.ev-text { font-size: 10px; color: var(--text-secondary); flex: 1; font-family: 'IBM Plex Mono', monospace; }
+.ev-time { font-size: 9px; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; }
+
+/* ════════════════════════════════════
+   TRUST BAR
+════════════════════════════════════ */
+.trust-bar {
+  background: var(--bg-layer1);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 80px;
+  display: flex; align-items: center; gap: 48px;
+  overflow: hidden;
+}
+.trust-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; color: var(--text-muted);
+  letter-spacing: 1.5px; flex-shrink: 0; white-space: nowrap;
+}
+.trust-items { display: flex; gap: 48px; flex-wrap: wrap; }
+.trust-items span {
+  font-size: 13px; font-weight: 600;
+  color: rgba(232,238,255,0.25);
+  letter-spacing: -0.2px; transition: color 0.3s;
+}
+.trust-items span:hover { color: rgba(232,238,255,0.5); }
+
+/* ════════════════════════════════════
+   STATS
+════════════════════════════════════ */
+.stats-wrap {
+  padding: 0 80px;
+  max-width: 1280px; margin: 64px auto;
+}
+.stats-grid {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+  background: var(--border);
+  gap: 1px;
+}
+.stat-item {
+  background: var(--bg-layer1);
+  padding: 48px 40px;
+  position: relative; overflow: hidden;
+}
+.stat-item::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+}
+.stat-num {
+  font-size: 52px; font-weight: 800;
+  letter-spacing: -2px; line-height: 1;
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--blue) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text; margin-bottom: 10px;
+}
+.stat-label { font-size: 14px; color: var(--text-secondary); line-height: 1.5; }
+
+/* ════════════════════════════════════
+   SECTION BASE
+════════════════════════════════════ */
+.section { padding: 96px 80px; max-width: 1280px; margin: 0 auto; }
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--cyan);
+  letter-spacing: 2px; display: block; margin-bottom: 14px;
+}
+.section-title {
+  font-size: clamp(32px, 3.5vw, 48px);
+  font-weight: 800; letter-spacing: -1.5px;
+  color: var(--text-primary); line-height: 1.1; margin-bottom: 18px;
+}
+.section-desc {
+  font-size: 17px; color: var(--text-secondary);
+  max-width: 500px; line-height: 1.75; margin-bottom: 52px;
+}
+
+/* ════════════════════════════════════
+   PRODUCT CARDS
+════════════════════════════════════ */
+.product-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+
+.product-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px; padding: 32px;
+  backdrop-filter: blur(20px);
+  display: flex; flex-direction: column;
+  transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+  cursor: default; overflow: hidden; position: relative;
+}
+.product-card::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: 16px;
+  background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,200,224,0.04), transparent);
+  pointer-events: none;
+}
+.product-card:hover {
+  border-color: var(--border-cyan);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), 0 0 24px rgba(0,200,224,0.08);
+}
+.product-card:nth-child(2):hover {
+  border-color: rgba(59,130,246,0.3);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), 0 0 24px rgba(59,130,246,0.08);
+}
+.product-card:nth-child(3):hover {
+  border-color: rgba(124,92,246,0.3);
+  box-shadow: 0 20px 48px rgba(0,0,0,0.4), 0 0 24px rgba(124,92,246,0.08);
+}
+
+.card-icon-wrap {
+  width: 52px; height: 52px; border-radius: 14px;
+  display: grid; place-items: center;
+  margin-bottom: 24px; font-size: 24px;
+  position: relative;
+}
+.icon-c { background: var(--cyan-dim); border: 1px solid var(--border-cyan); }
+.icon-b { background: var(--blue-dim); border: 1px solid rgba(59,130,246,0.2); }
+.icon-p { background: var(--purple-dim); border: 1px solid rgba(124,92,246,0.2); }
+.icon-a { background: rgba(245,166,35,0.1); border: 1px solid rgba(245,166,35,0.2); }
+
+.card-role-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; font-weight: 500; letter-spacing: 1px;
+  margin-bottom: 8px; display: block;
+}
+.role-c { color: var(--cyan); }
+.role-b { color: var(--blue); }
+.role-p { color: var(--purple); }
+
+.card-title {
+  font-size: 21px; font-weight: 700;
+  color: var(--text-primary); letter-spacing: -0.4px;
+  margin-bottom: 12px;
+}
+.card-desc {
+  font-size: 14px; color: var(--text-secondary);
+  line-height: 1.75; margin-bottom: 24px; flex: 1;
+}
+
+.card-feats { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+.card-feats li {
+  font-size: 13px; color: var(--text-label);
+  display: flex; align-items: center; gap: 10px;
+}
+.feat-tick {
+  width: 16px; height: 16px; flex-shrink: 0;
+  border-radius: 5px;
+  background: var(--cyan-dim);
+  border: 1px solid var(--border-cyan);
+  display: grid; place-items: center;
+}
+.feat-tick svg { width: 9px; height: 9px; }
+
+.card-ui {
+  width: 100%; border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--bg-layer1);
+}
+.card-ui-chrome {
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.card-ui-chrome-dots { display: flex; gap: 4px; }
+.tiny-dot { width: 7px; height: 7px; border-radius: 50%; }
+.card-ui-title { font-size: 10px; color: var(--text-muted); margin-left: auto; margin-right: auto; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.5px; }
+
+.card-ui-body { padding: 12px; }
+.ui-row { height: 7px; border-radius: 3px; background: var(--bg-layer2); margin-bottom: 6px; }
+.ui-kpi-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 10px; }
+.ui-kpi {
+  background: var(--bg-layer2); border: 1px solid var(--border);
+  border-radius: 7px; padding: 8px; height: 44px;
+}
+.ui-kpi-val { height: 11px; width: 55%; border-radius: 3px; margin-bottom: 5px; }
+.ui-kpi-sub { height: 7px; width: 35%; border-radius: 3px; background: var(--bg-layer3); }
+.c-cyan { background: rgba(0,200,224,0.25); }
+.c-blue { background: rgba(59,130,246,0.25); }
+.c-purple { background: rgba(124,92,246,0.25); }
+.c-bg3 { background: var(--bg-layer3); }
+
+/* ════════════════════════════════════
+   HOW IT WORKS – dark bg section
+════════════════════════════════════ */
+.section-dark {
+  background: var(--bg-layer1);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.steps-row {
+  display: grid; grid-template-columns: repeat(4,1fr);
+  gap: 0; border: 1px solid var(--border);
+  border-radius: 16px; overflow: hidden;
+}
+.step-item {
+  padding: 40px 32px;
+  border-right: 1px solid var(--border);
+  position: relative; transition: background 0.3s;
+}
+.step-item:last-child { border-right: none; }
+.step-item:hover { background: rgba(0,200,224,0.03); }
+
+.step-num {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 13px; font-weight: 500;
+  margin-bottom: 20px;
+  position: relative;
+}
+.step-num::after {
+  content: '';
+  position: absolute; inset: -2px; border-radius: 50%;
+  background: transparent;
+  border: 1px dashed rgba(0,200,224,0.3);
+}
+.sn-c { background: var(--cyan-dim); color: var(--cyan); border: 1px solid var(--border-cyan); }
+.sn-b { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(59,130,246,0.25); }
+.sn-p { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(124,92,246,0.25); }
+.sn-a { background: rgba(245,166,35,0.1); color: #F5A623; border: 1px solid rgba(245,166,35,0.2); }
+
+.step-title {
+  font-size: 16px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 12px; line-height: 1.3;
+}
+.step-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.75; }
+
+/* ════════════════════════════════════
+   FEATURES BENTO
+════════════════════════════════════ */
+.bento { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.bento-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 32px;
+  backdrop-filter: blur(20px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  position: relative; overflow: hidden;
+}
+.bento-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan-glow), transparent);
+  opacity: 0; transition: opacity 0.3s;
+}
+.bento-card:hover::before { opacity: 1; }
+.bento-card:hover { border-color: var(--border-cyan); box-shadow: 0 8px 32px rgba(0,0,0,0.3); }
+.bento-card.wide { grid-column: span 2; }
+
+.bento-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--cyan-dim); border: 1px solid var(--border-cyan);
+  display: grid; place-items: center;
+  font-size: 20px; margin-bottom: 16px;
+}
+.bento-title {
+  font-size: 17px; font-weight: 700;
+  color: var(--text-primary); margin-bottom: 10px; letter-spacing: -0.2px;
+}
+.bento-desc { font-size: 14px; color: var(--text-secondary); line-height: 1.75; }
+
+/* ════════════════════════════════════
+   CTA
+════════════════════════════════════ */
+.cta-wrap {
+  background: var(--bg-layer1);
+  border-top: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.cta-glow-l {
+  position: absolute; top: -120px; left: -100px;
+  width: 500px; height: 500px; border-radius: 50%;
+  background: radial-gradient(rgba(0,200,224,0.08), transparent 70%);
+  pointer-events: none;
+}
+.cta-glow-r {
+  position: absolute; bottom: -150px; right: -80px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(rgba(59,130,246,0.06), transparent 70%);
+  pointer-events: none;
+}
+.cta-inner {
+  max-width: 1280px; margin: 0 auto;
+  padding: 100px 80px;
+  text-align: center; position: relative; z-index: 1;
+}
+.cta-inner .section-title { max-width: 640px; margin: 0 auto 18px; }
+.cta-inner .section-desc { max-width: 500px; margin: 0 auto 40px; }
+.cta-buttons { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.cta-trust {
+  margin-top: 24px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--text-muted); letter-spacing: 0.5px;
+}
+
+/* ════════════════════════════════════
+   FOOTER
+════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--bg-base);
+  padding: 64px 80px 40px;
+  max-width: 1280px; margin: 0 auto;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr;
+  gap: 48px; margin-bottom: 48px;
+}
+.footer-brand-logo {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 16px; text-decoration: none;
+}
+.footer-tagline { font-size: 13px; color: var(--text-secondary); line-height: 1.75; margin-bottom: 20px; max-width: 260px; }
+.footer-email {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px; color: var(--cyan);
+}
+.footer-col-head {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px; letter-spacing: 1.5px;
+  color: var(--text-muted); margin-bottom: 18px;
+}
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a {
+  font-size: 13px; color: var(--text-secondary);
+  text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--text-primary); }
+.footer-bottom {
+  border-top: 1px solid var(--border);
+  padding-top: 28px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-copy { font-size: 12px; color: var(--text-muted); }
+.footer-ver {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px; color: var(--text-muted); letter-spacing: 1px;
+}
+
+/* ════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-1 { animation: fadeUp 0.6s ease 0.1s both; }
+.fade-2 { animation: fadeUp 0.6s ease 0.25s both; }
+.fade-3 { animation: fadeUp 0.6s ease 0.4s both; }
+.fade-4 { animation: fadeUp 0.7s ease 0.5s both; }
+.fade-5 { animation: fadeUp 0.8s ease 0.6s both; }
+
+</style>
+</head>
+<body>
+
+<!-- ══ NAV ══════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-brand">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 3L5 10H9L8 15L13 8H9L10 3Z" fill="#07091A" stroke="#07091A" stroke-width="0.5" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">Ionex<span>OS</span></span>
+  </a>
+
+  <ul class="nav-links">
+    <li><a href="#products">User App</a></li>
+    <li><a href="#products">Utility App</a></li>
+    <li><a href="#products">iEnergy Console</a></li>
+    <li><a href="#how">How it Works</a></li>
+  </ul>
+
+  <div class="nav-right">
+    <a href="#" class="btn btn-ghost">Log In</a>
+    <a href="#cta" class="btn btn-cyan">Request Demo</a>
+  </div>
+</nav>
+
+<!-- ══ HERO ═════════════════════════════════════════ -->
+<div class="hero-wrap">
+  <div class="hero">
+
+    <div class="hero-badge fade-1">
+      <span class="badge-pill">NEW</span>
+      <span class="badge-text">IonexOS v1.5 — Fleet Console now in progress</span>
+    </div>
+
+    <h1 class="hero-headline fade-2">
+      Power Every<br>
+      <span class="hl">EV Operation</span><br>
+      with IonexOS
+    </h1>
+
+    <p class="hero-sub fade-3">
+      The complete software platform for electric motorcycle ecosystems — connecting riders, dealers, operators and fleet managers into a single unified system.
+    </p>
+
+    <div class="hero-ctas fade-4">
+      <a href="#cta" class="btn btn-cyan btn-lg">Get a Live Demo</a>
+      <a href="#products" class="btn btn-outline btn-lg">Explore Products →</a>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="hero-dashboard fade-5">
+      <div class="hero-dashboard-glow"></div>
+
+      <!-- Browser chrome -->
+      <div class="dash-chrome">
+        <div class="dash-chrome-dots">
+          <div class="dot" style="background:#FF5F57"></div>
+          <div class="dot" style="background:#FEBC2E"></div>
+          <div class="dot" style="background:#28C840"></div>
+        </div>
+        <div class="dash-url" style="max-width:360px; margin: 0 auto;">
+          <span class="dash-url-lock">🔒</span>
+          <span class="dash-url-text">console.ionexenergy.com/dashboard</span>
+          <span class="dash-url-badge">LIVE</span>
+        </div>
+      </div>
+
+      <!-- App shell -->
+      <div class="dash-inner">
+
+        <!-- Sidebar -->
+        <div class="dash-sidebar">
+          <div class="sidebar-logo">
+            <div class="sidebar-logo-mark">⚡</div>
+            <span class="sidebar-logo-text">iEnergy</span>
+          </div>
+          <div class="sidebar-nav">
+            <div class="sidebar-item active">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Dashboard</span>
+            </div>
+            <div class="sidebar-item">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Cabinets</span>
+            </div>
+            <div class="sidebar-item">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Batteries</span>
+            </div>
+            <div class="sidebar-item">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Vehicles</span>
+            </div>
+            <div class="sidebar-item">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Event History</span>
+            </div>
+            <div class="sidebar-item">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Fleet</span>
+            </div>
+            <div class="sidebar-item">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Billing</span>
+            </div>
+            <div class="sidebar-item">
+              <div class="sidebar-item-dot"></div>
+              <span class="sidebar-item-label">Settings</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="dash-content">
+          <div class="dash-topbar-row">
+            <span class="dash-page-title">Live Dashboard</span>
+            <div class="dash-status-badge">
+              <div class="status-dot-live"></div>
+              <span class="status-text">LIVE</span>
+            </div>
+          </div>
+
+          <!-- KPIs -->
+          <div class="kpi-row">
+            <div class="kpi">
+              <div class="kpi-label">ACTIVE STATIONS</div>
+              <div class="kpi-value">248</div>
+              <div class="kpi-change pos">↑ +12 this week</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">BATTERIES ONLINE</div>
+              <div class="kpi-value">1,842</div>
+              <div class="kpi-change pos">↑ 94.7% uptime</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">SWAPS TODAY</div>
+              <div class="kpi-value">3,291</div>
+              <div class="kpi-change pos">↑ 8% vs yesterday</div>
+            </div>
+            <div class="kpi">
+              <div class="kpi-label">SWAP FAILURES</div>
+              <div class="kpi-value">7</div>
+              <div class="kpi-change neg">⚠ 3 need review</div>
+            </div>
+          </div>
+
+          <!-- Charts + events -->
+          <div class="charts-row">
+            <div class="chart-card">
+              <div class="chart-label">SWAP VOLUME — 8 DAY TREND</div>
+              <div class="bar-chart">
+                <div class="bar-item" style="height:38%"></div>
+                <div class="bar-item" style="height:52%"></div>
+                <div class="bar-item" style="height:70%"></div>
+                <div class="bar-item" style="height:62%"></div>
+                <div class="bar-item" style="height:85%"></div>
+                <div class="bar-item" style="height:72%"></div>
+                <div class="bar-item" style="height:58%"></div>
+                <div class="bar-item" style="height:88%"></div>
+              </div>
+            </div>
+            <div class="chart-card" style="display:flex;flex-direction:column;gap:6px">
+              <div class="chart-label">BATTERY STATUS</div>
+              <div class="donut-placeholder"></div>
+              <div class="event-row" style="background:none;border:none;padding:0;gap:6px">
+                <div class="ev-dot" style="background:var(--cyan)"></div>
+                <span class="ev-text" style="font-size:9px">Charging 62%</span>
+              </div>
+              <div class="event-row" style="background:none;border:none;padding:0;gap:6px">
+                <div class="ev-dot" style="background:var(--blue)"></div>
+                <span class="ev-text" style="font-size:9px">Available 28%</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Events -->
+          <div class="event-list">
+            <div class="event-row">
+              <div class="ev-dot" style="background:var(--cyan)"></div>
+              <span class="ev-text">Battery 0A3F inserted — Station 12, Slot 4</span>
+              <span class="ev-time">2m ago</span>
+            </div>
+            <div class="event-row">
+              <div class="ev-dot" style="background:var(--cyan)"></div>
+              <span class="ev-text">Swap completed — Rider #9422</span>
+              <span class="ev-time">4m ago</span>
+            </div>
+            <div class="event-row">
+              <div class="ev-dot" style="background:#F87171"></div>
+              <span class="ev-text">Swap failure — Cabinet C07 Slot 3</span>
+              <span class="ev-time">11m ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TRUST BAR ═════════════════════════════════════ -->
+<div class="trust-bar">
+  <span class="trust-label">TRUSTED BY</span>
+  <div class="trust-items">
+    <span>Ionex Energy</span>
+    <span>Aionex</span>
+    <span>BaaS Providers</span>
+    <span>VaaS Operators</span>
+    <span>Fleet Managers</span>
+    <span>EV Dealerships</span>
+  </div>
+</div>
+
+<!-- ══ STATS ═════════════════════════════════════════ -->
+<div class="stats-wrap">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-num">5+</div>
+      <div class="stat-label">Software products<br>in the ecosystem</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">3</div>
+      <div class="stat-label">User roles<br>seamlessly managed</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">360°</div>
+      <div class="stat-label">Full EV lifecycle<br>coverage</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num" style="font-size:36px;letter-spacing:-1px;">Real-time</div>
+      <div class="stat-label">Energy & fleet<br>monitoring</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PRODUCTS ══════════════════════════════════════ -->
+<section id="products" class="section">
+  <span class="eyebrow">PRODUCT SUITE</span>
+  <h2 class="section-title">Every Role.<br>One Platform.</h2>
+  <p class="section-desc">IonexOS delivers purpose-built apps and consoles for each stakeholder in the EV ecosystem.</p>
+
+  <div class="product-grid">
+
+    <!-- User App -->
+    <div class="product-card">
+      <div class="card-icon-wrap icon-c">📱</div>
+      <span class="card-role-badge role-c">FOR EV RIDERS</span>
+      <h3 class="card-title">Ionex User App</h3>
+      <p class="card-desc">Keyless smart vehicle controls, energy station maps, trip analytics, usage tracking and subscription management — all in one rider companion app.</p>
+      <ul class="card-feats">
+        <li><span class="feat-tick"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#00C8E0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Smart Keyless Vehicle Control</li>
+        <li><span class="feat-tick"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#00C8E0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Nearby Energy Station Locator</li>
+        <li><span class="feat-tick"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#00C8E0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Trip & Usage Analytics</li>
+        <li><span class="feat-tick"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#00C8E0" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Virtual Key Sharing</li>
+      </ul>
+      <div class="card-ui">
+        <div class="card-ui-chrome">
+          <div class="card-ui-chrome-dots"><div class="tiny-dot" style="background:#FF5F57"></div><div class="tiny-dot" style="background:#FEBC2E"></div><div class="tiny-dot" style="background:#28C840"></div></div>
+          <span class="card-ui-title">IONEX USER APP</span>
+        </div>
+        <div class="card-ui-body">
+          <div class="ui-row" style="width:75%; background:rgba(0,200,224,0.12)"></div>
+          <div class="ui-row" style="width:50%"></div>
+          <div class="ui-kpi-row">
+            <div class="ui-kpi"><div class="ui-kpi-val c-cyan"></div><div class="ui-kpi-sub"></div></div>
+            <div class="ui-kpi"><div class="ui-kpi-val c-cyan" style="opacity:0.5"></div><div class="ui-kpi-sub"></div></div>
+          </div>
+          <div class="ui-row" style="width:60%; margin-top:8px"></div>
+          <div class="ui-row" style="width:40%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Utility App -->
+    <div class="product-card">
+      <div class="card-icon-wrap icon-b">🔧</div>
+      <span class="card-role-badge role-b">FOR DEALERS & OPERATIONS</span>
+      <h3 class="card-title">Ionex Utility App</h3>
+      <p class="card-desc">Streamlined vehicle delivery, NFC-enabled battery management, and fleet plan activation for service teams and EV dealers.</p>
+      <ul class="card-feats">
+        <li><span class="feat-tick" style="background:var(--blue-dim);border-color:rgba(59,130,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Prepare & Deliver Vehicles</li>
+        <li><span class="feat-tick" style="background:var(--blue-dim);border-color:rgba(59,130,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>NFC Battery Operations</li>
+        <li><span class="feat-tick" style="background:var(--blue-dim);border-color:rgba(59,130,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Fleet Plan Activation</li>
+        <li><span class="feat-tick" style="background:var(--blue-dim);border-color:rgba(59,130,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#3B82F6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Vehicle Diagnostics & ODO</li>
+      </ul>
+      <div class="card-ui">
+        <div class="card-ui-chrome">
+          <div class="card-ui-chrome-dots"><div class="tiny-dot" style="background:#FF5F57"></div><div class="tiny-dot" style="background:#FEBC2E"></div><div class="tiny-dot" style="background:#28C840"></div></div>
+          <span class="card-ui-title">UTILITY APP</span>
+        </div>
+        <div class="card-ui-body">
+          <div class="ui-row" style="width:80%; background:rgba(59,130,246,0.12)"></div>
+          <div class="ui-row" style="width:55%"></div>
+          <div class="ui-kpi-row">
+            <div class="ui-kpi"><div class="ui-kpi-val c-blue"></div><div class="ui-kpi-sub"></div></div>
+            <div class="ui-kpi"><div class="ui-kpi-val c-blue" style="opacity:0.5"></div><div class="ui-kpi-sub"></div></div>
+          </div>
+          <div class="ui-row" style="width:65%; margin-top:8px"></div>
+          <div class="ui-row" style="width:45%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- iEnergy Console -->
+    <div class="product-card">
+      <div class="card-icon-wrap icon-p">🖥</div>
+      <span class="card-role-badge role-p">FOR OPERATORS & MANAGERS</span>
+      <h3 class="card-title">iEnergy Console</h3>
+      <p class="card-desc">Comprehensive back-office system for monitoring energy networks, managing assets, revenue tracking and customer service operations.</p>
+      <ul class="card-feats">
+        <li><span class="feat-tick" style="background:var(--purple-dim);border-color:rgba(124,92,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#7C5CF6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Live Station Dashboard</li>
+        <li><span class="feat-tick" style="background:var(--purple-dim);border-color:rgba(124,92,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#7C5CF6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Asset & Battery Management</li>
+        <li><span class="feat-tick" style="background:var(--purple-dim);border-color:rgba(124,92,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#7C5CF6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Event History & Analytics</li>
+        <li><span class="feat-tick" style="background:var(--purple-dim);border-color:rgba(124,92,246,0.25)"><svg viewBox="0 0 9 9" fill="none"><path d="M1.5 4.5l2 2L7.5 2" stroke="#7C5CF6" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Revenue & Billing Center</li>
+      </ul>
+      <div class="card-ui">
+        <div class="card-ui-chrome">
+          <div class="card-ui-chrome-dots"><div class="tiny-dot" style="background:#FF5F57"></div><div class="tiny-dot" style="background:#FEBC2E"></div><div class="tiny-dot" style="background:#28C840"></div></div>
+          <span class="card-ui-title">IENERGY CONSOLE</span>
+        </div>
+        <div class="card-ui-body">
+          <div class="ui-row" style="width:65%; background:rgba(124,92,246,0.15)"></div>
+          <div class="ui-row" style="width:45%"></div>
+          <div class="ui-kpi-row">
+            <div class="ui-kpi"><div class="ui-kpi-val c-purple"></div><div class="ui-kpi-sub"></div></div>
+            <div class="ui-kpi"><div class="ui-kpi-val c-purple" style="opacity:0.5"></div><div class="ui-kpi-sub"></div></div>
+          </div>
+          <div class="ui-row" style="width:70%; margin-top:8px"></div>
+          <div class="ui-row" style="width:50%"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ HOW IT WORKS ══════════════════════════════════ -->
+<div class="section-dark">
+  <section id="how" class="section">
+    <span class="eyebrow">HOW IT WORKS</span>
+    <h2 class="section-title">From First Ride<br>to Full Fleet Control</h2>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-num sn-c">01</div>
+        <h3 class="step-title">Rider Signs Up</h3>
+        <p class="step-desc">Customer scans QR code, fills in personal info, verifies phone number, sets a password and downloads the Ionex App.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num sn-b">02</div>
+        <h3 class="step-title">Dealer Prepares Vehicle</h3>
+        <p class="step-desc">Staff uses the Utility App to scan QR codes, pair batteries via NFC, and deliver the vehicle to the customer on pick-up day.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num sn-p">03</div>
+        <h3 class="step-title">Operator Monitors Network</h3>
+        <p class="step-desc">Operators use iEnergy Console to track assets, review events, manage billing and provide real-time customer support.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-num sn-a">04</div>
+        <h3 class="step-title">Fleet Manager Scales</h3>
+        <p class="step-desc">Fleet managers activate plans, track live vehicle locations and manage entire enterprise operations from iFleet Console.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- ══ FEATURES BENTO ════════════════════════════════ -->
+<section class="section">
+  <span class="eyebrow">PLATFORM CAPABILITIES</span>
+  <h2 class="section-title">Built for the Full<br>EV Ecosystem</h2>
+  <div class="bento">
+
+    <div class="bento-card wide">
+      <div class="bento-icon">⚡</div>
+      <h3 class="bento-title">Real-time Energy Network Monitoring</h3>
+      <p class="bento-desc">Live dashboards display station status, battery availability, swap success rates and energy consumption across your entire network. Instantly identify and resolve issues before they impact riders.</p>
+    </div>
+
+    <div class="bento-card">
+      <div class="bento-icon">🔒</div>
+      <h3 class="bento-title">Invite-only Role Access</h3>
+      <p class="bento-desc">Role-based access with LV1 Admin, LV2 Staff and LV3 Operator tiers. Secure, invitation-only onboarding for all stakeholders.</p>
+    </div>
+
+    <div class="bento-card">
+      <div class="bento-icon">📡</div>
+      <h3 class="bento-title">NFC & QR Operations</h3>
+      <p class="bento-desc">Android NFC support enables fast, reliable battery insert/extract, vehicle pairing and asset scanning in the field.</p>
+    </div>
+
+    <div class="bento-card">
+      <div class="bento-icon">💳</div>
+      <h3 class="bento-title">Flexible Subscription & Billing</h3>
+      <p class="bento-desc">Automated billing, contract history, holiday pricing settings and payment tracking built directly into the platform.</p>
+    </div>
+
+    <div class="bento-card">
+      <div class="bento-icon">🗺</div>
+      <h3 class="bento-title">Fleet Location & Zones</h3>
+      <p class="bento-desc">Precise vehicle tracking, route management and riding zone configuration for enterprise fleet operations at any scale.</p>
+    </div>
+
+    <div class="bento-card">
+      <div class="bento-icon">📊</div>
+      <h3 class="bento-title">Event Analytics & Traceability</h3>
+      <p class="bento-desc">Complete historical traceability of all battery, cabinet and vehicle events with top-10 analytics and swap failure review.</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ CTA ═══════════════════════════════════════════ -->
+<div class="cta-wrap">
+  <div class="cta-glow-l"></div>
+  <div class="cta-glow-r"></div>
+  <div id="cta" class="cta-inner">
+    <span class="eyebrow" style="display:block;text-align:center;">GET STARTED</span>
+    <h2 class="section-title">Ready to Power Your<br>EV Ecosystem?</h2>
+    <p class="section-desc">Join the growing network of operators, dealers and fleet managers using IonexOS to deliver exceptional electric mobility experiences.</p>
+    <div class="cta-buttons">
+      <a href="mailto:info@ionexenergy.com" class="btn btn-cyan btn-lg">Get a Live Demo</a>
+      <a href="mailto:info@ionexenergy.com" class="btn btn-ghost btn-lg" style="border-color:var(--border-cyan);color:var(--cyan)">Contact Sales</a>
+    </div>
+    <p class="cta-trust">Android & Web · Invite-only access · Confidential & Proprietary · © 2024 Ionex Energy Inc.</p>
+  </div>
+</div>
+
+<!-- ══ FOOTER ════════════════════════════════════════ -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <a href="#" class="footer-brand-logo">
+        <div class="nav-logo-icon">
+          <svg viewBox="0 0 18 18" fill="none"><path d="M10 3L5 10H9L8 15L13 8H9L10 3Z" fill="#07091A" stroke="#07091A" stroke-width="0.5" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="nav-logo-text">Ionex<span>OS</span></span>
+      </a>
+      <p class="footer-tagline">The complete software platform for electric motorcycle ecosystems.</p>
+      <div class="footer-email">info@ionexenergy.com</div>
+    </div>
+    <div>
+      <div class="footer-col-head">PRODUCTS</div>
+      <ul class="footer-links">
+        <li><a href="#">Ionex User App</a></li>
+        <li><a href="#">Ionex Utility App</a></li>
+        <li><a href="#">iEnergy Console</a></li>
+        <li><a href="#">iFleet Console</a></li>
+        <li><a href="#">Sign-Up Page</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-head">SOLUTIONS</div>
+      <ul class="footer-links">
+        <li><a href="#">Battery as a Service</a></li>
+        <li><a href="#">Vehicle as a Service</a></li>
+        <li><a href="#">Fleet Management</a></li>
+        <li><a href="#">Swapping Networks</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-head">COMPANY</div>
+      <ul class="footer-links">
+        <li><a href="https://ionexenergy.com">ionexenergy.com</a></li>
+        <li><a href="#">About Ionex Energy</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2024 Ionex Energy Inc. All Rights Reserved. Confidential & Proprietary.</span>
+    <span class="footer-ver">IONEXOS V1.5</span>
+  </div>
+</footer>
+
+</body>
+</html>
