@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>Moto Dashboard — 4BTN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@300;400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+
+/* ══ DESIGN TOKENS ══════════════════════════════ */
+:root {
+  --bg:            #0c0c0c;
+  --surface:       #ffffff;
+  --surface-dim:   #1a1a1a;
+  --accent:        #ff5500;
+  --accent-dim:    rgba(255,85,0,0.15);
+  --text:          #f0f0f0;
+  --text-on-light: #0c0c0c;
+  --text-muted:    #888888;
+  --border:        #2a2a2a;
+  --border-light:  #e0e0e0;
+  --warn:          #ffaa00;
+  --danger:        #ff2200;
+  --success:       #00cc66;
+}
+
+/* ══ RESET ══════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Barlow Condensed', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 800px;
+  height: 480px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ══ FIXED LAYOUT ════════════════════════════════ */
+#topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  background: var(--surface-dim);
+  border-bottom: 1px solid var(--border);
+  z-index: 10;
+}
+#ride-mode-badge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 2px 8px;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+}
+#topbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+#topbar-clock {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  color: var(--text);
+}
+#topbar-logo {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  color: var(--accent);
+}
+
+#main-content {
+  position: absolute;
+  top: 36px; bottom: 36px;
+  left: 0; right: 0;
+  overflow: hidden;
+}
+
+#bottombar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface-dim);
+  border-top: 2px solid var(--accent);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+}
+#bottom-hint { transition: opacity 200ms; }
+
+#page-indicator {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.pg-seg {
+  width: 15px;
+  height: 2px;
+  background: var(--border);
+  transition: background 150ms;
+}
+.pg-seg.active { background: var(--accent); }
+
+/* ══ D-PAD BUTTONS ══════════════════════════════ */
+#dpad {
+  position: absolute;
+  bottom: 44px;
+  right: 16px;
+  width: 120px;
+  height: 120px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
+  gap: 4px;
+  z-index: 100;
+  opacity: 0.7;
+}
+.dpad-btn {
+  background: var(--surface-dim);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background 100ms, color 100ms;
+}
+.dpad-btn:active, .dpad-btn.pressed { background: var(--accent); color: #fff; }
+.dpad-up    { grid-column: 2; grid-row: 1; }
+.dpad-left  { grid-column: 1; grid-row: 2; }
+.dpad-right { grid-column: 3; grid-row: 2; }
+.dpad-down  { grid-column: 2; grid-row: 3; }
+
+/* ══ SCREEN BASE ════════════════════════════════ */
+.screen { display: none; width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+.screen.active { display: block; }
+
+/* ══ INSTRUMENT MAIN ════════════════════════════ */
+#screen-inst-main.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+#gear-card {
+  position: absolute;
+  top: 12px; left: 16px;
+  background: var(--surface-dim);
+  border: 1px solid var(--border);
+  padding: 6px 16px;
+  text-align: center;
+}
+#gear-label { font-size: 11px; letter-spacing: 2px; color: var(--text-muted); }
+#gear-val {
+  font-size: 72px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--text);
+}
+
+#speed-block { text-align: center; position: relative; z-index: 2; }
+#speed-val {
+  font-size: 200px;
+  font-weight: 900;
+  line-height: 0.85;
+  color: var(--text);
+  letter-spacing: -8px;
+  transition: color 150ms;
+}
+#speed-val.warn { color: var(--accent); }
+#speed-unit { font-size: 16px; color: var(--text-muted); letter-spacing: 2px; margin-top: 4px; }
+
+#rpm-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+
+/* Secondary info bar */
+#sec-bar {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: var(--surface-dim);
+  border-top: 1px solid var(--border);
+  display: flex;
+}
+.sec-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid var(--border);
+  gap: 2px;
+}
+.sec-cell:last-child { border-right: none; }
+.sec-val { font-size: 28px; font-weight: 700; color: var(--text); }
+.sec-label { font-size: 11px; letter-spacing: 1px; color: var(--text-muted); }
+
+.fuel-bar-wrap { width: 60px; height: 6px; background: var(--border); }
+.fuel-bar-fill { height: 100%; background: var(--accent); transition: width 300ms; }
+
+/* ══ LEFT GAUGE PANEL (shared) ══════════════════ */
+.gauge-panel {
+  width: 220px;
+  background: var(--surface-dim);
+  border-right: 2px solid var(--accent);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 16px;
+  gap: 12px;
+  flex-shrink: 0;
+}
+.mg-row { display: flex; flex-direction: column; gap: 2px; }
+.mg-label { font-size: 11px; letter-spacing: 2px; color: var(--text-muted); }
+.mg-val { font-size: 36px; font-weight: 700; color: var(--text); }
+.mg-val.speed { font-size: 56px; font-weight: 900; }
+
+.fuel-bar-wrap-sm { width: 100%; height: 4px; background: var(--border); margin-top: 4px; }
+.fuel-bar-fill-sm { height: 100%; background: var(--accent); transition: width 300ms; }
+
+/* ══ INSTRUMENT + MUSIC ═════════════════════════ */
+#screen-inst-music.active { display: flex; flex-direction: row; }
+
+#music-main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px 32px;
+  gap: 16px;
+}
+#album-art {
+  width: 100px; height: 100px;
+  background: var(--surface-dim);
+  border: 2px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px;
+  flex-shrink: 0;
+  transition: opacity 150ms;
+}
+#album-art.fade { opacity: 0.2; }
+#music-info-row { display: flex; align-items: center; gap: 20px; }
+#music-text { flex: 1; }
+#track-name { font-size: 24px; font-weight: 700; color: var(--text); }
+#artist-name { font-size: 16px; color: var(--text-muted); margin-top: 4px; }
+
+#prog-wrap { display: flex; align-items: center; gap: 12px; }
+#prog-bar { flex: 1; height: 4px; background: var(--border); }
+#prog-fill { height: 100%; background: var(--accent); width: 42%; transition: width 300ms; }
+#prog-time { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+
+#music-ctrls { display: flex; gap: 20px; align-items: center; }
+.ctrl {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  opacity: 0.5; transition: opacity 150ms, color 150ms;
+}
+.ctrl.active, .ctrl:hover { opacity: 1; }
+.ctrl-icon { font-size: 28px; color: var(--text); }
+.ctrl.active .ctrl-icon { color: var(--accent); }
+.ctrl-label { font-size: 11px; letter-spacing: 1px; color: var(--text-muted); }
+
+/* ══ INSTRUMENT + NAV ═══════════════════════════ */
+#screen-inst-nav.active { display: flex; flex-direction: row; }
+
+#nav-map-panel {
+  flex: 1;
+  background: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-muted);
+}
+#nav-map-icon { font-size: 48px; }
+#nav-map-text { font-size: 16px; letter-spacing: 2px; }
+
+/* ══ PARKED SCREENS ══════════════════════════════ */
+#screen-notif.active,
+#screen-trip.active,
+#screen-diag.active,
+#screen-settings.active { display: flex; flex-direction: row; }
+
+.right-panel { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+/* ══ INFO HEADER ════════════════════════════════ */
+.info-screen-header {
+  padding: 16px 28px;
+  border-bottom: 2px solid var(--accent);
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  background: var(--surface-dim);
+  flex-shrink: 0;
+}
+.info-screen-title {
+  font-size: 18px; font-weight: 700;
+  letter-spacing: 4px; text-transform: uppercase;
+  color: var(--accent);
+}
+.info-screen-sub {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px; color: var(--text);
+}
+
+/* Trip 2×2 grid */
+.info-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+}
+.info-card {
+  background: var(--bg);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px; padding: 20px;
+}
+.info-card-label { font-size: 13px; letter-spacing: 2px; color: var(--text-muted); }
+.info-card-val { font-size: 48px; font-weight: 900; color: var(--text); line-height: 1; }
+.info-unit { font-size: 16px; color: var(--text-muted); margin-left: 4px; }
+
+/* Diag list */
+.diag-list { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.diag-row {
+  display: flex; align-items: center;
+  padding: 14px 28px;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+.diag-label { flex: 1; font-size: 15px; letter-spacing: 1px; color: var(--text); }
+.diag-val { font-size: 20px; font-weight: 700; color: var(--text); }
+.diag-unit { font-size: 13px; color: var(--text-muted); margin-left: 4px; }
+.diag-status { font-size: 13px; letter-spacing: 1px; padding: 3px 10px; border: 1px solid; }
+.diag-status.ok   { color: var(--success); border-color: var(--success); }
+.diag-status.warn { color: var(--warn);    border-color: var(--warn); }
+.diag-status.muted { color: var(--text-muted); border-color: var(--border); }
+
+/* ══ NOTIFICATIONS ════════════════════════════════ */
+#notif-header {
+  height: 48px; display: flex; align-items: center;
+  padding: 0 24px; gap: 12px;
+  background: var(--surface-dim);
+  border-bottom: 2px solid var(--accent);
+  flex-shrink: 0;
+}
+#notif-title { font-size: 16px; font-weight: 700; letter-spacing: 3px; color: var(--accent); }
+#notif-count { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text-muted); margin-left: auto; }
+
+#notif-list { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.notif-item {
+  display: flex; align-items: center; gap: 16px;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.notif-item.selected { background: var(--accent-dim); border-left: 3px solid var(--accent); }
+.notif-icon { width: 48px; height: 48px; border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 22px; }
+.notif-item.selected .notif-icon { border-color: var(--accent); }
+.notif-body { flex: 1; min-width: 0; }
+.notif-sender { font-size: 22px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.notif-item.selected .notif-sender { color: var(--accent); }
+.notif-msg { font-size: 14px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.notif-time { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text-muted); flex-shrink: 0; }
+.notif-badge { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+.notif-badge.read { background: transparent; }
+
+#notif-detail {
+  display: none; flex-direction: column;
+  flex: 1; padding: 24px 32px; gap: 16px;
+}
+#notif-detail.active { display: flex; }
+#notif-detail-header { display: flex; align-items: center; gap: 20px; }
+#notif-detail-icon { width: 60px; height: 60px; border: 1px solid var(--accent); display: flex; align-items: center; justify-content: center; font-size: 28px; flex-shrink: 0; }
+#notif-detail-sender { font-size: 30px; font-weight: 700; color: var(--accent); }
+#notif-detail-time { font-family: 'Share Tech Mono', monospace; font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+#notif-detail-divider { height: 2px; background: var(--accent); opacity: 0.3; }
+#notif-detail-body { font-size: 20px; line-height: 1.6; color: var(--text); flex: 1; }
+
+/* ══ SETTINGS ═════════════════════════════════════ */
+#settings-nav {
+  width: 200px;
+  background: var(--surface-dim);
+  border-right: 2px solid var(--accent);
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 8px 0;
+  transition: opacity 150ms;
+}
+#settings-nav.in-sub { opacity: 0.22; pointer-events: none; }
+
+#settings-mode-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0 10px;
+  margin-bottom: 6px;
+  border-bottom: 2px solid var(--accent);
+}
+#settings-mode-bar.active { display: flex; }
+#settings-mode-arrow { font-size: 16px; color: var(--accent); }
+#settings-mode-label {
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--accent);
+  flex: 1;
+}
+#settings-mode-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; color: var(--text-muted);
+}
+.snav {
+  padding: 14px 20px;
+  font-size: 16px; font-weight: 500; letter-spacing: 1px;
+  color: var(--text-muted);
+  border-left: 3px solid transparent;
+  transition: background 80ms, color 80ms;
+  position: relative;
+}
+.snav::before {
+  content: attr(data-num);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px; color: var(--text-muted);
+  margin-right: 8px; opacity: 0.6;
+}
+.snav.selected { color: var(--accent); border-left-color: var(--accent); }
+.snav.active   { background: var(--accent); color: #fff; border-left-color: #fff; }
+
+#settings-content {
+  flex: 1; display: flex; flex-direction: column;
+  justify-content: center; padding: 16px 28px; gap: 4px;
+}
+.ssec { display: none; flex-direction: column; gap: 4px; }
+.ssec.active { display: flex; }
+.srow {
+  display: flex; align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+}
+.srow.cursor-row { background: var(--accent-dim); padding-left: 8px; border-left: 3px solid var(--accent); }
+.srow-label { width: 160px; font-size: 14px; letter-spacing: 1px; color: var(--text); flex-shrink: 0; }
+.srow.cursor-row .srow-label { color: var(--accent); }
+.sopts { display: flex; gap: 8px; flex-wrap: wrap; }
+.opt {
+  padding: 4px 14px;
+  border: 1px solid var(--border);
+  font-size: 12px; letter-spacing: 1px; text-transform: uppercase;
+  color: var(--text-muted);
+  transition: all 120ms;
+}
+.opt.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+.srow-val { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text-muted); }
+
+/* ══ BOOT SCREEN ════════════════════════════════ */
+#boot-screen {
+  position: fixed; inset: 0;
+  background: #0c0c0c;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 24px; z-index: 1000;
+  transition: opacity 600ms;
+}
+#boot-logo { font-size: 48px; font-weight: 900; letter-spacing: 8px; color: var(--accent); opacity: 0; transition: opacity 500ms; }
+#boot-tagline { font-size: 13px; letter-spacing: 4px; color: var(--text-muted); opacity: 0; transition: opacity 500ms; }
+#boot-bar-wrap { width: 240px; height: 2px; background: var(--border); opacity: 0; transition: opacity 300ms; }
+#boot-bar-fill { height: 100%; width: 0%; background: var(--accent); transition: width 1.5s ease; }
+#boot-status { font-family: 'Share Tech Mono', monospace; font-size: 11px; letter-spacing: 2px; color: var(--text-muted); opacity: 0; transition: opacity 300ms; }
+
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div id="ride-mode-badge">NORMAL</div>
+  <div id="topbar-right">
+    <div id="topbar-clock">00:00</div>
+    <div id="topbar-logo">IONEX</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT AREA -->
+<main id="main-content">
+
+  <!-- ① INSTRUMENT MAIN -->
+  <section id="screen-inst-main" class="screen active">
+    <div id="gear-card">
+      <div id="gear-label">GEAR</div>
+      <div id="gear-val">N</div>
+    </div>
+    <svg id="rpm-svg" width="800" height="394" style="pointer-events:none;">
+      <path id="rpm-track" fill="none" stroke="#2a2a2a" stroke-width="20" stroke-linecap="round"
+        d="M 315.15 281.85 A 120 120 0 1 1 484.85 281.85"/>
+      <path id="rpm-fill" fill="none" stroke="#ff5500" stroke-width="20" stroke-linecap="round"
+        stroke-dasharray="0 565.49"
+        d="M 315.15 281.85 A 120 120 0 1 1 484.85 281.85"/>
+    </svg>
+    <div id="speed-block">
+      <div id="speed-val">0</div>
+      <div id="speed-unit">km/h</div>
+    </div>
+    <div id="sec-bar">
+      <div class="sec-cell"><div class="sec-val" id="rpm-val">0</div><div class="sec-label">RPM</div></div>
+      <div class="sec-cell">
+        <div class="fuel-bar-wrap"><div class="fuel-bar-fill" id="fuel-fill-main" style="width:65%"></div></div>
+        <div class="sec-label">FUEL</div>
+      </div>
+      <div class="sec-cell"><div class="sec-val" id="temp-val">90°</div><div class="sec-label">°C</div></div>
+      <div class="sec-cell"><div class="sec-val" id="volt-val">12.6</div><div class="sec-label">VOLT</div></div>
+      <div class="sec-cell"><div class="sec-val" id="odo-val">12,453</div><div class="sec-label">km</div></div>
+    </div>
+  </section>
+
+  <!-- ② INSTRUMENT + MUSIC -->
+  <section id="screen-inst-music" class="screen">
+    <div class="gauge-panel">
+      <div class="mg-row"><div class="mg-label">SPEED</div><div class="mg-val speed" id="mg-speed">0</div><div class="mg-label">km/h</div></div>
+      <div class="mg-row"><div class="mg-label">GEAR</div><div class="mg-val" id="mg-gear">N</div></div>
+      <div class="mg-row"><div class="mg-label">FUEL</div><div class="fuel-bar-wrap-sm"><div class="fuel-bar-fill-sm" id="fuel-fill-music" style="width:65%"></div></div></div>
+      <div class="mg-row"><div class="mg-label">TIME</div><div class="mg-val" style="font-size:22px;" id="mg-time">00:00</div></div>
+    </div>
+    <div id="music-main-panel">
+      <div id="music-info-row">
+        <div id="album-art">♪</div>
+        <div id="music-text">
+          <div id="track-name">Derezzed</div>
+          <div id="artist-name">Daft Punk — TRON: Legacy OST</div>
+        </div>
+      </div>
+      <div id="prog-wrap">
+        <div id="prog-bar"><div id="prog-fill"></div></div>
+        <div id="prog-time">00:00 / 1:44</div>
+      </div>
+      <div id="music-ctrls">
+        <div class="ctrl" id="ctrl-prev"><div class="ctrl-icon">⏮</div><div class="ctrl-label">▲ 上一首</div></div>
+        <div class="ctrl active" id="ctrl-play"><div class="ctrl-icon" id="play-icon">⏸</div><div class="ctrl-label">▶ 播放/暫停</div></div>
+        <div class="ctrl" id="ctrl-next"><div class="ctrl-icon">⏭</div><div class="ctrl-label">▼ 下一首</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ③ INSTRUMENT + NAV -->
+  <section id="screen-inst-nav" class="screen">
+    <div class="gauge-panel">
+      <div class="mg-row"><div class="mg-label">SPEED</div><div class="mg-val speed" id="ng-speed">0</div><div class="mg-label">km/h</div></div>
+      <div class="mg-row"><div class="mg-label">GEAR</div><div class="mg-val" id="ng-gear">N</div></div>
+      <div class="mg-row"><div class="mg-label">FUEL</div><div class="fuel-bar-wrap-sm"><div class="fuel-bar-fill-sm" id="fuel-fill-nav" style="width:65%"></div></div></div>
+      <div class="mg-row"><div class="mg-label">TIME</div><div class="mg-val" style="font-size:22px;" id="ng-time">00:00</div></div>
+    </div>
+    <div id="nav-map-panel">
+      <div id="nav-map-icon">📡</div>
+      <div id="nav-map-text">請連接手機</div>
+    </div>
+  </section>
+
+  <!-- ④ NOTIF (parked only) -->
+  <section id="screen-notif" class="screen">
+    <div class="gauge-panel">
+      <div class="mg-row"><div class="mg-label">SPEED</div><div class="mg-val speed" id="nf-speed">0</div><div class="mg-label">km/h</div></div>
+      <div class="mg-row"><div class="mg-label">GEAR</div><div class="mg-val" id="nf-gear">N</div></div>
+      <div class="mg-row"><div class="mg-label">FUEL</div><div class="fuel-bar-wrap-sm"><div class="fuel-bar-fill-sm" id="fuel-fill-notif" style="width:65%"></div></div></div>
+      <div class="mg-row"><div class="mg-label">TIME</div><div class="mg-val" style="font-size:22px;" id="nf-time">00:00</div></div>
+    </div>
+    <div class="right-panel">
+      <div id="notif-header">
+        <div id="notif-title">最新訊息</div>
+        <div id="notif-count">3 則未讀</div>
+      </div>
+      <div id="notif-list">
+        <div class="notif-item selected" data-idx="0">
+          <div class="notif-icon">📞</div>
+          <div class="notif-body"><div class="notif-sender">陳大明</div><div class="notif-msg">未接來電 × 2</div></div>
+          <div class="notif-time">08:42</div><div class="notif-badge"></div>
+        </div>
+        <div class="notif-item" data-idx="1">
+          <div class="notif-icon">💬</div>
+          <div class="notif-body"><div class="notif-sender">IONEX</div><div class="notif-msg">電池電量剩餘 20%，請儘速前往換電站</div></div>
+          <div class="notif-time">07:55</div><div class="notif-badge"></div>
+        </div>
+        <div class="notif-item" data-idx="2">
+          <div class="notif-icon">🌦</div>
+          <div class="notif-body"><div class="notif-sender">天氣警示</div><div class="notif-msg">今日下午 3 點後有午後雷陣雨，注意騎乘安全</div></div>
+          <div class="notif-time">07:30</div><div class="notif-badge read"></div>
+        </div>
+        <div class="notif-item" data-idx="3">
+          <div class="notif-icon">🔧</div>
+          <div class="notif-body"><div class="notif-sender">保養提醒</div><div class="notif-msg">距離上次保養已達 3,000 km，建議預約保養</div></div>
+          <div class="notif-time">昨天</div><div class="notif-badge read"></div>
+        </div>
+      </div>
+      <div id="notif-detail">
+        <div id="notif-detail-header">
+          <div id="notif-detail-icon">📞</div>
+          <div><div id="notif-detail-sender">陳大明</div><div id="notif-detail-time">今天 08:42</div></div>
+        </div>
+        <div id="notif-detail-divider"></div>
+        <div id="notif-detail-body">未接來電 × 2</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑤ TRIP (parked only) -->
+  <section id="screen-trip" class="screen">
+    <div class="gauge-panel">
+      <div class="mg-row"><div class="mg-label">SPEED</div><div class="mg-val speed" id="tp-speed">0</div><div class="mg-label">km/h</div></div>
+      <div class="mg-row"><div class="mg-label">GEAR</div><div class="mg-val" id="tp-gear">N</div></div>
+      <div class="mg-row"><div class="mg-label">FUEL</div><div class="fuel-bar-wrap-sm"><div class="fuel-bar-fill-sm" id="fuel-fill-trip" style="width:65%"></div></div></div>
+      <div class="mg-row"><div class="mg-label">TIME</div><div class="mg-val" style="font-size:22px;" id="tp-time">00:00</div></div>
+    </div>
+    <div class="right-panel">
+      <div class="info-screen-header">
+        <div class="info-screen-title">本次騎乘</div>
+        <div class="info-screen-sub" id="trip-elapsed">00:00:00</div>
+      </div>
+      <div class="info-grid">
+        <div class="info-card"><div class="info-card-label">開始時間</div><div class="info-card-val" style="font-size:32px;" id="trip-start">— —</div></div>
+        <div class="info-card"><div class="info-card-label">行駛距離</div><div class="info-card-val"><span id="trip-dist">0.0</span><span class="info-unit">km</span></div></div>
+        <div class="info-card"><div class="info-card-label">最高速度</div><div class="info-card-val"><span id="trip-max">0</span><span class="info-unit">km/h</span></div></div>
+        <div class="info-card"><div class="info-card-label">平均速度</div><div class="info-card-val"><span id="trip-avg">0</span><span class="info-unit">km/h</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑥ DIAG (parked only) -->
+  <section id="screen-diag" class="screen">
+    <div class="gauge-panel">
+      <div class="mg-row"><div class="mg-label">SPEED</div><div class="mg-val speed" id="dg-speed">0</div><div class="mg-label">km/h</div></div>
+      <div class="mg-row"><div class="mg-label">GEAR</div><div class="mg-val" id="dg-gear">N</div></div>
+      <div class="mg-row"><div class="mg-label">FUEL</div><div class="fuel-bar-wrap-sm"><div class="fuel-bar-fill-sm" id="fuel-fill-diag" style="width:65%"></div></div></div>
+      <div class="mg-row"><div class="mg-label">TIME</div><div class="mg-val" style="font-size:22px;" id="dg-time">00:00</div></div>
+    </div>
+    <div class="right-panel">
+      <div class="info-screen-header">
+        <div class="info-screen-title">車輛診斷</div>
+      </div>
+      <div class="diag-list" id="diag-list">
+        <div class="diag-row"><div class="diag-label">前輪胎壓</div><div class="diag-val">32<span class="diag-unit">PSI</span></div><div class="diag-status ok">正常</div></div>
+        <div class="diag-row"><div class="diag-label">後輪胎壓</div><div class="diag-val">29<span class="diag-unit">PSI</span></div><div class="diag-status ok">正常</div></div>
+        <div class="diag-row"><div class="diag-label">電瓶電壓</div><div class="diag-val" id="diag-volt">12.6<span class="diag-unit">V</span></div><div class="diag-status ok">正常</div></div>
+        <div class="diag-row"><div class="diag-label">引擎水溫</div><div class="diag-val" id="diag-temp">90<span class="diag-unit">°C</span></div><div class="diag-status ok" id="diag-temp-st">正常</div></div>
+        <div class="diag-row"><div class="diag-label">里程表</div><div class="diag-val">12,453<span class="diag-unit">km</span></div><div class="diag-status muted">—</div></div>
+        <div class="diag-row"><div class="diag-label">距上次保養</div><div class="diag-val">3,245<span class="diag-unit">km</span></div><div class="diag-status warn">建議保養</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ⑦ SETTINGS (parked only) -->
+  <section id="screen-settings" class="screen">
+    <div id="settings-nav">
+      <div class="snav selected active" data-section="riding" data-num="01">騎乘模式</div>
+      <div class="snav" data-section="units"   data-num="02">單位設定</div>
+      <div class="snav" data-section="display" data-num="03">顯示設定</div>
+      <div class="snav" data-section="bt"      data-num="04">藍牙裝置</div>
+      <div class="snav" data-section="about"   data-num="05">關於系統</div>
+    </div>
+    <div id="settings-content">
+      <div id="settings-mode-bar">
+        <span id="settings-mode-arrow">▶</span>
+        <span id="settings-mode-label">騎乘模式</span>
+        <span id="settings-mode-hint">▲▼ 上/下項　▶ 切換　◀ 返回</span>
+      </div>
+      <div class="ssec active" id="sec-riding">
+        <div class="srow cursor-row">
+          <div class="srow-label">騎乘模式</div>
+          <div class="sopts">
+            <div class="opt active" data-key="ride-mode" data-val="NORMAL">NORMAL</div>
+            <div class="opt" data-key="ride-mode" data-val="RAIN">RAIN</div>
+            <div class="opt" data-key="ride-mode" data-val="RACE">RACE</div>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="srow-label">換檔提示 RPM</div>
+          <div class="sopts">
+            <div class="opt" data-key="shift-rpm" data-val="7000">7,000</div>
+            <div class="opt active" data-key="shift-rpm" data-val="8000">8,000</div>
+            <div class="opt" data-key="shift-rpm" data-val="9000">9,000</div>
+            <div class="opt" data-key="shift-rpm" data-val="10000">10,000</div>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="srow-label">速度警示</div>
+          <div class="sopts">
+            <div class="opt" data-key="speed-warn" data-val="100">100</div>
+            <div class="opt active" data-key="speed-warn" data-val="120">120</div>
+            <div class="opt" data-key="speed-warn" data-val="140">140</div>
+            <div class="opt" data-key="speed-warn" data-val="off">關閉</div>
+          </div>
+        </div>
+      </div>
+      <div class="ssec" id="sec-units">
+        <div class="srow cursor-row"><div class="srow-label">速度單位</div><div class="sopts"><div class="opt active" data-key="speed-unit" data-val="km/h">km/h</div><div class="opt" data-key="speed-unit" data-val="mph">mph</div></div></div>
+        <div class="srow"><div class="srow-label">距離單位</div><div class="sopts"><div class="opt active" data-key="dist-unit" data-val="km">km</div><div class="opt" data-key="dist-unit" data-val="mi">mi</div></div></div>
+        <div class="srow"><div class="srow-label">溫度單位</div><div class="sopts"><div class="opt active" data-key="temp-unit" data-val="°C">°C</div><div class="opt" data-key="temp-unit" data-val="°F">°F</div></div></div>
+      </div>
+      <div class="ssec" id="sec-display">
+        <div class="srow cursor-row"><div class="srow-label">亮度</div><div class="sopts">
+          <div class="opt" data-key="bright" data-val="1">1</div>
+          <div class="opt" data-key="bright" data-val="2">2</div>
+          <div class="opt active" data-key="bright" data-val="3">3</div>
+          <div class="opt" data-key="bright" data-val="4">4</div>
+          <div class="opt" data-key="bright" data-val="5">5</div>
+        </div></div>
+      </div>
+      <div class="ssec" id="sec-bt">
+        <div class="srow cursor-row"><div class="srow-label">狀態</div><div class="srow-val">未配對</div></div>
+        <div class="srow"><div class="srow-label">裝置名稱</div><div class="srow-val">— —</div></div>
+      </div>
+      <div class="ssec" id="sec-about">
+        <div class="srow cursor-row"><div class="srow-label">版本</div><div class="srow-val">v1.0.0</div></div>
+        <div class="srow"><div class="srow-label">韌體</div><div class="srow-val">FW-2026.04</div></div>
+        <div class="srow"><div class="srow-label">序號</div><div class="srow-val">IONEX-4BTN-0001</div></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- BOTTOMBAR -->
+<footer id="bottombar">
+  <div id="page-indicator"></div>
+  <div id="bottom-hint">◀ 上一畫面</div>
+</footer>
+
+<!-- D-PAD SIMULATION -->
+<div id="dpad">
+  <div class="dpad-btn dpad-up"    id="btn-up">▲</div>
+  <div class="dpad-btn dpad-left"  id="btn-left">◀</div>
+  <div class="dpad-btn dpad-right" id="btn-right">▶</div>
+  <div class="dpad-btn dpad-down"  id="btn-down">▼</div>
+</div>
+
+<div id="boot-screen">
+  <div id="boot-logo">IONEX</div>
+  <div id="boot-tagline">MOTO DASHBOARD 4BTN</div>
+  <div id="boot-bar-wrap"><div id="boot-bar-fill"></div></div>
+  <div id="boot-status">INITIALIZING...</div>
+</div>
+
+<script>
+/* ══ CLOCK ══════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  document.getElementById('topbar-clock').textContent = `${h}:${m}`;
+}
+
+/* ══ STATE ══════════════════════════════════════ */
+const state = {
+  instSub: 'main',
+  isRiding: false,
+  notifDetail: false,
+  settingsInSub: false,
+  speed: 0, rpm: 0, gear: 'N', fuel: 65, temp: 90, volt: 12.6,
+  speedWarn: 120,
+  ridingMode: 'NORMAL',
+  isPlaying: true,
+  trackIdx: 0,
+  notifIdx: 0,
+  settingsSecIdx: 0,
+  settingsRowIdx: 0,
+  trip: { startTime: null, distance: 0, maxSpeed: 0, speedSamples: [] },
+};
+
+const SUBS_RIDING = ['nav', 'music', 'main'];
+const SUBS_PARKED = ['settings', 'diag', 'trip', 'notif', 'nav', 'music', 'main'];
+const SCREEN_IDS = {
+  main:     'screen-inst-main',
+  music:    'screen-inst-music',
+  nav:      'screen-inst-nav',
+  notif:    'screen-notif',
+  trip:     'screen-trip',
+  diag:     'screen-diag',
+  settings: 'screen-settings',
+};
+
+/* ══ RPM ARC ═════════════════════════════════════ */
+const RPM_CIRC = 753.98;
+const RPM_ARC  = 565.49;
+const RPM_MAX  = 10000;
+
+function setRpm(rpm) {
+  state.rpm = rpm;
+  const pct = Math.min(rpm / RPM_MAX, 1);
+  const dash = pct * RPM_ARC;
+  const el = document.getElementById('rpm-fill');
+  el.setAttribute('stroke-dasharray', `${dash} ${RPM_CIRC - dash}`);
+  el.setAttribute('stroke', pct > 0.9 ? '#ff2200' : '#ff5500');
+  document.getElementById('rpm-val').textContent = Math.round(rpm).toLocaleString();
+}
+
+/* ══ SPEED ═══════════════════════════════════════ */
+function setSpeed(spd) {
+  const wasRiding = state.isRiding;
+  state.speed = spd;
+  state.isRiding = spd > 0;
+  const rounded = Math.round(spd);
+  const warn = state.speedWarn !== 'off' && rounded >= parseInt(state.speedWarn);
+  const el = document.getElementById('speed-val');
+  if (el) { el.textContent = rounded; el.classList.toggle('warn', warn); }
+  ['mg-speed','ng-speed','nf-speed','tp-speed','dg-speed'].forEach(id => {
+    const e = document.getElementById(id); if (e) e.textContent = rounded;
+  });
+  if (state.isRiding) {
+    if (!state.trip.startTime) { state.trip.startTime = new Date(); updateTripStartDisplay(); }
+    if (spd > state.trip.maxSpeed) state.trip.maxSpeed = spd;
+    state.trip.speedSamples.push(spd);
+    state.trip.distance += (spd / 3600) * 0.7;
+  }
+  if (state.isRiding !== wasRiding) onRidingStateChange();
+}
+
+function setGear(g) {
+  state.gear = g;
+  ['gear-val','mg-gear','ng-gear','nf-gear','tp-gear','dg-gear'].forEach(id => {
+    const e = document.getElementById(id); if (e) e.textContent = g;
+  });
+}
+
+function setFuel(pct) {
+  state.fuel = pct;
+  ['fuel-fill-main','fuel-fill-music','fuel-fill-nav','fuel-fill-notif','fuel-fill-trip','fuel-fill-diag'].forEach(id => {
+    const e = document.getElementById(id); if (e) e.style.width = pct + '%';
+  });
+}
+
+function onRidingStateChange() {
+  const parkOnly = ['notif','trip','diag','settings'];
+  if (state.isRiding && parkOnly.includes(state.instSub)) {
+    showInstSub('main');
+  } else {
+    updateBottomHint();
+  }
+}
+
+function setRidingMode(mode) {
+  state.ridingMode = mode;
+  const badge = document.getElementById('ride-mode-badge');
+  badge.textContent = mode;
+  const colors = { NORMAL: '#888888', RAIN: '#668bfa', RACE: '#ff5500' };
+  badge.style.borderColor = colors[mode];
+  badge.style.color = colors[mode];
+}
+
+/* ══ BOTTOM HINT ════════════════════════════════ */
+function updatePageIndicator() {
+  const indicator = document.getElementById('page-indicator');
+  if (!indicator) return;
+  const subs = state.isRiding ? SUBS_RIDING : SUBS_PARKED;
+  indicator.innerHTML = subs.map(s =>
+    `<span class="pg-seg${s === state.instSub ? ' active' : ''}"></span>`
+  ).join('');
+}
+
+function updateBottomHint() {
+  const hint = document.getElementById('bottom-hint');
+  if (!hint) return;
+  const sub = state.instSub;
+  if (sub === 'main') {
+    hint.textContent = `◀ 上一畫面`;
+  } else if (sub === 'music') {
+    hint.textContent = `▲▼ 上/下一首   ▶ 播放/暫停   ◀ 上一畫面`;
+  } else if (sub === 'nav') {
+    hint.textContent = `▼ 暫停導航   ▶ 停止導航   ◀ 上一畫面`;
+  } else if (sub === 'notif') {
+    hint.textContent = state.notifDetail
+      ? `▲▼ 上/下一則   ◀ 返回列表`
+      : `▲▼ 選擇   ▶ 開啟   ◀ 上一畫面`;
+  } else if (sub === 'trip') {
+    hint.textContent = `▶ 下一畫面   ◀ 上一畫面`;
+  } else if (sub === 'diag') {
+    hint.textContent = `▶ 下一畫面   ◀ 上一畫面`;
+  } else if (sub === 'settings') {
+    hint.textContent = state.settingsInSub
+      ? `▲▼ 上/下一項   ▶ 切換值   ◀ 返回分類`
+      : `▲▼ 選擇分類   ▶ 進入   ◀ 上一畫面`;
+  }
+  updatePageIndicator();
+}
+
+/* ══ TRIP DISPLAY ════════════════════════════════ */
+function updateTripStartDisplay() {
+  if (!state.trip.startTime) return;
+  const h = String(state.trip.startTime.getHours()).padStart(2,'0');
+  const m = String(state.trip.startTime.getMinutes()).padStart(2,'0');
+  const el = document.getElementById('trip-start');
+  if (el) el.textContent = `${h}:${m}`;
+}
+
+function updateTripDisplay() {
+  if (!state.trip.startTime) return;
+  const elapsed = Math.floor((Date.now() - state.trip.startTime) / 1000);
+  const h = String(Math.floor(elapsed/3600)).padStart(2,'0');
+  const m = String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
+  const s = String(elapsed%60).padStart(2,'0');
+  const el = document.getElementById('trip-elapsed');
+  if (el) el.textContent = `${h}:${m}:${s}`;
+  const td = document.getElementById('trip-dist');
+  if (td) td.textContent = state.trip.distance.toFixed(1);
+  const tm = document.getElementById('trip-max');
+  if (tm) tm.textContent = Math.round(state.trip.maxSpeed);
+  const ta = document.getElementById('trip-avg');
+  if (ta) {
+    const avg = state.trip.speedSamples.length
+      ? (state.trip.speedSamples.reduce((a,b)=>a+b,0)/state.trip.speedSamples.length).toFixed(1) : '0';
+    ta.textContent = avg;
+  }
+}
+
+/* ══ MUSIC ═══════════════════════════════════════ */
+const TRACKS = [
+  { name: 'Derezzed',    artist: 'Daft Punk', album: 'TRON: Legacy OST', dur: '1:44' },
+  { name: 'End of Line', artist: 'Daft Punk', album: 'TRON: Legacy OST', dur: '2:24' },
+  { name: 'Recognizer',  artist: 'Daft Punk', album: 'TRON: Legacy OST', dur: '2:19' },
+  { name: 'The Grid',    artist: 'Daft Punk', album: 'TRON: Legacy OST', dur: '1:37' },
+  { name: 'Fall',        artist: 'Daft Punk', album: 'TRON: Legacy OST', dur: '4:02' },
+];
+
+function loadTrack(idx) {
+  state.trackIdx = ((idx % TRACKS.length) + TRACKS.length) % TRACKS.length;
+  const t = TRACKS[state.trackIdx];
+  const tn = document.getElementById('track-name'); if (tn) tn.textContent = t.name;
+  const an = document.getElementById('artist-name'); if (an) an.textContent = `${t.artist} — ${t.album}`;
+  const pt = document.getElementById('prog-time'); if (pt) pt.textContent = `00:00 / ${t.dur}`;
+  const pf = document.getElementById('prog-fill'); if (pf) pf.style.width = '0%';
+  const art = document.getElementById('album-art');
+  if (art) { art.classList.add('fade'); setTimeout(() => art.classList.remove('fade'), 150); }
+}
+
+function nextTrack() { flashCtrl('ctrl-next'); loadTrack(state.trackIdx + 1); }
+function prevTrack() { flashCtrl('ctrl-prev'); loadTrack(state.trackIdx - 1); }
+
+function togglePlay() {
+  state.isPlaying = !state.isPlaying;
+  const pi = document.getElementById('play-icon');
+  if (pi) pi.textContent = state.isPlaying ? '⏸' : '▶';
+  flashCtrl('ctrl-play');
+}
+
+function flashCtrl(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('active');
+  setTimeout(() => el.classList.remove('active'), 300);
+}
+
+/* ══ SCREEN SWITCHING ════════════════════════════ */
+function showInstSub(sub) {
+  state.instSub = sub;
+  Object.values(SCREEN_IDS).forEach(id => {
+    const el = document.getElementById(id); if (el) el.classList.remove('active');
+  });
+  const target = document.getElementById(SCREEN_IDS[sub]);
+  if (target) target.classList.add('active');
+  if (sub !== 'notif') { state.notifDetail = false; }
+  if (sub !== 'settings') {
+    state.settingsInSub = false;
+    document.getElementById('settings-nav').classList.remove('in-sub');
+    document.getElementById('settings-mode-bar').classList.remove('active');
+  }
+  updateBottomHint();
+}
+
+/* ══ NAV ACTIONS ══════════════════════════════════ */
+let navPaused = false;
+function navPauseAction() {
+  navPaused = !navPaused;
+  const icon = document.getElementById('nav-map-icon');
+  const text = document.getElementById('nav-map-text');
+  if (icon) icon.textContent = navPaused ? '⏸' : '📡';
+  if (text) text.textContent = navPaused ? '導航已暫停' : '請連接手機';
+}
+function navStopAction() {
+  navPaused = false;
+  const icon = document.getElementById('nav-map-icon');
+  const text = document.getElementById('nav-map-text');
+  if (icon) icon.textContent = '✕';
+  if (text) text.textContent = '導航已停止';
+}
+
+/* ══ D-PAD HANDLERS ══════════════════════════════ */
+function onUp() {
+  const sub = state.instSub;
+  if (sub === 'music') { prevTrack(); }
+  else if (sub === 'notif') { notifUp(); }
+  else if (sub === 'settings') {
+    if (state.settingsInSub) {
+      const sec = document.querySelector('.ssec.active'); if (!sec) return;
+      const rows = sec.querySelectorAll('.srow');
+      state.settingsRowIdx = (state.settingsRowIdx - 1 + rows.length) % rows.length;
+      settingsApplyRowCursor();
+    } else {
+      state.settingsSecIdx = (state.settingsSecIdx - 1 + SETTINGS_SECS.length) % SETTINGS_SECS.length;
+      settingsApplySectionCursor();
+    }
+  }
+  // main, nav, trip, diag: no action
+}
+
+function onDown() {
+  const sub = state.instSub;
+  if (sub === 'music') { nextTrack(); }
+  else if (sub === 'nav') { navPauseAction(); }
+  else if (sub === 'notif') { notifDown(); }
+  else if (sub === 'settings') {
+    if (state.settingsInSub) {
+      const sec = document.querySelector('.ssec.active'); if (!sec) return;
+      const rows = sec.querySelectorAll('.srow');
+      state.settingsRowIdx = (state.settingsRowIdx + 1) % rows.length;
+      settingsApplyRowCursor();
+    } else {
+      state.settingsSecIdx = (state.settingsSecIdx + 1) % SETTINGS_SECS.length;
+      settingsApplySectionCursor();
+    }
+  }
+  // main, trip, diag: no action
+}
+
+function onLeft() {
+  const sub = state.instSub;
+  // Sub-level back
+  if (sub === 'notif' && state.notifDetail) { closeNotifDetail(); return; }
+  if (sub === 'settings' && state.settingsInSub) {
+    settingsExitSub();
+    return;
+  }
+  // Previous screen (cycle)
+  const subs = state.isRiding ? SUBS_RIDING : SUBS_PARKED;
+  const idx = subs.indexOf(sub);
+  showInstSub(subs[(idx - 1 + subs.length) % subs.length]);
+}
+
+function onRight() {
+  const sub = state.instSub;
+  if (sub === 'music') { togglePlay(); }
+  else if (sub === 'nav') { navStopAction(); }
+  else if (sub === 'notif') {
+    if (!state.notifDetail) openNotifDetail(state.notifIdx);
+    // in detail: no action
+  }
+  else if (sub === 'trip' || sub === 'diag') {
+    // next screen
+    const subs = state.isRiding ? SUBS_RIDING : SUBS_PARKED;
+    const idx = subs.indexOf(sub);
+    showInstSub(subs[(idx + 1) % subs.length]);
+  }
+  else if (sub === 'settings') {
+    if (state.settingsInSub) {
+      settingsRight();
+    } else {
+      settingsEnterSub();
+    }
+  }
+  // main: no action
+}
+
+/* ══ NOTIFICATIONS ═══════════════════════════════ */
+const NOTIF_COUNT = 4;
+const NOTIFS = [
+  { icon: '📞', sender: '陳大明',   time: '今天 08:42', body: '未接來電 × 2\n\n陳大明 於 08:40 及 08:42 嘗試聯繫您。' },
+  { icon: '💬', sender: 'IONEX',    time: '今天 07:55', body: '電池電量剩餘 20%\n\n建議儘速前往附近換電站進行換電。' },
+  { icon: '🌦', sender: '天氣警示', time: '今天 07:30', body: '午後雷陣雨警示\n\n今日下午 3 點後北部地區有局部午後雷陣雨。' },
+  { icon: '🔧', sender: '保養提醒', time: '昨天',        body: '建議預約定期保養\n\n距上次保養已行駛 3,000 km。' },
+];
+
+function notifApplyCursor() {
+  document.querySelectorAll('.notif-item').forEach((el,i) => el.classList.toggle('selected', i === state.notifIdx));
+}
+function notifUp() {
+  state.notifIdx = (state.notifIdx - 1 + NOTIF_COUNT) % NOTIF_COUNT;
+  if (state.notifDetail) openNotifDetail(state.notifIdx);
+  else notifApplyCursor();
+}
+function notifDown() {
+  state.notifIdx = (state.notifIdx + 1) % NOTIF_COUNT;
+  if (state.notifDetail) openNotifDetail(state.notifIdx);
+  else notifApplyCursor();
+}
+function openNotifDetail(idx) {
+  const n = NOTIFS[idx];
+  document.getElementById('notif-detail-icon').textContent   = n.icon;
+  document.getElementById('notif-detail-sender').textContent = n.sender;
+  document.getElementById('notif-detail-time').textContent   = n.time;
+  document.getElementById('notif-detail-body').innerHTML     = n.body.replace(/\n/g,'<br>');
+  const badge = document.querySelector(`.notif-item[data-idx="${idx}"] .notif-badge`);
+  if (badge) badge.classList.add('read');
+  document.getElementById('notif-list').style.display = 'none';
+  document.getElementById('notif-detail').classList.add('active');
+  state.notifDetail = true;
+  updateBottomHint();
+}
+function closeNotifDetail() {
+  document.getElementById('notif-list').style.display = '';
+  document.getElementById('notif-detail').classList.remove('active');
+  state.notifDetail = false;
+  updateBottomHint();
+}
+
+/* ══ SETTINGS ════════════════════════════════════ */
+const SETTINGS_SECS = ['riding','units','display','bt','about'];
+
+const SETTINGS_SEC_LABELS = ['騎乘模式','單位設定','顯示設定','藍牙裝置','關於系統'];
+
+function settingsEnterSub() {
+  state.settingsInSub = true;
+  state.settingsRowIdx = 0;
+  settingsApplyRowCursor();
+  document.getElementById('settings-nav').classList.add('in-sub');
+  document.getElementById('settings-mode-label').textContent = SETTINGS_SEC_LABELS[state.settingsSecIdx];
+  document.getElementById('settings-mode-bar').classList.add('active');
+  updateBottomHint();
+}
+
+function settingsExitSub() {
+  state.settingsInSub = false;
+  document.getElementById('settings-nav').classList.remove('in-sub');
+  document.getElementById('settings-mode-bar').classList.remove('active');
+  updateBottomHint();
+}
+
+function settingsApplySectionCursor() {
+  document.querySelectorAll('.snav').forEach((el,i) => {
+    el.classList.toggle('selected', i === state.settingsSecIdx);
+    el.classList.toggle('active',   i === state.settingsSecIdx);
+  });
+  document.querySelectorAll('.ssec').forEach(el => {
+    el.classList.toggle('active', el.id === 'sec-' + SETTINGS_SECS[state.settingsSecIdx]);
+  });
+  state.settingsRowIdx = 0;
+  settingsApplyRowCursor();
+}
+
+function settingsApplyRowCursor() {
+  const sec = document.querySelector('.ssec.active'); if (!sec) return;
+  sec.querySelectorAll('.srow').forEach((r,i) => r.classList.toggle('cursor-row', i === state.settingsRowIdx));
+}
+
+function settingsRight() {
+  const sec = document.querySelector('.ssec.active'); if (!sec) return;
+  const rows = sec.querySelectorAll('.srow'); if (!rows.length) return;
+  const row = rows[state.settingsRowIdx];
+  const opts = row.querySelectorAll('.opt'); if (!opts.length) return;
+  let cur = -1;
+  opts.forEach((o,i) => { if (o.classList.contains('active')) cur = i; });
+  opts.forEach(o => o.classList.remove('active'));
+  const next = opts[(cur + 1) % opts.length];
+  next.classList.add('active');
+  if (next.dataset.key === 'ride-mode') setRidingMode(next.dataset.val);
+  if (next.dataset.key === 'speed-warn') state.speedWarn = next.dataset.val;
+}
+
+/* ══ BUTTON WIRING ══════════════════════════════ */
+function wireBtn(id, fn) {
+  const el = document.getElementById(id); if (!el) return;
+  let down = false;
+  el.addEventListener('pointerdown', e => { e.preventDefault(); down = true; el.classList.add('pressed'); });
+  const up = () => { if (!down) return; down = false; el.classList.remove('pressed'); fn(); };
+  el.addEventListener('pointerup', up);
+  el.addEventListener('pointerleave', () => { if (down) { down = false; el.classList.remove('pressed'); } });
+}
+
+wireBtn('btn-up',    onUp);
+wireBtn('btn-down',  onDown);
+wireBtn('btn-left',  onLeft);
+wireBtn('btn-right', onRight);
+
+// Keyboard: W/A/S/D = up/left/down/right, P = toggle park/ride
+document.addEventListener('keydown', e => {
+  if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key)) e.preventDefault();
+});
+document.addEventListener('keyup', e => {
+  if (e.key === 'p' || e.key === 'P') {
+    tickerPaused = !tickerPaused;
+    if (tickerPaused) { setSpeed(0); setRpm(800); setGear('N'); }
+    else { setSpeed(85); setRpm(5000); setGear('4'); }
+  }
+  else if (e.key === 'ArrowUp')    onUp();
+  else if (e.key === 'ArrowDown')  onDown();
+  else if (e.key === 'ArrowLeft')  onLeft();
+  else if (e.key === 'ArrowRight') onRight();
+});
+
+let tickerPaused = false;
+
+/* ══ BOOT ════════════════════════════════════════ */
+function runBoot() {
+  const boot   = document.getElementById('boot-screen');
+  const logo   = document.getElementById('boot-logo');
+  const tag    = document.getElementById('boot-tagline');
+  const barW   = document.getElementById('boot-bar-wrap');
+  const barF   = document.getElementById('boot-bar-fill');
+  const status = document.getElementById('boot-status');
+  const statuses = ['LOADING SENSORS...','CALIBRATING RPM...','CONNECTING BLUETOOTH...','SYSTEM READY'];
+  setTimeout(() => { logo.style.opacity='1'; tag.style.opacity='1'; barW.style.opacity='1'; status.style.opacity='1'; }, 100);
+  setTimeout(() => { barF.style.width = '100%'; }, 400);
+  setTimeout(() => {
+    let r=0, spd=0, si=0;
+    const sweep = setInterval(() => {
+      r   = Math.min(r+400, 6500);
+      spd = Math.min(spd+5, 108);
+      setRpm(r); setSpeed(spd);
+      setGear(spd<20?'N':spd<50?'1':spd<80?'3':'5');
+      if (r>=6500) clearInterval(sweep);
+    }, 40);
+    const sti = setInterval(() => {
+      if (si<statuses.length) status.textContent = statuses[si++];
+      else clearInterval(sti);
+    }, 500);
+  }, 600);
+  setTimeout(() => {
+    boot.style.opacity = '0';
+    setTimeout(() => { boot.style.display = 'none'; }, 600);
+  }, 3000);
+}
+
+/* ══ DEMO TICKER ══════════════════════════════════ */
+function startTicker() {
+  let mockSpd = 108;
+  setInterval(() => { updateClock(); updateTripDisplay(); }, 1000);
+  setInterval(() => {
+    if (tickerPaused) return;
+    mockSpd += (Math.random()-0.5)*10;
+    mockSpd  = Math.max(70, Math.min(138, mockSpd));
+    const mockRpm = 2000 + (mockSpd/140)*7500;
+    setSpeed(mockSpd); setRpm(mockRpm);
+    const s = Math.round(mockSpd);
+    setGear(s<20?'N':s<40?'1':s<65?'2':s<85?'3':s<105?'4':s<122?'5':'6');
+    const now = new Date();
+    const t = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    ['mg-time','ng-time','nf-time','tp-time','dg-time'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.textContent = t;
+    });
+  }, 700);
+}
+
+/* ══ INIT ════════════════════════════════════════ */
+setFuel(65);
+loadTrack(0);
+showInstSub('main');
+updateBottomHint();
+runBoot();
+startTicker();
+</script>
+</body>
+</html>

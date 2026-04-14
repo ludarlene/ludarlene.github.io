@@ -1,0 +1,2195 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<title>Moto Dashboard — TRON</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Barlow+Condensed:wght@300;400;500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+
+/* ══════════════════════════════════════════════
+   DESIGN TOKENS — TRON
+══════════════════════════════════════════════ */
+:root {
+  --bg:        #020811;
+  --surface:   #060f1e;
+  --panel:     #0a1628;
+  --border:    #0d2040;
+  --glow:      #00d4ff;
+  --glow2:     #0080ff;
+  --glow-dim:  rgba(0,212,255,0.15);
+  --glow-mid:  rgba(0,212,255,0.4);
+  --text:      #c8e8ff;
+  --text-dim:  #4a7a9a;
+  --warn:      #ff8c00;
+  --danger:    #ff2244;
+  --success:   #00ff88;
+  --grid-line: rgba(0,150,255,0.07);
+  --scan-line: rgba(0,200,255,0.04);
+}
+
+/* ══════════════════════════════════════════════
+   RESET & BASE
+══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Barlow Condensed', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  width: 800px;
+  height: 480px;
+  overflow: hidden;
+  position: relative;
+  /* Tron grid background */
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Scanline overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    var(--scan-line) 0px,
+    var(--scan-line) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  pointer-events: none;
+  z-index: 999;
+}
+
+.orb  { font-family: 'Orbitron', sans-serif; }
+.mono { font-family: 'Share Tech Mono', monospace; }
+.bc   { font-family: 'Barlow Condensed', sans-serif; }
+
+/* ══════════════════════════════════════════════
+   GLOW UTILITIES
+══════════════════════════════════════════════ */
+.glow-text  { color: var(--glow); text-shadow: 0 0 8px var(--glow), 0 0 20px rgba(0,212,255,0.5); }
+.glow-line  { border-color: var(--glow); box-shadow: 0 0 6px var(--glow-mid); }
+.glow-box   { box-shadow: 0 0 12px var(--glow-mid), inset 0 0 12px rgba(0,212,255,0.05); }
+
+/* ══════════════════════════════════════════════
+   LAYOUT SHELL
+══════════════════════════════════════════════ */
+#topbar {
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  z-index: 10;
+  background: rgba(2,8,17,0.9);
+}
+#topbar::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glow), transparent);
+  opacity: 0.6;
+}
+
+#main-content {
+  height: 394px;
+  position: relative;
+  overflow: hidden;
+}
+
+#footer {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  border-top: 1px solid var(--border);
+  background: rgba(2,8,17,0.95);
+  position: relative;
+  z-index: 10;
+}
+#footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glow), transparent);
+  opacity: 0.6;
+}
+
+/* ── Top bar elements ── */
+#screen-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--glow);
+  text-shadow: 0 0 8px var(--glow);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+#clock {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  color: var(--text);
+  letter-spacing: 1px;
+}
+#ride-mode-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 3px 10px;
+  border: 1px solid var(--glow);
+  color: var(--glow);
+  background: var(--glow-dim);
+  box-shadow: 0 0 8px var(--glow-mid);
+}
+
+/* ── Footer / HW buttons ── */
+.hw-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  cursor: pointer;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  background: rgba(0,212,255,0.03);
+  user-select: none;
+  transition: all 150ms;
+  text-transform: uppercase;
+}
+.hw-btn:hover { border-color: var(--glow-mid); color: var(--glow); }
+.hw-btn.pressed {
+  background: var(--glow-dim);
+  border-color: var(--glow);
+  color: var(--glow);
+  box-shadow: 0 0 10px var(--glow-mid);
+}
+
+/* Screen indicator dots (5 screens) */
+#screen-dots { display: flex; gap: 10px; align-items: center; }
+.dot {
+  width: 20px; height: 3px;
+  background: var(--border);
+  transition: all 200ms;
+}
+.dot.active {
+  background: var(--glow);
+  box-shadow: 0 0 8px var(--glow);
+  width: 28px;
+}
+
+/* ══════════════════════════════════════════════
+   SCREENS
+══════════════════════════════════════════════ */
+.screen {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+.screen.active { display: block; }
+
+/* ══════════════════════════════════════════════
+   SCREEN 1 — MAIN GAUGE
+══════════════════════════════════════════════ */
+#screen-main.active { display: flex; flex-direction: column; justify-content: space-between; }
+
+/* Left info column */
+#main-left {
+  position: absolute;
+  top: 12px; left: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 2;
+}
+.info-block { text-align: left; }
+.info-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 28px;
+  color: var(--text);
+  line-height: 1;
+}
+.info-val.warn  { color: var(--warn); text-shadow: 0 0 8px var(--warn); }
+.info-val.danger{ color: var(--danger); text-shadow: 0 0 8px var(--danger); animation: blink 0.5s infinite; }
+.info-lbl {
+  font-size: 10px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+/* Gear (large, top-left) */
+#gear-display {
+  position: absolute;
+  top: 14px; left: 16px;
+  z-index: 2;
+}
+#gear-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 72px;
+  font-weight: 900;
+  color: var(--glow);
+  text-shadow: 0 0 16px var(--glow), 0 0 40px rgba(0,212,255,0.4);
+  line-height: 1;
+}
+#gear-lbl {
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+}
+
+/* Speed center */
+#speed-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -54%);
+  text-align: center;
+  z-index: 2;
+}
+#speed-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 148px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1;
+  letter-spacing: -4px;
+  text-shadow: 0 0 30px rgba(200,232,255,0.3);
+  transition: color 200ms, text-shadow 200ms;
+}
+#speed-val.warn {
+  color: var(--warn);
+  text-shadow: 0 0 30px rgba(255,140,0,0.5);
+}
+#speed-unit {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-align: right;
+  margin-top: -4px;
+}
+
+/* RPM Arc SVG */
+#rpm-svg {
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Right info column */
+#main-right {
+  position: absolute;
+  top: 12px; right: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  z-index: 2;
+  text-align: right;
+}
+
+/* Bottom info strip */
+#main-strip {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  border-top: 1px solid var(--border);
+  background: rgba(6,15,30,0.9);
+  display: flex;
+  z-index: 2;
+}
+#main-strip::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glow-mid), transparent);
+}
+.strip-cell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-right: 1px solid var(--border);
+}
+.strip-cell:last-child { border-right: none; }
+.strip-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px;
+  color: var(--text);
+  transition: color 200ms;
+}
+.strip-lbl {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.fuel-bar-wrap {
+  width: 72px; height: 6px;
+  background: var(--border);
+  position: relative;
+  overflow: hidden;
+}
+.fuel-bar-fill {
+  height: 100%;
+  width: 65%;
+  background: var(--glow);
+  box-shadow: 0 0 6px var(--glow);
+  transition: width 400ms, background 400ms, box-shadow 400ms;
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN 2 — GAUGE + MUSIC
+══════════════════════════════════════════════ */
+#screen-music.active { display: flex; flex-direction: row; }
+
+/* Left mini gauge */
+#music-gauge {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: rgba(6,15,30,0.8);
+  position: relative;
+}
+#music-gauge::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--glow-mid), transparent);
+}
+#mg-speed {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1;
+}
+#mg-unit { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); }
+#mg-gear {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--glow);
+  text-shadow: 0 0 10px var(--glow);
+}
+.mg-mini-fuel {
+  width: 60px; height: 5px;
+  background: var(--border);
+}
+.mg-fuel-fill {
+  height: 100%; width: 65%;
+  background: var(--glow);
+  box-shadow: 0 0 6px var(--glow);
+  transition: width 400ms;
+}
+
+/* Music panel */
+#music-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 28px;
+  gap: 16px;
+}
+#music-album {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+#album-art {
+  width: 100px; height: 100px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(0,212,255,0.1);
+}
+#album-art::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border: 1px solid var(--glow-mid);
+  box-shadow: 0 0 10px var(--glow-mid);
+  pointer-events: none;
+}
+#music-meta { flex: 1; }
+#track-name  {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+#artist-name { font-size: 14px; color: var(--text-dim); margin-bottom: 14px; }
+#prog-wrap {
+  height: 3px;
+  background: var(--border);
+  position: relative;
+  margin-bottom: 5px;
+}
+#prog-fill {
+  height: 100%;
+  width: 42%;
+  background: var(--glow);
+  box-shadow: 0 0 6px var(--glow);
+  transition: width 1s linear;
+}
+#prog-time { font-family: 'Share Tech Mono', monospace; font-size: 11px; color: var(--text-dim); }
+
+#music-controls {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+.ctrl {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.ctrl-icon { font-size: 20px; color: var(--text-dim); line-height: 1; }
+.ctrl-label { font-size: 9px; letter-spacing: 1px; color: var(--text-dim); text-transform: uppercase; }
+.ctrl.active .ctrl-icon {
+  color: var(--glow);
+  text-shadow: 0 0 10px var(--glow);
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN 3 — NOTIFICATIONS
+══════════════════════════════════════════════ */
+#screen-notif.active { display: flex; flex-direction: column; }
+
+#notif-header {
+  height: 48px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  gap: 10px;
+  background: rgba(6,15,30,0.8);
+}
+#notif-header::after {
+  content: '';
+  position: absolute;
+  left: 20px; right: 20px;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glow-mid), transparent);
+}
+#notif-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 16px;
+  letter-spacing: 3px;
+  color: var(--glow);
+}
+#notif-count {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-left: auto;
+}
+#notif-selected-hint {
+  font-size: 12px;
+  color: var(--text-dim);
+  letter-spacing: 1px;
+}
+
+#notif-list {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+}
+.notif-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(13,32,64,0.8);
+  position: relative;
+  cursor: default;
+  transition: background 150ms;
+}
+.notif-item::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--glow);
+  opacity: 0;
+  transition: opacity 150ms;
+}
+.notif-item.selected {
+  background: rgba(0,212,255,0.06);
+}
+.notif-item.selected::before { opacity: 1; }
+.notif-icon {
+  width: 48px; height: 48px;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 22px;
+}
+.notif-item.selected .notif-icon {
+  border-color: var(--glow-mid);
+  box-shadow: 0 0 8px rgba(0,212,255,0.2);
+}
+.notif-body { flex: 1; min-width: 0; }
+.notif-sender {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notif-item.selected .notif-sender { color: var(--glow); }
+.notif-msg {
+  font-size: 15px;
+  color: var(--text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.notif-time {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  color: var(--text-dim);
+  flex-shrink: 0;
+}
+.notif-badge {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--glow);
+  box-shadow: 0 0 6px var(--glow);
+  flex-shrink: 0;
+}
+.notif-badge.read { background: transparent; }
+
+/* ── Notification Detail View ─────────────── */
+#notif-detail {
+  display: none;
+  flex-direction: column;
+  flex: 1;
+  padding: 20px 28px;
+  gap: 16px;
+  background: rgba(0,212,255,0.03);
+  border-top: 1px solid var(--glow-mid);
+  animation: fadeIn 150ms ease;
+}
+#notif-detail.active { display: flex; }
+#notif-detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+#notif-detail-icon {
+  width: 60px; height: 60px;
+  border: 1px solid var(--glow-mid);
+  box-shadow: 0 0 12px rgba(0,212,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+}
+#notif-detail-meta { flex: 1; }
+#notif-detail-sender {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--glow);
+  letter-spacing: 1px;
+}
+#notif-detail-time {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+#notif-detail-divider {
+  height: 1px;
+  background: linear-gradient(90deg, var(--glow-mid), transparent);
+}
+#notif-detail-body {
+  font-size: 20px;
+  line-height: 1.6;
+  color: var(--text);
+  flex: 1;
+}
+#notif-detail-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  color: var(--text-dim);
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN 4 — GAUGE + NAV
+══════════════════════════════════════════════ */
+#screen-nav.active { display: flex; flex-direction: row; }
+
+#nav-gauge {
+  width: 220px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: rgba(6,15,30,0.8);
+  position: relative;
+}
+#nav-gauge::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--glow-mid), transparent);
+}
+#ng-speed {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1;
+}
+#ng-unit { font-size: 10px; letter-spacing: 3px; color: var(--text-dim); }
+#ng-gear {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--glow);
+  text-shadow: 0 0 10px var(--glow);
+}
+.ng-mini-fuel { width: 60px; height: 5px; background: var(--border); }
+.ng-fuel-fill { height: 100%; width: 65%; background: var(--glow); box-shadow: 0 0 6px var(--glow); transition: width 400ms; }
+#ng-time {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  color: var(--text-dim);
+}
+#nav-next-turn {
+  font-size: 12px;
+  color: var(--glow);
+  text-align: center;
+  padding: 0 10px;
+  line-height: 1.4;
+  display: none;
+}
+
+#nav-map {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020a14;
+  position: relative;
+  overflow: hidden;
+}
+/* Tron map grid */
+#nav-map::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,150,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,150,255,0.06) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+#nav-placeholder {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  z-index: 1;
+}
+#nav-placeholder svg { color: var(--border); }
+.nav-title { font-size: 15px; color: var(--text); letter-spacing: 1px; }
+
+/* ══════════════════════════════════════════════
+   SCREEN 5 — SETTINGS
+══════════════════════════════════════════════ */
+#screen-settings.active { display: flex; flex-direction: row; }
+
+#settings-nav {
+  width: 200px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 8px 0;
+  background: rgba(6,15,30,0.8);
+  position: relative;
+  transition: opacity 150ms;
+}
+#settings-nav.in-sub { opacity: 0.18; pointer-events: none; }
+
+#settings-mode-bar {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0 12px;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--glow);
+  box-shadow: 0 1px 8px rgba(0,212,255,0.15);
+}
+#settings-mode-bar.active { display: flex; }
+#settings-mode-arrow { font-size: 14px; color: var(--glow); }
+#settings-mode-label {
+  font-size: 12px; font-weight: 700;
+  letter-spacing: 3px; text-transform: uppercase;
+  color: var(--glow);
+  text-shadow: 0 0 8px rgba(0,212,255,0.5);
+  flex: 1;
+}
+#settings-mode-hint {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px; color: var(--text-dim);
+}
+#settings-nav::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--glow-mid), transparent);
+}
+.snav {
+  padding: 13px 20px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  position: relative;
+  transition: all 150ms;
+}
+.snav::before {
+  content: attr(data-num);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-right: 8px;
+}
+.snav.active {
+  color: var(--glow);
+  border-left-color: var(--glow);
+  background: rgba(0,212,255,0.06);
+  text-shadow: 0 0 6px var(--glow);
+}
+
+#settings-content {
+  flex: 1;
+  padding: 14px 24px;
+  overflow-y: auto;
+}
+.ssec { display: none; }
+.ssec.active { display: block; }
+
+.srow {
+  display: flex;
+  align-items: center;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(13,32,64,0.8);
+  gap: 16px;
+}
+.srow-label {
+  width: 160px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--text);
+  flex-shrink: 0;
+}
+.sopts { display: flex; gap: 8px; flex-wrap: wrap; }
+.opt {
+  padding: 5px 14px;
+  border: 1px solid var(--border);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 120ms;
+  background: transparent;
+}
+.opt:hover  { border-color: rgba(0,212,255,0.4); color: var(--text); }
+.opt.active {
+  background: rgba(0,212,255,0.1);
+  border-color: var(--glow);
+  color: var(--glow);
+  text-shadow: 0 0 6px var(--glow);
+  box-shadow: 0 0 8px rgba(0,212,255,0.15);
+}
+.srow-val { font-family: 'Share Tech Mono', monospace; font-size: 13px; color: var(--text-dim); }
+
+/* Settings cursor highlight */
+.srow.cursor-row {
+  background: rgba(0,212,255,0.05);
+  border-bottom-color: rgba(0,212,255,0.2);
+}
+.srow.cursor-row .srow-label { color: var(--glow); text-shadow: 0 0 8px rgba(0,212,255,0.4); }
+
+/* ══════════════════════════════════════════════
+   ANIMATIONS
+══════════════════════════════════════════════ */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 6px var(--glow); }
+  50%       { box-shadow: 0 0 16px var(--glow), 0 0 30px rgba(0,212,255,0.3); }
+}
+@keyframes sweep-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+.screen.active { animation: sweep-in 200ms ease-out; }
+
+/* ══════════════════════════════════════════════
+   BOOT SCREEN
+══════════════════════════════════════════════ */
+#boot-screen {
+  position: fixed;
+  inset: 0;
+  background: #010509;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 600ms;
+  background-image:
+    linear-gradient(rgba(0,100,200,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,100,200,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+#boot-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--glow);
+  letter-spacing: 14px;
+  opacity: 0;
+  text-shadow: 0 0 20px var(--glow), 0 0 60px rgba(0,212,255,0.4);
+  transition: opacity 800ms;
+}
+#boot-tagline {
+  margin-top: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--text-dim);
+  opacity: 0;
+  transition: opacity 600ms 500ms;
+}
+#boot-bar-wrap {
+  margin-top: 32px;
+  width: 200px;
+  height: 2px;
+  background: var(--border);
+  opacity: 0;
+  transition: opacity 300ms 700ms;
+}
+#boot-bar-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--glow);
+  box-shadow: 0 0 10px var(--glow);
+  transition: width 2s ease-out;
+}
+#boot-status {
+  margin-top: 14px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--text-dim);
+  opacity: 0;
+  transition: opacity 300ms 700ms;
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN — TRIP INFO
+══════════════════════════════════════════════ */
+#screen-trip.active  { display: flex; flex-direction: column; }
+#screen-diag.active  { display: flex; flex-direction: column; }
+
+.info-screen-header {
+  padding: 18px 24px 14px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(6,15,30,0.85);
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  position: relative;
+}
+.info-screen-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--glow-mid), transparent);
+}
+.info-screen-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--glow);
+  text-shadow: 0 0 8px var(--glow);
+}
+.info-screen-sub {
+  font-size: 22px;
+  color: var(--text);
+  letter-spacing: 2px;
+}
+
+.info-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+}
+.info-card {
+  background: var(--bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 20px;
+  position: relative;
+}
+.info-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0,212,255,0.02);
+  pointer-events: none;
+}
+.info-card-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.info-card-val {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+.info-unit {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 14px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  font-weight: 400;
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN — DIAGNOSTICS
+══════════════════════════════════════════════ */
+.diag-list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 0;
+  overflow: hidden;
+}
+.diag-row {
+  display: flex;
+  align-items: center;
+  padding: 13px 24px;
+  border-bottom: 1px solid rgba(13,32,64,0.8);
+  gap: 12px;
+}
+.diag-label {
+  flex: 1;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+}
+.diag-val {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px;
+  color: var(--text);
+  min-width: 130px;
+  text-align: right;
+}
+.diag-unit {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-left: 4px;
+}
+.diag-status {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid transparent;
+  min-width: 72px;
+  text-align: center;
+}
+.diag-status.ok {
+  color: var(--success);
+  border-color: rgba(0,255,136,0.3);
+  background: rgba(0,255,136,0.05);
+}
+.diag-status.warn {
+  color: var(--warn);
+  border-color: rgba(255,140,0,0.3);
+  background: rgba(255,140,0,0.05);
+}
+.diag-status.muted {
+  color: var(--text-dim);
+  border-color: var(--border);
+}
+
+/* ══════════════════════════════════════════════
+   KEYBOARD HINT
+══════════════════════════════════════════════ */
+#kbd-hint {
+  font-size: 9px;
+  color: var(--border);
+  font-family: 'Share Tech Mono', monospace;
+  position: absolute;
+  right: 8px;
+  bottom: 2px;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+</style>
+</head>
+<body>
+
+<!-- ══ BOOT SCREEN ══ -->
+<div id="boot-screen">
+  <div id="boot-logo">IONEX</div>
+  <div id="boot-tagline">MOTO DASHBOARD SYSTEM v2.0</div>
+  <div id="boot-bar-wrap"><div id="boot-bar-fill"></div></div>
+  <div id="boot-status">INITIALIZING SYSTEMS...</div>
+</div>
+
+<!-- ══ TOP BAR ══ -->
+<header id="topbar">
+  <div id="ride-mode-badge">NORMAL</div>
+  <div id="screen-title">INSTRUMENT</div>
+  <div id="clock" class="mono">--:--</div>
+</header>
+
+<!-- ══ MAIN CONTENT ══ -->
+<main id="main-content">
+
+  <!-- ── SCREEN 1: MAIN GAUGE ── -->
+  <section id="screen-main" class="screen active">
+
+    <!-- Gear top-left -->
+    <div id="gear-display">
+      <div id="gear-val">N</div>
+      <div id="gear-lbl" class="bc">GEAR</div>
+    </div>
+
+    <!-- RPM arc (SVG, behind speed) -->
+    <svg id="rpm-svg" width="800" height="394" viewBox="0 0 800 394">
+      <!-- Filter for glow -->
+      <defs>
+        <filter id="glow-filter" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+          <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+      </defs>
+      <!-- Background track -->
+      <!-- 270° arc, r=120, center=400,197, rotate 135° -->
+      <!-- circumference=753.98, 270°=565.49, gap=188.49 -->
+      <circle id="rpm-track" cx="400" cy="197" r="120"
+        fill="none" stroke="#0d2040" stroke-width="3"
+        stroke-dasharray="565.49 188.49"
+        stroke-linecap="round"
+        transform="rotate(135,400,197)"/>
+      <!-- Fill (glow) -->
+      <circle id="rpm-fill" cx="400" cy="197" r="120"
+        fill="none" stroke="#00d4ff" stroke-width="3"
+        stroke-dasharray="0 753.98"
+        stroke-linecap="round"
+        transform="rotate(135,400,197)"
+        filter="url(#glow-filter)"
+        style="transition: stroke-dasharray 80ms linear"/>
+      <!-- Tick marks -->
+      <g id="rpm-ticks" stroke="#0d2040" stroke-width="1" opacity="0.6"></g>
+    </svg>
+
+    <!-- Speed center -->
+    <div id="speed-center">
+      <div id="speed-val" class="orb">0</div>
+      <div id="speed-unit" class="bc">km / h</div>
+    </div>
+
+    <!-- Right info (top-right) -->
+    <div id="main-right">
+      <div class="info-block" style="text-align:right">
+        <div id="temp-val" class="info-val mono">90°</div>
+        <div class="info-lbl">TEMP</div>
+      </div>
+      <div class="info-block" style="text-align:right">
+        <div id="volt-val" class="info-val mono">12.6</div>
+        <div class="info-lbl">VOLT</div>
+      </div>
+    </div>
+
+    <!-- Bottom strip (5 cells) -->
+    <div id="main-strip">
+      <div class="strip-cell">
+        <div id="rpm-val" class="strip-val mono">0</div>
+        <div class="strip-lbl">RPM</div>
+      </div>
+      <div class="strip-cell">
+        <div class="fuel-bar-wrap"><div class="fuel-bar-fill" id="fuel-fill-main"></div></div>
+        <div class="strip-lbl">FUEL</div>
+      </div>
+      <div class="strip-cell">
+        <div id="odo-val" class="strip-val mono">12,345</div>
+        <div class="strip-lbl">KM</div>
+      </div>
+      <div class="strip-cell">
+        <div id="trip-val" class="strip-val mono">0.0</div>
+        <div class="strip-lbl">TRIP</div>
+      </div>
+      <div class="strip-cell">
+        <div id="time-strip" class="strip-val mono">--:--</div>
+        <div class="strip-lbl">TIME</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── SCREEN 2: GAUGE + MUSIC ── -->
+  <section id="screen-music" class="screen">
+
+    <!-- Mini gauge -->
+    <div id="music-gauge">
+      <div id="mg-speed" class="orb">0</div>
+      <div id="mg-unit" class="bc">km/h</div>
+      <div style="height:4px"></div>
+      <div class="info-lbl">GEAR</div>
+      <div id="mg-gear" class="orb">N</div>
+      <div style="height:4px"></div>
+      <div class="mg-mini-fuel"><div class="mg-fuel-fill" id="fuel-fill-music"></div></div>
+      <div class="info-lbl" style="margin-top:3px">FUEL</div>
+    </div>
+
+    <!-- Music panel -->
+    <div id="music-panel">
+      <div id="music-album">
+        <div id="album-art">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#0d2040" stroke-width="1.2">
+            <circle cx="12" cy="12" r="10"/>
+            <circle cx="12" cy="12" r="3" fill="#0d2040" stroke="none"/>
+          </svg>
+        </div>
+        <div id="music-meta">
+          <div id="track-name">Track Name</div>
+          <div id="artist-name">Artist — Album</div>
+          <div id="prog-wrap"><div id="prog-fill"></div></div>
+          <div id="prog-time" class="mono">00:00 / 00:00</div>
+        </div>
+      </div>
+
+      <div id="music-controls">
+        <div class="ctrl" id="ctrl-prev">
+          <div class="ctrl-icon">⏮</div>
+          <div class="ctrl-label">← 長按</div>
+        </div>
+        <div class="ctrl active" id="ctrl-play">
+          <div class="ctrl-icon" id="play-icon">⏸</div>
+          <div class="ctrl-label">確認</div>
+        </div>
+        <div class="ctrl" id="ctrl-next">
+          <div class="ctrl-icon">⏭</div>
+          <div class="ctrl-label">→ 短按</div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── SCREEN 3: NOTIFICATIONS ── -->
+  <section id="screen-notif" class="screen">
+
+    <div id="notif-header">
+      <div id="notif-title">最新訊息</div>
+      <div id="notif-selected-hint" class="bc">長按 ← → 切換 &nbsp;│&nbsp; 確認 閱讀</div>
+      <div id="notif-count" class="mono">3 則未讀</div>
+    </div>
+
+    <div id="notif-list">
+      <div class="notif-item selected" data-idx="0">
+        <div class="notif-icon">📞</div>
+        <div class="notif-body">
+          <div class="notif-sender">陳大明</div>
+          <div class="notif-msg">未接來電 × 2</div>
+        </div>
+        <div class="notif-time mono">08:42</div>
+        <div class="notif-badge"></div>
+      </div>
+      <div class="notif-item" data-idx="1">
+        <div class="notif-icon">💬</div>
+        <div class="notif-body">
+          <div class="notif-sender">IONEX</div>
+          <div class="notif-msg">電池電量剩餘 20%，請儘速前往換電站</div>
+        </div>
+        <div class="notif-time mono">07:55</div>
+        <div class="notif-badge"></div>
+      </div>
+      <div class="notif-item" data-idx="2">
+        <div class="notif-icon">🌦</div>
+        <div class="notif-body">
+          <div class="notif-sender">天氣警示</div>
+          <div class="notif-msg">今日下午 3 點後有午後雷陣雨，注意騎乘安全</div>
+        </div>
+        <div class="notif-time mono">07:30</div>
+        <div class="notif-badge read"></div>
+      </div>
+      <div class="notif-item" data-idx="3">
+        <div class="notif-icon">🔧</div>
+        <div class="notif-body">
+          <div class="notif-sender">保養提醒</div>
+          <div class="notif-msg">距離上次保養已達 3,000 km，建議預約保養</div>
+        </div>
+        <div class="notif-time mono">昨天</div>
+        <div class="notif-badge read"></div>
+      </div>
+    </div>
+
+    <!-- Detail view (hidden until user presses confirm on a notification) -->
+    <div id="notif-detail">
+      <div id="notif-detail-header">
+        <div id="notif-detail-icon">📞</div>
+        <div id="notif-detail-meta">
+          <div id="notif-detail-sender">陳大明</div>
+          <div id="notif-detail-time">今天 08:42</div>
+        </div>
+      </div>
+      <div id="notif-detail-divider"></div>
+      <div id="notif-detail-body">未接來電 × 2</div>
+      <div id="notif-detail-hint">◀ 左鍵 / 確認 &nbsp;→&nbsp; 返回</div>
+    </div>
+
+  </section>
+
+  <!-- ── SCREEN 4: GAUGE + NAV ── -->
+  <section id="screen-nav" class="screen">
+
+    <div id="nav-gauge">
+      <div class="info-lbl">速度</div>
+      <div id="ng-speed" class="orb">0</div>
+      <div id="ng-unit" class="bc">km/h</div>
+      <div style="height:6px"></div>
+      <div class="info-lbl">GEAR</div>
+      <div id="ng-gear" class="orb">N</div>
+      <div style="height:6px"></div>
+      <div class="ng-mini-fuel"><div class="ng-fuel-fill" id="fuel-fill-nav"></div></div>
+      <div class="info-lbl" style="margin-top:3px">FUEL</div>
+      <div style="height:6px"></div>
+      <div id="ng-time" class="mono">--:--</div>
+      <div style="height:6px"></div>
+      <div id="nav-next-turn" class="bc">▲ 直走 500m</div>
+    </div>
+
+    <div id="nav-map">
+      <div id="nav-placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+          <circle cx="12" cy="9" r="2.5"/>
+        </svg>
+        <div class="nav-title bc">請連接手機</div>
+        <div class="info-lbl">Bluetooth 未配對</div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── SCREEN 5: TRIP INFO ── -->
+  <section id="screen-trip" class="screen">
+    <div class="info-screen-header">
+      <div class="info-screen-title">本次騎乘</div>
+      <div class="info-screen-sub mono" id="trip-elapsed">00:00:00</div>
+    </div>
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-card-label">開始時間</div>
+        <div class="info-card-val" id="trip-start">— —</div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">行駛距離</div>
+        <div class="info-card-val"><span id="trip-dist">0.0</span><span class="info-unit">km</span></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">最高速度</div>
+        <div class="info-card-val"><span id="trip-max">0</span><span class="info-unit">km/h</span></div>
+      </div>
+      <div class="info-card">
+        <div class="info-card-label">平均速度</div>
+        <div class="info-card-val"><span id="trip-avg">0</span><span class="info-unit">km/h</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREEN 6: DIAGNOSTICS ── -->
+  <section id="screen-diag" class="screen">
+    <div class="info-screen-header">
+      <div class="info-screen-title">車輛診斷</div>
+      <div class="info-screen-sub mono">最後更新 09:14</div>
+    </div>
+    <div class="diag-list">
+      <div class="diag-row">
+        <div class="diag-label">前輪胎壓</div>
+        <div class="diag-val">32 <span class="diag-unit">PSI</span></div>
+        <div class="diag-status ok">正常</div>
+      </div>
+      <div class="diag-row">
+        <div class="diag-label">後輪胎壓</div>
+        <div class="diag-val">29 <span class="diag-unit">PSI</span></div>
+        <div class="diag-status ok">正常</div>
+      </div>
+      <div class="diag-row">
+        <div class="diag-label">電瓶電壓</div>
+        <div class="diag-val" id="diag-volt">12.6 <span class="diag-unit">V</span></div>
+        <div class="diag-status ok">正常</div>
+      </div>
+      <div class="diag-row">
+        <div class="diag-label">引擎水溫</div>
+        <div class="diag-val" id="diag-temp">90 <span class="diag-unit">°C</span></div>
+        <div class="diag-status ok" id="diag-temp-status">正常</div>
+      </div>
+      <div class="diag-row">
+        <div class="diag-label">里程表</div>
+        <div class="diag-val">12,453 <span class="diag-unit">km</span></div>
+        <div class="diag-status muted">—</div>
+      </div>
+      <div class="diag-row">
+        <div class="diag-label">距上次保養</div>
+        <div class="diag-val">3,245 <span class="diag-unit">km</span></div>
+        <div class="diag-status warn">建議保養</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── SCREEN 7: SETTINGS ── -->
+  <section id="screen-settings" class="screen">
+
+    <nav id="settings-nav">
+      <div class="snav active" data-section="riding" data-num="01">騎乘模式</div>
+      <div class="snav" data-section="units" data-num="02">單位設定</div>
+      <div class="snav" data-section="display" data-num="03">顯示設定</div>
+      <div class="snav" data-section="bluetooth" data-num="04">藍牙裝置</div>
+      <div class="snav" data-section="about" data-num="05">關於系統</div>
+    </nav>
+
+    <div id="settings-content">
+      <div id="settings-mode-bar">
+        <span id="settings-mode-arrow">▶</span>
+        <span id="settings-mode-label">騎乘模式</span>
+        <span id="settings-mode-hint">◀▶ 上/下選項　● 切換　長按● 返回</span>
+      </div>
+      <div class="ssec active" id="sec-riding">
+        <div class="srow">
+          <div class="srow-label">騎乘模式</div>
+          <div class="sopts">
+            <div class="opt" data-key="ride-mode" data-val="RAIN">RAIN</div>
+            <div class="opt active" data-key="ride-mode" data-val="NORMAL">NORMAL</div>
+            <div class="opt" data-key="ride-mode" data-val="RACE">RACE</div>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="srow-label">換檔提示 RPM</div>
+          <div class="sopts">
+            <div class="opt" data-key="shift-rpm" data-val="7000">7,000</div>
+            <div class="opt active" data-key="shift-rpm" data-val="8000">8,000</div>
+            <div class="opt" data-key="shift-rpm" data-val="9000">9,000</div>
+            <div class="opt" data-key="shift-rpm" data-val="10000">10,000</div>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="srow-label">速度警示</div>
+          <div class="sopts">
+            <div class="opt" data-key="speed-warn" data-val="100">100</div>
+            <div class="opt active" data-key="speed-warn" data-val="120">120</div>
+            <div class="opt" data-key="speed-warn" data-val="140">140</div>
+            <div class="opt" data-key="speed-warn" data-val="off">關閉</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ssec" id="sec-units">
+        <div class="srow">
+          <div class="srow-label">速度單位</div>
+          <div class="sopts">
+            <div class="opt active" data-key="speed-unit" data-val="km/h">km/h</div>
+            <div class="opt" data-key="speed-unit" data-val="mph">mph</div>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="srow-label">距離單位</div>
+          <div class="sopts">
+            <div class="opt active" data-key="dist-unit" data-val="km">km</div>
+            <div class="opt" data-key="dist-unit" data-val="mi">mi</div>
+          </div>
+        </div>
+        <div class="srow">
+          <div class="srow-label">溫度單位</div>
+          <div class="sopts">
+            <div class="opt active" data-key="temp-unit" data-val="°C">°C</div>
+            <div class="opt" data-key="temp-unit" data-val="°F">°F</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ssec" id="sec-display">
+        <div class="srow">
+          <div class="srow-label">亮度</div>
+          <div class="sopts">
+            <div class="opt" data-key="bright" data-val="1">1</div>
+            <div class="opt" data-key="bright" data-val="2">2</div>
+            <div class="opt active" data-key="bright" data-val="3">3</div>
+            <div class="opt" data-key="bright" data-val="4">4</div>
+            <div class="opt" data-key="bright" data-val="5">5</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ssec" id="sec-bluetooth">
+        <div class="srow"><div class="srow-label">狀態</div><div class="srow-val">未配對</div></div>
+        <div class="srow"><div class="srow-label">裝置名稱</div><div class="srow-val">— —</div></div>
+      </div>
+
+      <div class="ssec" id="sec-about">
+        <div class="srow"><div class="srow-label">版本</div><div class="srow-val">v2.0.0</div></div>
+        <div class="srow"><div class="srow-label">韌體</div><div class="srow-val">FW-2026.04</div></div>
+        <div class="srow"><div class="srow-label">序號</div><div class="srow-val">IONEX-MBD-0001</div></div>
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<!-- ══ FOOTER ══ -->
+<footer id="footer">
+  <div id="btn-left"    class="hw-btn">◀ 左鍵</div>
+  <div id="screen-dots"></div>
+  <div id="btn-confirm" class="hw-btn">● 確認</div>
+  <div id="btn-right"   class="hw-btn">右鍵 ▶</div>
+</footer>
+<div id="kbd-hint">A = 左  S = 確認  D = 右 │ 長按(0.6s) │ P = 停車/行駛</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+// Dynamic screens — settings is OUTSIDE the cycle
+const SCREENS_RIDING = ['main', 'music', 'nav'];
+const SCREENS_PARKED = ['main', 'music', 'nav', 'notif', 'trip', 'diag', 'settings'];
+let SCREENS = SCREENS_PARKED; // starts parked (speed=0)
+const SCREEN_TITLES = {
+  main:     'INSTRUMENT',
+  music:    'INSTRUMENT + MUSIC',
+  notif:    'NOTIFICATIONS',
+  nav:      'INSTRUMENT + NAV',
+  trip:     'TRIP INFO',
+  diag:     'DIAGNOSTICS',
+  settings: 'SETTINGS',
+};
+const SECTIONS = ['riding', 'units', 'display', 'bluetooth', 'about'];
+const SECTION_LABELS = { riding: '騎乘模式', units: '單位設定', display: '顯示設定', bluetooth: '藍牙裝置', about: '關於系統' };
+const NOTIF_COUNT = 4;
+
+const NOTIFS = [
+  { icon: '📞', sender: '陳大明',  time: '今天 08:42', body: '未接來電 × 2\n\n陳大明 於 08:40 及 08:42 嘗試聯繫您，\n目前仍未接聽。' },
+  { icon: '💬', sender: 'IONEX',   time: '今天 07:55', body: '電池電量剩餘 20%\n\n您的車輛電池電量偏低，建議儘速前往附近換電站進行換電，以確保行程順利。' },
+  { icon: '🌦', sender: '天氣警示', time: '今天 07:30', body: '午後雷陣雨警示\n\n今日下午 3 點後北部地區有局部午後雷陣雨，\n騎乘請注意路面濕滑，適時穿著雨具。' },
+  { icon: '🔧', sender: '保養提醒', time: '昨天',       body: '建議預約定期保養\n\n您的車輛自上次保養至今已行駛 3,000 km，\n建議儘早前往授權服務站進行定期保養檢查。' },
+];
+
+const state = {
+  screenIdx: 0,
+  settingsSec: 'riding',
+  settingsInSub: false,
+  settingsSecIdx: 0,
+  notifIdx: 0,
+  notifDetail: false,   // true when detail view is open
+  speed: 0,
+  rpm: 0,
+  gear: 'N',
+  fuel: 65,
+  temp: 90,
+  volt: 12.6,
+  speedWarn: 120,
+  ridingMode: 'NORMAL',
+  isPlaying: true,
+  isRiding: false,
+  trip: {
+    startTime: null,   // Date when riding started
+    distance: 0,       // km accumulated
+    maxSpeed: 0,
+    speedSamples: [],  // for avg speed
+  },
+};
+
+/* ══════════════════════════════════════════════
+   RPM ARC
+══════════════════════════════════════════════ */
+const RPM_CIRC = 753.98;  // 2π×120
+const RPM_ARC  = 565.49;  // 270/360 × 753.98
+const RPM_MAX  = 10000;
+
+function setRpm(rpm) {
+  state.rpm = rpm;
+  const pct  = Math.min(Math.max(rpm / RPM_MAX, 0), 1);
+  const fill = RPM_ARC * pct;
+  const el   = document.getElementById('rpm-fill');
+  el.setAttribute('stroke-dasharray', `${fill.toFixed(2)} ${RPM_CIRC}`);
+
+  let color = '#00d4ff';
+  if (pct > 0.9)      color = '#ff2244';
+  else if (pct > 0.7) color = '#ff8c00';
+  el.setAttribute('stroke', color);
+
+  // Update filter glow color
+  const val = Math.round(rpm);
+  document.getElementById('rpm-val').textContent = val.toLocaleString();
+}
+
+/* ══════════════════════════════════════════════
+   SPEED
+══════════════════════════════════════════════ */
+function setSpeed(spd) {
+  const wasRiding = state.isRiding;
+  state.speed = spd;
+  state.isRiding = spd > 0;
+  if (state.isRiding !== wasRiding) switchMode(state.isRiding);
+
+  const rounded = Math.round(spd);
+  const warn = state.speedWarn !== 'off' && rounded >= parseInt(state.speedWarn);
+  ['speed-val','mg-speed','ng-speed'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = rounded; el.classList.toggle('warn', warn && id === 'speed-val'); }
+  });
+
+  if (state.isRiding) {
+    if (!state.trip.startTime) state.trip.startTime = new Date();
+    if (spd > state.trip.maxSpeed) state.trip.maxSpeed = spd;
+    state.trip.speedSamples.push(spd);
+    // Accumulate distance: speed (km/h) × interval (700ms) → km
+    state.trip.distance += (spd / 3600) * 0.7;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RENDER DOTS
+══════════════════════════════════════════════ */
+function renderDots() {
+  const container = document.getElementById('screen-dots');
+  container.innerHTML = '';
+  SCREENS.forEach((_, i) => {
+    const d = document.createElement('span');
+    d.className = 'dot' + (i === state.screenIdx ? ' active' : '');
+    container.appendChild(d);
+  });
+}
+
+/* ══════════════════════════════════════════════
+   MODE SWITCH (RIDING / PARKED)
+══════════════════════════════════════════════ */
+function switchMode(riding) {
+  if (riding) {
+    SCREENS = SCREENS_RIDING;
+    if (state.screenIdx >= SCREENS.length) showScreen(0);
+    else { renderDots(); updateFooterHints(); }
+  } else {
+    SCREENS = SCREENS_PARKED;
+    renderDots();
+    updateFooterHints();
+  }
+}
+
+/* ══════════════════════════════════════════════
+   TRIP DISPLAY
+══════════════════════════════════════════════ */
+function updateTripDisplay() {
+  if (!state.trip.startTime) return;
+  const elapsed = Math.floor((Date.now() - state.trip.startTime) / 1000);
+  const h = String(Math.floor(elapsed / 3600)).padStart(2,'0');
+  const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2,'0');
+  const s = String(elapsed % 60).padStart(2,'0');
+  document.getElementById('trip-elapsed').textContent = `${h}:${m}:${s}`;
+  document.getElementById('trip-dist').textContent = state.trip.distance.toFixed(1);
+  document.getElementById('trip-max').textContent = Math.round(state.trip.maxSpeed);
+  const avg = state.trip.speedSamples.length
+    ? (state.trip.speedSamples.reduce((a,b)=>a+b,0) / state.trip.speedSamples.length).toFixed(1)
+    : '0';
+  document.getElementById('trip-avg').textContent = avg;
+  // Update start time display (once)
+  const startEl = document.getElementById('trip-start');
+  if (startEl && startEl.textContent === '— —') {
+    const st = state.trip.startTime;
+    startEl.textContent = `${String(st.getHours()).padStart(2,'0')}:${String(st.getMinutes()).padStart(2,'0')}`;
+  }
+}
+
+/* ══════════════════════════════════════════════
+   GEAR
+══════════════════════════════════════════════ */
+function setGear(g) {
+  state.gear = g;
+  ['gear-val','mg-gear','ng-gear'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = g;
+  });
+}
+
+/* ══════════════════════════════════════════════
+   FUEL
+══════════════════════════════════════════════ */
+function setFuel(pct) {
+  state.fuel = pct;
+  ['fuel-fill-main','fuel-fill-music','fuel-fill-nav'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.width = pct + '%';
+    if (pct <= 10)      el.style.background = '#ff2244';
+    else if (pct <= 25) el.style.background = '#ff8c00';
+    else                el.style.background = '#00d4ff';
+    el.style.boxShadow = `0 0 6px ${pct <= 10 ? '#ff2244' : pct <= 25 ? '#ff8c00' : '#00d4ff'}`;
+  });
+}
+
+/* ══════════════════════════════════════════════
+   CLOCK
+══════════════════════════════════════════════ */
+function updateClock() {
+  const now = new Date();
+  const t   = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  ['clock','time-strip','ng-time'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = t;
+  });
+}
+
+/* ══════════════════════════════════════════════
+   RIDING MODE
+══════════════════════════════════════════════ */
+function setRidingMode(mode) {
+  state.ridingMode = mode;
+  const badge = document.getElementById('ride-mode-badge');
+  badge.textContent = mode;
+  badge.style.color = mode === 'RACE' ? '#ff2244' : mode === 'RAIN' ? '#668bfa' : '#00d4ff';
+  badge.style.borderColor = badge.style.color;
+  badge.style.boxShadow = `0 0 8px ${badge.style.color}66`;
+}
+
+/* ══════════════════════════════════════════════
+   SCREEN SWITCHING
+══════════════════════════════════════════════ */
+function showScreen(idx) {
+  if (state.notifDetail) {
+    document.getElementById('notif-list').style.display = '';
+    document.getElementById('notif-detail').classList.remove('active');
+    state.notifDetail = false;
+  }
+  // Reset settings sub-mode when navigating away
+  if (state.settingsInSub && SCREENS[state.screenIdx] === 'settings' && SCREENS[idx] !== 'settings') {
+    state.settingsInSub = false;
+    document.getElementById('settings-nav').classList.remove('in-sub');
+    document.getElementById('settings-mode-bar').classList.remove('active');
+  }
+  state.screenIdx = idx;
+  const name = SCREENS[idx];
+  document.querySelectorAll('#main-content .screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  renderDots();
+  document.getElementById('screen-title').textContent = SCREEN_TITLES[name];
+  updateFooterHints();
+}
+
+/* ── Left / Right ────────────────────────────
+   Top-level settings: cycle pages (like any other screen)
+   Sub-level settings: cycle sections
+   All other screens: cycle pages
+   ─────────────────────────────────────────── */
+function goLeft() {
+  if (SCREENS[state.screenIdx] === 'settings' && state.settingsInSub) {
+    settingsNavRow(-1);
+  } else {
+    showScreen((state.screenIdx - 1 + SCREENS.length) % SCREENS.length);
+  }
+}
+
+function goRight() {
+  if (SCREENS[state.screenIdx] === 'settings' && state.settingsInSub) {
+    settingsNavRow(1);
+  } else {
+    showScreen((state.screenIdx + 1) % SCREENS.length);
+  }
+}
+
+/* ── Confirm: context action ─────────────────
+   - Music:  play/pause
+   - Notif:  open detail / close detail
+   - Others: no action
+   ─────────────────────────────────────────── */
+function confirm() {
+  const name = SCREENS[state.screenIdx];
+  if (name === 'settings') {
+    if (state.settingsInSub) {
+      settingsCycleValue();
+    } else {
+      settingsEnterSub();
+    }
+    return;
+  }
+  if (name === 'music') {
+    togglePlay();
+  } else if (name === 'notif') {
+    if (state.notifDetail) {
+      closeNotifDetail();
+    } else {
+      openNotifDetail(state.notifIdx);
+    }
+  }
+}
+
+/* ── Long press actions ──────────────────────
+   - Long Left:    music prev track / notif prev item
+   - Long Right:   music next track / notif next item
+   - Long Confirm: toggle settings (enter / exit)
+   ─────────────────────────────────────────── */
+function longLeft() {
+  const name = SCREENS[state.screenIdx];
+  if (name === 'settings') {
+    if (!state.settingsInSub) {
+      state.settingsSecIdx = (state.settingsSecIdx - 1 + SECTIONS.length) % SECTIONS.length;
+      setSettingsSection(SECTIONS[state.settingsSecIdx]);
+    }
+    return;
+  }
+  if (name === 'music') prevTrack();
+  else if (name === 'notif') {
+    state.notifIdx = (state.notifIdx - 1 + NOTIF_COUNT) % NOTIF_COUNT;
+    if (state.notifDetail) openNotifDetail(state.notifIdx);
+    else updateNotifCursor();
+  }
+}
+function longRight() {
+  const name = SCREENS[state.screenIdx];
+  if (name === 'settings') {
+    if (!state.settingsInSub) {
+      state.settingsSecIdx = (state.settingsSecIdx + 1) % SECTIONS.length;
+      setSettingsSection(SECTIONS[state.settingsSecIdx]);
+    }
+    return;
+  }
+  if (name === 'music') nextTrack();
+  else if (name === 'notif') {
+    state.notifIdx = (state.notifIdx + 1) % NOTIF_COUNT;
+    if (state.notifDetail) openNotifDetail(state.notifIdx);
+    else updateNotifCursor();
+  }
+}
+function longConfirm() {
+  const name = SCREENS[state.screenIdx];
+  if (name === 'settings' && state.settingsInSub) {
+    settingsExitSub();
+  }
+}
+
+
+/* ══════════════════════════════════════════════
+   NOTIFICATIONS
+══════════════════════════════════════════════ */
+function updateNotifCursor() {
+  document.querySelectorAll('.notif-item').forEach((el, i) => {
+    el.classList.toggle('selected', i === state.notifIdx);
+  });
+}
+
+function openNotifDetail(idx) {
+  const n = NOTIFS[idx];
+  document.getElementById('notif-detail-icon').textContent   = n.icon;
+  document.getElementById('notif-detail-sender').textContent = n.sender;
+  document.getElementById('notif-detail-time').textContent   = n.time;
+  // preserve line breaks in body text
+  document.getElementById('notif-detail-body').innerHTML =
+    n.body.replace(/\n/g, '<br>');
+  // mark as read
+  const badge = document.querySelector(`.notif-item[data-idx="${idx}"] .notif-badge`);
+  if (badge) badge.classList.add('read');
+  // show/hide panels
+  document.getElementById('notif-list').style.display   = 'none';
+  document.getElementById('notif-detail').classList.add('active');
+  state.notifDetail = true;
+  updateFooterHints();
+}
+
+function closeNotifDetail() {
+  document.getElementById('notif-list').style.display   = '';
+  document.getElementById('notif-detail').classList.remove('active');
+  state.notifDetail = false;
+  updateFooterHints();
+}
+
+/* ══════════════════════════════════════════════
+   SETTINGS
+══════════════════════════════════════════════ */
+function setSettingsSection(sec) {
+  state.settingsSec = sec;
+  document.querySelectorAll('.snav').forEach(el => el.classList.toggle('active', el.dataset.section === sec));
+  document.querySelectorAll('.ssec').forEach(el => el.classList.toggle('active', el.id === 'sec-' + sec));
+  settingsRowIdx = 0;
+  settingsApplyCursor();
+}
+
+let settingsRowIdx = 0;
+
+function settingsApplyCursor() {
+  const activeSec = document.querySelector('.ssec.active');
+  if (!activeSec) return;
+  activeSec.querySelectorAll('.srow').forEach((r, i) => {
+    r.classList.toggle('cursor-row', i === settingsRowIdx);
+  });
+}
+
+function settingsNavRow(dir) {
+  const activeSec = document.querySelector('.ssec.active');
+  if (!activeSec) return;
+  const rows = activeSec.querySelectorAll('.srow');
+  if (!rows.length) return;
+  settingsRowIdx = (settingsRowIdx + dir + rows.length) % rows.length;
+  settingsApplyCursor();
+}
+
+function settingsCycleValue() {
+  const activeSec = document.querySelector('.ssec.active');
+  if (!activeSec) return;
+  const rows = activeSec.querySelectorAll('.srow');
+  if (!rows.length) return;
+  const row = rows[settingsRowIdx];
+  const opts = row.querySelectorAll('.opt');
+  if (!opts.length) return;
+  let cur = -1;
+  opts.forEach((o, i) => { if (o.classList.contains('active')) cur = i; });
+  opts.forEach(o => o.classList.remove('active'));
+  const next = opts[(cur + 1) % opts.length];
+  next.classList.add('active');
+  // Apply side effects
+  if (next.dataset.key === 'ride-mode') setRidingMode(next.dataset.val);
+  if (next.dataset.key === 'speed-warn') state.speedWarn = next.dataset.val;
+}
+
+function settingsEnterSub() {
+  state.settingsInSub = true;
+  settingsRowIdx = 0;
+  settingsApplyCursor();
+  document.getElementById('settings-nav').classList.add('in-sub');
+  document.getElementById('settings-mode-label').textContent = SECTION_LABELS[SECTIONS[state.settingsSecIdx]];
+  document.getElementById('settings-mode-bar').classList.add('active');
+  updateFooterHints();
+}
+
+function settingsExitSub() {
+  state.settingsInSub = false;
+  document.getElementById('settings-nav').classList.remove('in-sub');
+  document.getElementById('settings-mode-bar').classList.remove('active');
+  updateFooterHints();
+}
+
+/* ══════════════════════════════════════════════
+   MUSIC
+══════════════════════════════════════════════ */
+const TRACKS = [
+  { name: 'Derezzed',            artist: 'Daft Punk',         album: 'TRON: Legacy OST',  dur: '1:44' },
+  { name: 'End of Line',         artist: 'Daft Punk',         album: 'TRON: Legacy OST',  dur: '2:24' },
+  { name: 'Recognizer',          artist: 'Daft Punk',         album: 'TRON: Legacy OST',  dur: '2:19' },
+  { name: 'The Grid',            artist: 'Daft Punk',         album: 'TRON: Legacy OST',  dur: '1:37' },
+  { name: 'Fall',                artist: 'Daft Punk',         album: 'TRON: Legacy OST',  dur: '4:02' },
+];
+let trackIdx = 0;
+let progPct   = 42;   // mock progress %
+
+function loadTrack(idx) {
+  trackIdx = ((idx % TRACKS.length) + TRACKS.length) % TRACKS.length;
+  const t = TRACKS[trackIdx];
+  document.getElementById('track-name').textContent  = t.name;
+  document.getElementById('artist-name').textContent = `${t.artist} — ${t.album}`;
+  document.getElementById('prog-time').textContent   = `00:00 / ${t.dur}`;
+  progPct = 0;
+  document.getElementById('prog-fill').style.width   = '0%';
+  // Fade album art
+  const art = document.getElementById('album-art');
+  art.classList.add('fade');
+  setTimeout(() => art.classList.remove('fade'), 150);
+}
+
+function nextTrack() {
+  flashCtrl('ctrl-next');
+  loadTrack(trackIdx + 1);
+}
+function prevTrack() {
+  flashCtrl('ctrl-prev');
+  loadTrack(trackIdx - 1);
+}
+
+function togglePlay() {
+  state.isPlaying = !state.isPlaying;
+  document.getElementById('play-icon').textContent = state.isPlaying ? '⏸' : '▶';
+}
+function flashCtrl(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.classList.add('active');
+  setTimeout(() => el.classList.remove('active'), 300);
+}
+
+/* ══════════════════════════════════════════════
+   FOOTER HINTS
+══════════════════════════════════════════════ */
+function updateFooterHints() {
+  const l = document.getElementById('btn-left');
+  const c = document.getElementById('btn-confirm');
+  const r = document.getElementById('btn-right');
+  const name = SCREENS[state.screenIdx];
+  if (name === 'settings' && state.settingsInSub) {
+    l.textContent = '◀ 上一選項';
+    c.textContent = '● 切換值　長按● 返回';
+    r.textContent = '下一選項 ▶';
+  } else if (name === 'settings') {
+    l.textContent = '◀ 上一畫面 / 長按:上一分類';
+    c.textContent = '● 進入設定';
+    r.textContent = '下一畫面 / 長按:下一分類 ▶';
+  } else if (name === 'music') {
+    l.textContent = '◀ 上一畫面 / 長按:上一首';
+    c.textContent = '⏸ 播放暫停';
+    r.textContent = '下一畫面 / 長按:下一首 ▶';
+  } else if (name === 'notif' && state.notifDetail) {
+    l.textContent = '◀ 上一畫面 / 長按:上一則';
+    c.textContent = '✕ 關閉';
+    r.textContent = '下一畫面 / 長按:下一則 ▶';
+  } else if (name === 'notif') {
+    l.textContent = '◀ 上一畫面 / 長按:上一則';
+    c.textContent = '● 開啟閱讀';
+    r.textContent = '下一畫面 / 長按:下一則 ▶';
+  } else {
+    l.textContent = '◀ 上一畫面';
+    c.textContent = '●';
+    r.textContent = '下一畫面 ▶';
+  }
+}
+
+/* ══════════════════════════════════════════════
+   BUTTON WIRE-UP
+══════════════════════════════════════════════ */
+function wireBtn(id, shortFn, longFn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let timer = null;
+  el.addEventListener('pointerdown', e => {
+    e.preventDefault();
+    el.classList.add('pressed');
+    timer = setTimeout(() => { timer = null; el.classList.remove('pressed'); longFn(); }, 600);
+  });
+  const up = () => {
+    el.classList.remove('pressed');
+    if (timer) { clearTimeout(timer); timer = null; shortFn(); }
+  };
+  el.addEventListener('pointerup', up);
+  el.addEventListener('pointerleave', () => {
+    el.classList.remove('pressed');
+    if (timer) { clearTimeout(timer); timer = null; }
+  });
+}
+
+wireBtn('btn-left',    goLeft,   longLeft);
+wireBtn('btn-confirm', confirm,  longConfirm);
+wireBtn('btn-right',   goRight,  longRight);
+
+// Keyboard: A=left, S=confirm, D=right, P=park/ride toggle
+const heldKeys = {};
+document.addEventListener('keydown', e => {
+  const k = e.key;
+  if (k === 'p' || k === 'P') {
+    if (state.isRiding) {
+      tickerPaused = true;
+      setSpeed(0); setRpm(800); setGear('N');
+    } else {
+      tickerPaused = false;
+      setSpeed(85); setRpm(5000); setGear('4');
+    }
+    return;
+  }
+  if (!['ArrowLeft','ArrowDown','ArrowRight'].includes(k) || heldKeys[k]) return;
+  e.preventDefault();
+  heldKeys[k] = setTimeout(() => {
+    heldKeys[k] = 'fired';
+    if (k==='ArrowLeft')  longLeft();
+    if (k==='ArrowDown')  longConfirm();
+    if (k==='ArrowRight') longRight();
+  }, 600);
+});
+document.addEventListener('keyup', e => {
+  const k = e.key;
+  if (!heldKeys[k]) return;
+  if (heldKeys[k] !== 'fired') {
+    clearTimeout(heldKeys[k]);
+    if (k==='ArrowLeft')  goLeft();
+    if (k==='ArrowDown')  confirm();
+    if (k==='ArrowRight') goRight();
+  }
+  delete heldKeys[k];
+});
+
+// Settings click fallback
+document.querySelectorAll('.opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const key = opt.dataset.key;
+    if (!key) return;
+    document.querySelectorAll(`.opt[data-key="${key}"]`).forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    if (key === 'ride-mode') setRidingMode(opt.dataset.val);
+    if (key === 'speed-warn') state.speedWarn = opt.dataset.val;
+  });
+});
+document.querySelectorAll('.snav').forEach(item => {
+  item.addEventListener('click', () => {
+    state.settingsSecIdx = SECTIONS.indexOf(item.dataset.section);
+    setSettingsSection(item.dataset.section);
+  });
+});
+
+/* ══════════════════════════════════════════════
+   BOOT ANIMATION
+══════════════════════════════════════════════ */
+function runBoot() {
+  const boot   = document.getElementById('boot-screen');
+  const logo   = document.getElementById('boot-logo');
+  const tag    = document.getElementById('boot-tagline');
+  const barW   = document.getElementById('boot-bar-wrap');
+  const barF   = document.getElementById('boot-bar-fill');
+  const status = document.getElementById('boot-status');
+
+  const statuses = [
+    'LOADING NAVIGATION MODULE...',
+    'CALIBRATING SENSORS...',
+    'CONNECTING BLUETOOTH...',
+    'SYSTEM READY',
+  ];
+
+  setTimeout(() => { logo.style.opacity = '1'; tag.style.opacity = '1'; barW.style.opacity = '1'; status.style.opacity = '1'; }, 100);
+  setTimeout(() => { barF.style.width = '100%'; }, 400);
+
+  // Sweep RPM & speed during boot
+  setTimeout(() => {
+    let r = 0, spd = 0, si = 0;
+    const sweep = setInterval(() => {
+      r   = Math.min(r + 400, 6500);
+      spd = Math.min(spd + 5, 108);
+      setRpm(r);
+      setSpeed(spd);
+      setGear(spd < 20 ? 'N' : spd < 50 ? '1' : spd < 80 ? '3' : '5');
+      if (r >= 6500) clearInterval(sweep);
+    }, 40);
+
+    const statusInterval = setInterval(() => {
+      if (si < statuses.length) {
+        status.textContent = statuses[si++];
+      } else {
+        clearInterval(statusInterval);
+      }
+    }, 500);
+  }, 600);
+
+  setTimeout(() => {
+    boot.style.opacity = '0';
+    setTimeout(() => { boot.style.display = 'none'; }, 600);
+  }, 3000);
+}
+
+/* ══════════════════════════════════════════════
+   DEMO TICKER
+══════════════════════════════════════════════ */
+let tickerPaused = false;
+
+function startTicker() {
+  let mockSpd = 108;
+  setInterval(() => { updateClock(); updateTripDisplay(); }, 1000);
+  setInterval(() => {
+    if (tickerPaused) return;
+    mockSpd += (Math.random() - 0.5) * 10;
+    mockSpd  = Math.max(70, Math.min(138, mockSpd));
+    const mockRpm = 2000 + (mockSpd / 140) * 7500;
+    state.rpm = mockRpm;
+    setSpeed(mockSpd);
+    setRpm(mockRpm);
+    const s = Math.round(mockSpd);
+    setGear(s < 20 ? 'N' : s < 40 ? '1' : s < 65 ? '2' : s < 85 ? '3' : s < 105 ? '4' : s < 122 ? '5' : '6');
+  }, 700);
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+setFuel(65);
+loadTrack(0);
+document.getElementById('temp-val').textContent = '90°';
+document.getElementById('volt-val').textContent = '12.6';
+updateClock();
+showScreen(0);
+runBoot();
+startTicker();
+</script>
+</body>
+</html>
