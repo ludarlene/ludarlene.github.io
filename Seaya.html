@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Seaya Woods</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+TC:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --primary: #1d1d1f;
+    --primary-light: #f5f5f7;
+    --accent: #95E86C;
+    --accent-hover: #82d458;
+    --accent-light: #f2fce8;
+    --bg: #f5f5f7;
+    --surface: #ffffff;
+    --surface-secondary: #fbfbfd;
+    --border: rgba(0,0,0,0.08);
+    --border-strong: rgba(0,0,0,0.13);
+    --text: #1d1d1f;
+    --text-secondary: #424245;
+    --text-muted: #86868b;
+    --success: #1d8348;
+    --success-bg: #f0faf4;
+    --danger: #c0392b;
+    --danger-bg: #fdf3f2;
+    --warning: #b7770d;
+    --warning-bg: #fdf8ee;
+    --sidebar-w: 220px;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+  body { font-family: 'Inter', 'Noto Sans TC', -apple-system, sans-serif; background: var(--bg); color: var(--text); font-size: 14px; display: flex; min-height: 100vh; }
+
+  /* Sidebar — light frosted */
+  .sidebar { width: var(--sidebar-w); background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 1px solid var(--border); color: var(--text); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; height: 100vh; z-index: 100; }
+  .sidebar-logo { padding: 28px 20px 22px; border-bottom: 1px solid var(--border); }
+  .sidebar-logo h1 { font-size: 30px; font-weight: 400; font-family: 'Anton', sans-serif; letter-spacing: 0.01em; line-height: 1.1; background: linear-gradient(90deg, #f4f269, #5cb270); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .sidebar-logo p { font-size: 11px; color: var(--text-muted); margin-top: 3px; font-weight: 300; }
+  .sidebar-nav { flex: 1; padding: 10px 10px; overflow-y: auto; }
+  .nav-item { display: flex; align-items: center; gap: 9px; padding: 9px 12px; cursor: pointer; transition: background 0.12s; font-size: 13px; color: var(--text-secondary); border-radius: var(--radius); margin-bottom: 2px; font-weight: 400; }
+  .nav-item:hover { background: rgba(0,0,0,0.05); color: var(--text); }
+  .nav-item.active { background: var(--accent-light); color: #3a7a20; font-weight: 500; }
+  .nav-item svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.75; }
+  .nav-item.active svg { opacity: 1; }
+  .sidebar-footer { padding: 14px 20px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-muted); font-weight: 300; }
+
+  /* Main */
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+  .topbar { background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 0 32px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+  .topbar-title { font-size: 14px; font-weight: 500; color: var(--text); letter-spacing: -0.01em; }
+  .topbar-actions { display: flex; gap: 8px; align-items: center; }
+  .content { padding: 28px 32px; flex: 1; }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 980px; font-size: 13px; font-weight: 400; cursor: pointer; border: none; transition: all 0.15s; font-family: inherit; letter-spacing: -0.01em; }
+  .btn-primary { background: var(--accent); color: #1a1a1a; }
+  .btn-primary:hover { background: var(--accent-hover); }
+  .btn-accent { background: var(--text); color: #fff; }
+  .btn-accent:hover { background: #3a3a3c; }
+  .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border-strong); }
+  .btn-outline:hover { background: var(--bg); color: var(--text); }
+  .btn-sm { padding: 5px 12px; font-size: 12px; }
+  .btn-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(192,57,43,0.15); }
+  .btn-danger:hover { background: #fde8e6; }
+
+  /* Cards */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  .card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface-secondary); }
+  .card-header h2 { font-size: 13px; font-weight: 500; color: var(--text); letter-spacing: -0.01em; }
+  .card-body { padding: 20px; }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px 22px; }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; font-weight: 400; letter-spacing: 0.02em; text-transform: uppercase; }
+  .stat-value { font-size: 24px; font-weight: 300; color: var(--text); letter-spacing: -0.03em; }
+  .stat-sub { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  /* Table */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { background: var(--surface-secondary); padding: 10px 16px; text-align: left; font-size: 11px; font-weight: 500; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--border); }
+  td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-secondary); }
+  td strong { color: var(--text); font-weight: 500; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafa; }
+  .td-actions { display: flex; gap: 6px; }
+
+  /* Form */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group.full { grid-column: 1 / -1; }
+  label { font-size: 11px; font-weight: 500; color: var(--text-muted); letter-spacing: 0.03em; text-transform: uppercase; }
+  input, select, textarea { width: 100%; padding: 9px 13px; border: 1px solid var(--border-strong); border-radius: var(--radius); font-size: 13px; font-family: inherit; color: var(--text); background: var(--surface); transition: border-color 0.15s, box-shadow 0.15s; }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(149,232,108,0.2); }
+  textarea { resize: vertical; min-height: 72px; }
+
+  /* Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); backdrop-filter: blur(4px); z-index: 200; display: none; align-items: center; justify-content: center; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border-radius: 18px; width: 560px; max-width: 96vw; max-height: 92vh; overflow: hidden; display: flex; flex-direction: column; border: 1px solid var(--border); }
+  .modal-lg { width: 760px; }
+  .modal-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; background: var(--surface-secondary); }
+  .modal-header h3 { font-size: 15px; font-weight: 500; letter-spacing: -0.02em; }
+  .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 8px; background: var(--surface-secondary); }
+  .close-btn { background: rgba(0,0,0,0.06); border: none; cursor: pointer; color: var(--text-muted); padding: 5px; border-radius: 50%; width: 26px; height: 26px; display: flex; align-items: center; justify-content: center; transition: background 0.12s; }
+  .close-btn:hover { background: rgba(0,0,0,0.1); color: var(--text); }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 500; letter-spacing: 0.01em; }
+  .badge-success { background: var(--success-bg); color: var(--success); }
+  .badge-warning { background: var(--warning-bg); color: var(--warning); }
+  .badge-danger { background: var(--danger-bg); color: var(--danger); }
+  .badge-info { background: var(--accent-light); color: #3a7a20; }
+
+  /* Search & Filter */
+  .toolbar { display: flex; gap: 10px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+  .search-input { position: relative; flex: 1; min-width: 200px; }
+  .search-input input { padding-left: 34px; border-radius: 980px; background: var(--surface); }
+  .search-icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+
+  /* Order items */
+  .order-items-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  .order-items-table th { font-size: 11px; padding: 6px 10px; }
+  .order-items-table td { padding: 8px 10px; font-size: 13px; }
+  .order-items-table td:last-child { text-align: right; }
+  .order-total-row { background: var(--accent-light); font-weight: 500; }
+  .item-row-actions { display: flex; gap: 4px; }
+
+  /* Report */
+  .report-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .month-picker { display: flex; gap: 10px; align-items: center; margin-bottom: 24px; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 28px; right: 28px; background: rgba(29,29,31,0.92); backdrop-filter: blur(12px); color: #fff; padding: 12px 20px; border-radius: 980px; font-size: 13px; z-index: 999; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; font-weight: 400; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { background: rgba(29,131,72,0.92); }
+  .toast.error { background: rgba(192,57,43,0.92); }
+
+  /* Empty state */
+  .empty { text-align: center; padding: 48px 20px; color: var(--text-muted); }
+  .empty svg { width: 40px; height: 40px; margin: 0 auto 12px; opacity: 0.25; display: block; }
+
+  /* Divider */
+  .section-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* Loading */
+  .loading { display: flex; align-items: center; justify-content: center; padding: 48px; color: var(--text-muted); gap: 10px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { width: 16px; height: 16px; border: 1.5px solid var(--border-strong); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; }
+
+  /* Page visibility */
+  .page { display: none; }
+  .page.active { display: block; }
+  .cust-opt:hover { background: var(--primary-light); }
+
+  /* Auth */
+  .auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 500; display: flex; align-items: center; justify-content: center; }
+  .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; width: 380px; padding: 40px 36px; }
+  .auth-logo { font-family: 'Anton', sans-serif; font-size: 32px; font-weight: 400; background: linear-gradient(90deg, #f4f269, #5cb270); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 6px; }
+  .auth-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 32px; }
+  .auth-card .form-group { margin-bottom: 14px; }
+  .auth-error { font-size: 12px; color: var(--danger); margin-top: 10px; min-height: 18px; }
+  .user-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
+  .user-email { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<!-- Auth Screen -->
+<div class="auth-screen" id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-logo">Seaya Woods</div>
+    <div class="auth-sub">進銷存管理平台</div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="login-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="form-group">
+      <label>密碼</label>
+      <input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <div class="auth-error" id="login-error"></div>
+    <button class="btn btn-primary" style="width:100%;margin-top:8px;border-radius:var(--radius);justify-content:center" id="login-btn" onclick="doLogin()">登入</button>
+  </div>
+</div>
+
+<!-- Change Password Modal -->
+<div class="modal-overlay" id="change-pw-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>修改密碼</h3>
+      <button class="close-btn" onclick="closeModal('change-pw-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group" style="margin-bottom:14px">
+        <label>新密碼</label>
+        <input type="password" id="new-password" placeholder="至少 6 個字元">
+      </div>
+      <div class="form-group">
+        <label>確認新密碼</label>
+        <input type="password" id="confirm-password" placeholder="再輸入一次">
+      </div>
+      <div class="auth-error" id="pw-error"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('change-pw-modal')">取消</button>
+      <button class="btn btn-primary" onclick="doChangePassword()">確認修改</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>Seaya Woods</h1>
+    <p>進銷存管理平台</p>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-item active" data-page="dashboard" onclick="navigate('dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      總覽
+    </div>
+    <div class="nav-item" data-page="customers" onclick="navigate('customers')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      客戶管理
+    </div>
+    <div class="nav-item" data-page="materials" onclick="navigate('materials')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+      建材管理
+    </div>
+    <div class="nav-item" data-page="orders" onclick="navigate('orders')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      銷貨單管理
+    </div>
+    <div class="nav-item" data-page="reports" onclick="navigate('reports')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      每月報表
+    </div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="user-badge" style="margin-bottom:10px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      <span class="user-email" id="sidebar-user-email">—</span>
+    </div>
+    <div style="display:flex;gap:6px">
+      <button class="btn btn-sm btn-outline" style="flex:1;justify-content:center;font-size:11px" onclick="openModal('change-pw-modal')">修改密碼</button>
+      <button class="btn btn-sm btn-outline" style="flex:1;justify-content:center;font-size:11px;color:var(--danger)" onclick="doLogout()">登出</button>
+    </div>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+  <header class="topbar">
+    <span class="topbar-title" id="topbar-title">總覽</span>
+    <div class="topbar-actions" id="topbar-actions"></div>
+  </header>
+  <div class="content" id="content">
+    <div class="loading"><div class="spinner"></div> 載入中...</div>
+  </div>
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- MODALS -->
+
+<!-- Customer Modal -->
+<div class="modal-overlay" id="customer-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="customer-modal-title">新增客戶</h3>
+      <button class="close-btn" onclick="closeModal('customer-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form id="customer-form" class="form-grid">
+        <input type="hidden" id="customer-id">
+        <div class="form-group">
+          <label>客戶名稱 *</label>
+          <input type="text" id="c-name" placeholder="公司名稱或姓名" required>
+        </div>
+        <div class="form-group">
+          <label>統一編號</label>
+          <input type="text" id="c-tax_id" placeholder="12345678">
+        </div>
+        <div class="form-group">
+          <label>聯絡電話</label>
+          <input type="text" id="c-phone" placeholder="04-xxxx-xxxx">
+        </div>
+        <div class="form-group">
+          <label>公司地址</label>
+          <input type="text" id="c-address" placeholder="縣市區街道">
+        </div>
+        <div class="form-group full">
+          <label>送貨地址</label>
+          <input type="text" id="c-delivery_address" placeholder="若與公司地址不同，請填寫送貨地址">
+        </div>
+        <div class="form-group full">
+          <label>備註</label>
+          <textarea id="c-note" placeholder="其他說明..."></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('customer-modal')">取消</button>
+      <button class="btn btn-primary" onclick="saveCustomer()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Material Modal -->
+<div class="modal-overlay" id="material-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="material-modal-title">新增建材</h3>
+      <button class="close-btn" onclick="closeModal('material-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <form class="form-grid cols-3">
+        <input type="hidden" id="material-id">
+        <div class="form-group full">
+          <label>品項名稱 *</label>
+          <input type="text" id="m-name" placeholder="例：磁磚 30x30" required>
+        </div>
+        <div class="form-group">
+          <label>規格</label>
+          <input type="text" id="m-spec" placeholder="尺寸、型號...">
+        </div>
+        <div class="form-group">
+          <label>單位</label>
+          <input type="text" id="m-unit" placeholder="片、箱、m²...">
+        </div>
+        <div class="form-group">
+          <label>庫存數量</label>
+          <input type="number" id="m-stock_qty" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>進貨成本價</label>
+          <input type="number" id="m-cost_price" placeholder="0" min="0">
+        </div>
+        <div class="form-group">
+          <label>銷售單價</label>
+          <input type="number" id="m-sell_price" placeholder="0" min="0">
+        </div>
+        <div class="form-group full">
+          <label>備註</label>
+          <textarea id="m-note" placeholder="品牌、產地、注意事項..."></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('material-modal')">取消</button>
+      <button class="btn btn-primary" onclick="saveMaterial()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Order Modal -->
+<div class="modal-overlay" id="order-modal">
+  <div class="modal modal-lg">
+    <div class="modal-header">
+      <h3 id="order-modal-title">新增銷貨單</h3>
+      <button class="close-btn" onclick="closeModal('order-modal')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="order-id">
+      <div class="form-grid">
+        <div class="form-group">
+          <label>銷貨單號 *</label>
+          <input type="text" id="o-order_no" placeholder="SO-20240101-001">
+        </div>
+        <div class="form-group">
+          <label>客戶 *</label>
+          <select id="o-customer_id" style="display:none"></select>
+          <div style="position:relative" id="customer-picker">
+            <input type="text" id="customer-search" placeholder="輸入客戶名稱搜尋..." autocomplete="off" oninput="filterCustomerDropdown(this.value)" onfocus="showCustomerDropdown()">
+            <div id="customer-dropdown" style="display:none;position:absolute;top:100%;left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);z-index:300;max-height:200px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,0.1)"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>銷貨日期</label>
+          <input type="date" id="o-order_date">
+        </div>
+        <div class="form-group">
+          <label>狀態</label>
+          <select id="o-status">
+            <option value="pending">待確認</option>
+            <option value="confirmed">已確認</option>
+            <option value="delivered">已出貨</option>
+            <option value="paid">已付款</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label>備註</label>
+          <input type="text" id="o-note" placeholder="送貨地址、特殊需求...">
+        </div>
+      </div>
+      <hr class="section-divider">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+        <strong style="font-size:13px;">銷貨品項</strong>
+        <button class="btn btn-sm btn-outline" onclick="addOrderItem()">+ 新增品項</button>
+      </div>
+      <div id="order-items-container"></div>
+      <div style="text-align:right;margin-top:12px;font-size:14px;font-weight:500;color:var(--accent);">
+        合計：<span id="order-total">NT$ 0</span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('order-modal')">取消</button>
+      <button class="btn btn-primary" onclick="saveOrder()">儲存銷貨單</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://nhpolnbxhbzvxqqhgkbt.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5ocG9sbmJ4aGJ6dnhxcWhna2J0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODExNDA1MDEsImV4cCI6MjA5NjcxNjUwMX0.1Kzr6uLaU1lZtEQdlI1YIcrS5PQD9316T9_eldjLtY4';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let currentPage = 'dashboard';
+let orderItems = [];
+let allMaterials = [];
+let allCustomers = [];
+
+// ─── Navigation ───
+function navigate(page) {
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector(`[data-page="${page}"]`).classList.add('active');
+  const titles = { dashboard:'總覽', customers:'客戶管理', materials:'建材管理', orders:'銷貨單管理', reports:'每月報表' };
+  document.getElementById('topbar-title').textContent = titles[page];
+  renderPage(page);
+}
+
+async function renderPage(page) {
+  const content = document.getElementById('content');
+  const actions = document.getElementById('topbar-actions');
+  content.innerHTML = '<div class="loading"><div class="spinner"></div> 載入中...</div>';
+  actions.innerHTML = '';
+  if (page === 'dashboard') await renderDashboard();
+  else if (page === 'customers') await renderCustomers();
+  else if (page === 'materials') await renderMaterials();
+  else if (page === 'orders') await renderOrders();
+  else if (page === 'reports') await renderReports();
+}
+
+// ─── Toast ───
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 2500);
+}
+
+// ─── Modal ───
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ─── Format ───
+function fmtMoney(n) { return 'NT$ ' + Number(n || 0).toLocaleString(); }
+function fmtDate(d) { return d ? d.substring(0, 10) : '-'; }
+function today() { return new Date().toISOString().substring(0, 10); }
+
+// ─────────────── DASHBOARD ───────────────
+async function renderDashboard() {
+  const [{ data: customers }, { data: materials }, { data: orders }] = await Promise.all([
+    sb.from('customers').select('id'),
+    sb.from('materials').select('id,stock_qty,sell_price'),
+    sb.from('sales_orders').select('id,total_amount,order_date,status')
+  ]);
+
+  const totalCustomers = customers?.length || 0;
+  const totalMaterials = materials?.length || 0;
+  const thisMonth = new Date().toISOString().substring(0, 7);
+  const monthOrders = orders?.filter(o => o.order_date?.startsWith(thisMonth)) || [];
+  const monthRevenue = monthOrders.reduce((s, o) => s + Number(o.total_amount), 0);
+  const lowStock = materials?.filter(m => Number(m.stock_qty) < 10).length || 0;
+
+  const recentOrders = (orders || []).sort((a,b) => b.order_date > a.order_date ? 1 : -1).slice(0, 5);
+
+  document.getElementById('content').innerHTML = `
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">客戶總數</div>
+        <div class="stat-value">${totalCustomers}</div>
+        <div class="stat-sub">家客戶</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">建材品項</div>
+        <div class="stat-value">${totalMaterials}</div>
+        <div class="stat-sub">種品項</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">本月銷售額</div>
+        <div class="stat-value" style="font-size:18px">${fmtMoney(monthRevenue)}</div>
+        <div class="stat-sub">${monthOrders.length} 張銷貨單</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">低庫存警示</div>
+        <div class="stat-value" style="color:${lowStock > 0 ? 'var(--warning)' : 'var(--success)'}">${lowStock}</div>
+        <div class="stat-sub">品項低於 10 件</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h2>最近銷貨單</h2><button class="btn btn-sm btn-outline" onclick="navigate('orders')">查看全部</button></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>單號</th><th>日期</th><th>金額</th><th>狀態</th></tr></thead>
+          <tbody>
+            ${recentOrders.length === 0 ? `<tr><td colspan="4" style="text-align:center;color:var(--text-muted);padding:24px">尚無資料</td></tr>` :
+              recentOrders.map(o => `
+                <tr>
+                  <td><strong>${o.order_no || '-'}</strong></td>
+                  <td>${fmtDate(o.order_date)}</td>
+                  <td>${fmtMoney(o.total_amount)}</td>
+                  <td>${statusBadge(o.status)}</td>
+                </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ─────────────── CUSTOMERS ───────────────
+async function renderCustomers() {
+  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-primary" onclick="openCustomerModal()">+ 新增客戶</button>`;
+  const { data, error } = await sb.from('customers').select('*').order('created_at', { ascending: false });
+  if (error) { showToast('載入失敗', 'error'); return; }
+  allCustomers = data || [];
+  renderCustomerTable(allCustomers);
+}
+
+function renderCustomerTable(data) {
+  document.getElementById('content').innerHTML = `
+    <div class="toolbar">
+      <div class="search-input"><svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="搜尋客戶名稱..." oninput="filterCustomers(this.value)">
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>客戶名稱</th><th>統一編號</th><th>電話</th><th>公司地址</th><th>送貨地址</th><th>備註</th><th>操作</th></tr></thead>
+          <tbody id="customer-tbody">
+            ${data.length === 0 ? `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px">尚無客戶資料，點擊「新增客戶」開始建立</td></tr>` :
+              data.map(c => `
+                <tr>
+                  <td><strong>${c.name}</strong></td>
+                  <td>${c.tax_id || '-'}</td>
+                  <td>${c.phone || '-'}</td>
+                  <td>${c.address || '-'}</td>
+                  <td style="max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.delivery_address || '-'}</td>
+                  <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.note || '-'}</td>
+                  <td><div class="td-actions">
+                    <button class="btn btn-sm btn-outline" onclick='editCustomer(${JSON.stringify(c)})'>編輯</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCustomer('${c.id}')">刪除</button>
+                  </div></td>
+                </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function filterCustomers(q) {
+  const filtered = allCustomers.filter(c => c.name.includes(q) || (c.phone || '').includes(q));
+  renderCustomerTable(filtered);
+}
+
+function openCustomerModal(data = null) {
+  document.getElementById('customer-modal-title').textContent = data ? '編輯客戶' : '新增客戶';
+  document.getElementById('customer-id').value = data?.id || '';
+  ['name','tax_id','phone','address','delivery_address','note'].forEach(f => {
+    document.getElementById('c-' + f).value = data?.[f] || '';
+  });
+  openModal('customer-modal');
+}
+
+function editCustomer(data) { openCustomerModal(data); }
+
+async function saveCustomer() {
+  const id = document.getElementById('customer-id').value;
+  const payload = {};
+  ['name','tax_id','phone','address','delivery_address','note'].forEach(f => {
+    payload[f] = document.getElementById('c-' + f).value.trim() || null;
+  });
+  if (!payload.name) { showToast('請填寫客戶名稱', 'error'); return; }
+  const { error } = id
+    ? await sb.from('customers').update(payload).eq('id', id)
+    : await sb.from('customers').insert(payload);
+  if (error) { showToast('儲存失敗：' + error.message, 'error'); return; }
+  showToast(id ? '客戶資料已更新' : '客戶新增成功', 'success');
+  closeModal('customer-modal');
+  renderCustomers();
+}
+
+async function deleteCustomer(id) {
+  if (!confirm('確定要刪除此客戶？')) return;
+  const { error } = await sb.from('customers').delete().eq('id', id);
+  if (error) { showToast('刪除失敗', 'error'); return; }
+  showToast('已刪除', 'success');
+  renderCustomers();
+}
+
+// ─────────────── MATERIALS ───────────────
+async function renderMaterials() {
+  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-primary" onclick="openMaterialModal()">+ 新增建材</button>`;
+  const { data, error } = await sb.from('materials').select('*').order('name');
+  if (error) { showToast('載入失敗', 'error'); return; }
+  allMaterials = data || [];
+  renderMaterialTable(allMaterials);
+}
+
+function renderMaterialTable(data) {
+  document.getElementById('content').innerHTML = `
+    <div class="toolbar">
+      <div class="search-input"><svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" placeholder="搜尋品項名稱..." oninput="filterMaterials(this.value)">
+      </div>
+    </div>
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>品項名稱</th><th>規格</th><th>單位</th><th>庫存</th><th>成本價</th><th>銷售價</th><th>備註</th><th>操作</th></tr></thead>
+          <tbody>
+            ${data.length === 0 ? `<tr><td colspan="8" style="text-align:center;color:var(--text-muted);padding:32px">尚無建材資料，點擊「新增建材」開始建立</td></tr>` :
+              data.map(m => `
+                <tr>
+                  <td><strong>${m.name}</strong></td>
+                  <td>${m.spec || '-'}</td>
+                  <td>${m.unit || '-'}</td>
+                  <td><span class="badge ${Number(m.stock_qty) < 10 ? 'badge-warning' : 'badge-success'}">${m.stock_qty || 0}</span></td>
+                  <td>${fmtMoney(m.cost_price)}</td>
+                  <td>${fmtMoney(m.sell_price)}</td>
+                  <td style="max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.note || '-'}</td>
+                  <td><div class="td-actions">
+                    <button class="btn btn-sm btn-outline" onclick='editMaterial(${JSON.stringify(m)})'>編輯</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteMaterial('${m.id}')">刪除</button>
+                  </div></td>
+                </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+function filterMaterials(q) {
+  const filtered = allMaterials.filter(m => m.name.includes(q) || (m.spec || '').includes(q));
+  renderMaterialTable(filtered);
+}
+
+function openMaterialModal(data = null) {
+  document.getElementById('material-modal-title').textContent = data ? '編輯建材' : '新增建材';
+  document.getElementById('material-id').value = data?.id || '';
+  ['name','spec','unit','cost_price','sell_price','stock_qty','note'].forEach(f => {
+    document.getElementById('m-' + f).value = data?.[f] ?? '';
+  });
+  openModal('material-modal');
+}
+
+function editMaterial(data) { openMaterialModal(data); }
+
+async function saveMaterial() {
+  const id = document.getElementById('material-id').value;
+  const payload = {};
+  ['name','spec','unit','note'].forEach(f => payload[f] = document.getElementById('m-' + f).value.trim() || null);
+  ['cost_price','sell_price','stock_qty'].forEach(f => payload[f] = parseFloat(document.getElementById('m-' + f).value) || 0);
+  if (!payload.name) { showToast('請填寫品項名稱', 'error'); return; }
+  const { error } = id
+    ? await sb.from('materials').update(payload).eq('id', id)
+    : await sb.from('materials').insert(payload);
+  if (error) { showToast('儲存失敗：' + error.message, 'error'); return; }
+  showToast(id ? '建材資料已更新' : '建材新增成功', 'success');
+  closeModal('material-modal');
+  renderMaterials();
+}
+
+async function deleteMaterial(id) {
+  if (!confirm('確定要刪除此建材？')) return;
+  const { error } = await sb.from('materials').delete().eq('id', id);
+  if (error) { showToast('刪除失敗', 'error'); return; }
+  showToast('已刪除', 'success');
+  renderMaterials();
+}
+
+// ─────────────── ORDERS ───────────────
+function statusBadge(s) {
+  const map = { pending:'<span class="badge badge-warning">待確認</span>', confirmed:'<span class="badge badge-info">已確認</span>', delivered:'<span class="badge badge-success">已出貨</span>', paid:'<span class="badge badge-success">已付款</span>' };
+  return map[s] || s;
+}
+
+async function renderOrders() {
+  document.getElementById('topbar-actions').innerHTML = `<button class="btn btn-primary" onclick="openOrderModal()">+ 新增銷貨單</button>`;
+  const { data, error } = await sb.from('sales_orders').select('*, customers(name)').order('order_date', { ascending: false });
+  if (error) { showToast('載入失敗', 'error'); return; }
+
+  document.getElementById('content').innerHTML = `
+    <div class="card">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>銷貨單號</th><th>客戶</th><th>日期</th><th>金額</th><th>狀態</th><th>備註</th><th>操作</th></tr></thead>
+          <tbody>
+            ${(!data || data.length === 0) ? `<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:32px">尚無銷貨單，點擊「新增銷貨單」開始建立</td></tr>` :
+              data.map(o => `
+                <tr>
+                  <td><strong>${o.order_no}</strong></td>
+                  <td>${o.customers?.name || '-'}</td>
+                  <td>${fmtDate(o.order_date)}</td>
+                  <td><strong>${fmtMoney(o.total_amount)}</strong></td>
+                  <td>${statusBadge(o.status)}</td>
+                  <td style="max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.note || '-'}</td>
+                  <td><div class="td-actions">
+                    <button class="btn btn-sm btn-outline" onclick="editOrder('${o.id}')">編輯</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteOrder('${o.id}')">刪除</button>
+                  </div></td>
+                </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+async function openOrderModal(orderId = null) {
+  const [{ data: customers }, { data: materials }] = await Promise.all([
+    sb.from('customers').select('id,name').order('name'),
+    sb.from('materials').select('id,name,sell_price,unit').order('name')
+  ]);
+  allCustomers = customers || [];
+  allMaterials = materials || [];
+
+  const custOpts = allCustomers.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+  document.getElementById('o-customer_id').innerHTML = '<option value="">-- 選擇客戶 --</option>' + custOpts;
+  document.getElementById('customer-search').value = '';
+  renderCustomerDropdown(allCustomers);
+  document.getElementById('order-modal-title').textContent = orderId ? '編輯銷貨單' : '新增銷貨單';
+  document.getElementById('order-id').value = '';
+  document.getElementById('o-order_date').value = today();
+  document.getElementById('o-status').value = 'pending';
+  document.getElementById('o-note').value = '';
+  orderItems = [];
+
+  if (orderId) {
+    document.getElementById('order-id').value = orderId;
+    const [{ data: order }, { data: items }] = await Promise.all([
+      sb.from('sales_orders').select('*').eq('id', orderId).single(),
+      sb.from('sales_order_items').select('*').eq('order_id', orderId)
+    ]);
+    if (order) {
+      document.getElementById('o-order_no').value = order.order_no || '';
+      document.getElementById('o-customer_id').value = order.customer_id || '';
+      const selectedCust = allCustomers.find(c => c.id === order.customer_id);
+      document.getElementById('customer-search').value = selectedCust ? selectedCust.name : '';
+      document.getElementById('o-order_date').value = order.order_date || today();
+      document.getElementById('o-status').value = order.status || 'pending';
+      document.getElementById('o-note').value = order.note || '';
+    }
+    orderItems = (items || []).map(i => ({ material_id: i.material_id, quantity: i.quantity, unit_price: i.unit_price }));
+  } else {
+    const d = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    document.getElementById('o-order_no').value = `SO-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}-001`;
+  }
+
+  renderOrderItems();
+  openModal('order-modal');
+}
+
+function editOrder(id) { openOrderModal(id); }
+
+function renderOrderItems() {
+  const container = document.getElementById('order-items-container');
+  const materialOpts = allMaterials.map(m => `<option value="${m.id}" data-price="${m.sell_price}" data-unit="${m.unit || ''}">${m.name}${m.unit ? ' ('+m.unit+')' : ''}</option>`).join('');
+
+  if (orderItems.length === 0) {
+    container.innerHTML = `<div style="color:var(--text-muted);font-size:13px;padding:12px 0">尚未加入品項，點擊「新增品項」</div>`;
+    document.getElementById('order-total').textContent = 'NT$ 0';
+    return;
+  }
+
+  let total = 0;
+  const rows = orderItems.map((item, idx) => {
+    const sub = (item.quantity || 0) * (item.unit_price || 0);
+    total += sub;
+    return `<tr>
+      <td><select onchange="updateItemMaterial(${idx}, this)" style="width:100%">
+        <option value="">-- 選品項 --</option>${materialOpts}
+      </select></td>
+      <td><input type="number" value="${item.quantity || ''}" min="0" step="0.01" onchange="updateItemQty(${idx}, this.value)" style="width:80px"></td>
+      <td><input type="number" value="${item.unit_price || ''}" min="0" onchange="updateItemPrice(${idx}, this.value)" style="width:90px"></td>
+      <td>${fmtMoney(sub)}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="removeOrderItem(${idx})">移除</button></td>
+    </tr>`;
+  });
+
+  // Set selected values after render
+  container.innerHTML = `
+    <table class="order-items-table">
+      <thead><tr><th>品項</th><th>數量</th><th>單價</th><th>小計</th><th></th></tr></thead>
+      <tbody>${rows.join('')}</tbody>
+    </table>`;
+
+  // Set dropdown selected values
+  const selects = container.querySelectorAll('select');
+  orderItems.forEach((item, idx) => {
+    if (item.material_id) selects[idx].value = item.material_id;
+  });
+
+  document.getElementById('order-total').textContent = fmtMoney(total);
+}
+
+function addOrderItem() {
+  orderItems.push({ material_id: '', quantity: 1, unit_price: 0 });
+  renderOrderItems();
+}
+
+function removeOrderItem(idx) {
+  orderItems.splice(idx, 1);
+  renderOrderItems();
+}
+
+function updateItemMaterial(idx, sel) {
+  const opt = sel.options[sel.selectedIndex];
+  orderItems[idx].material_id = sel.value;
+  orderItems[idx].unit_price = parseFloat(opt.dataset.price) || 0;
+  renderOrderItems();
+}
+
+function updateItemQty(idx, val) {
+  orderItems[idx].quantity = parseFloat(val) || 0;
+  renderOrderItems();
+}
+
+function updateItemPrice(idx, val) {
+  orderItems[idx].unit_price = parseFloat(val) || 0;
+  renderOrderItems();
+}
+
+function renderCustomerDropdown(list) {
+  const dd = document.getElementById('customer-dropdown');
+  if (list.length === 0) {
+    dd.innerHTML = `<div style="padding:10px 14px;font-size:13px;color:var(--text-muted)">找不到符合的客戶</div>`;
+  } else {
+    dd.innerHTML = list.map(c => `<div class="cust-opt" data-id="${c.id}" data-name="${c.name}" onclick="selectCustomer('${c.id}','${c.name.replace(/'/g,"&#39;")}')" style="padding:9px 14px;font-size:13px;cursor:pointer;border-bottom:0.5px solid var(--border)">${c.name}</div>`).join('');
+  }
+}
+
+function showCustomerDropdown() {
+  const dd = document.getElementById('customer-dropdown');
+  dd.style.display = 'block';
+  document.addEventListener('click', hideCustomerDropdownOutside);
+}
+
+function hideCustomerDropdownOutside(e) {
+  if (!document.getElementById('customer-picker').contains(e.target)) {
+    document.getElementById('customer-dropdown').style.display = 'none';
+    document.removeEventListener('click', hideCustomerDropdownOutside);
+  }
+}
+
+function filterCustomerDropdown(q) {
+  const filtered = allCustomers.filter(c => c.name.includes(q));
+  renderCustomerDropdown(filtered);
+  document.getElementById('customer-dropdown').style.display = 'block';
+  if (!q) {
+    document.getElementById('o-customer_id').value = '';
+  }
+}
+
+function selectCustomer(id, name) {
+  document.getElementById('o-customer_id').value = id;
+  document.getElementById('customer-search').value = name;
+  document.getElementById('customer-dropdown').style.display = 'none';
+  document.removeEventListener('click', hideCustomerDropdownOutside);
+}
+
+async function saveOrder() {
+  const id = document.getElementById('order-id').value;
+  const order_no = document.getElementById('o-order_no').value.trim();
+  const customer_id = document.getElementById('o-customer_id').value;
+  const order_date = document.getElementById('o-order_date').value;
+  const status = document.getElementById('o-status').value;
+  const note = document.getElementById('o-note').value.trim() || null;
+
+  if (!order_no) { showToast('請填寫銷貨單號', 'error'); return; }
+  if (!customer_id) { showToast('請選擇客戶', 'error'); return; }
+
+  const total_amount = orderItems.reduce((s, i) => s + (i.quantity * i.unit_price), 0);
+  const payload = { order_no, customer_id, order_date, status, note, total_amount };
+
+  let orderId = id;
+  if (id) {
+    const { error } = await sb.from('sales_orders').update(payload).eq('id', id);
+    if (error) { showToast('更新失敗：' + error.message, 'error'); return; }
+    await sb.from('sales_order_items').delete().eq('order_id', id);
+  } else {
+    const { data, error } = await sb.from('sales_orders').insert(payload).select().single();
+    if (error) { showToast('新增失敗：' + error.message, 'error'); return; }
+    orderId = data.id;
+  }
+
+  if (orderItems.length > 0) {
+    const items = orderItems.filter(i => i.material_id).map(i => ({
+      order_id: orderId, material_id: i.material_id,
+      quantity: i.quantity, unit_price: i.unit_price
+    }));
+    if (items.length > 0) await sb.from('sales_order_items').insert(items);
+  }
+
+  showToast(id ? '銷貨單已更新' : '銷貨單新增成功', 'success');
+  closeModal('order-modal');
+  renderOrders();
+}
+
+async function deleteOrder(id) {
+  if (!confirm('確定要刪除此銷貨單？')) return;
+  await sb.from('sales_order_items').delete().eq('order_id', id);
+  const { error } = await sb.from('sales_orders').delete().eq('id', id);
+  if (error) { showToast('刪除失敗', 'error'); return; }
+  showToast('已刪除', 'success');
+  renderOrders();
+}
+
+// ─────────────── REPORTS ───────────────
+async function renderReports() {
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  document.getElementById('content').innerHTML = `
+    <div class="month-picker">
+      <label style="font-size:13px;font-weight:600">選擇月份：</label>
+      <input type="month" id="report-month" value="${ym}" onchange="loadReport(this.value)" style="width:160px">
+    </div>
+    <div id="report-content"><div class="loading"><div class="spinner"></div> 載入中...</div></div>`;
+  loadReport(ym);
+}
+
+async function loadReport(ym) {
+  const start = ym + '-01';
+  const endDate = new Date(ym + '-01');
+  endDate.setMonth(endDate.getMonth() + 1);
+  const end = endDate.toISOString().substring(0, 10);
+
+  const { data: orders } = await sb.from('sales_orders')
+    .select('id,order_no,total_amount,order_date,status,customers(name)')
+    .gte('order_date', start).lt('order_date', end).order('order_date');
+
+  const { data: items } = await sb.from('sales_order_items')
+    .select('quantity,unit_price,subtotal,materials(name,unit)')
+    .in('order_id', (orders||[]).map(o => o.id));
+
+  const totalRevenue = (orders||[]).reduce((s,o) => s + Number(o.total_amount), 0);
+  const totalOrders = (orders||[]).length;
+  const avgOrder = totalOrders ? totalRevenue / totalOrders : 0;
+
+  // Material sales summary
+  const matMap = {};
+  (items||[]).forEach(i => {
+    const name = i.materials?.name || '未知品項';
+    if (!matMap[name]) matMap[name] = { qty: 0, amount: 0, unit: i.materials?.unit || '' };
+    matMap[name].qty += Number(i.quantity);
+    matMap[name].amount += Number(i.subtotal);
+  });
+  const matList = Object.entries(matMap).sort((a,b) => b[1].amount - a[1].amount);
+
+  // Customer sales summary
+  const custMap = {};
+  (orders||[]).forEach(o => {
+    const name = o.customers?.name || '未知客戶';
+    if (!custMap[name]) custMap[name] = { count: 0, amount: 0 };
+    custMap[name].count++;
+    custMap[name].amount += Number(o.total_amount);
+  });
+  const custList = Object.entries(custMap).sort((a,b) => b[1].amount - a[1].amount);
+
+  document.getElementById('report-content').innerHTML = `
+    <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="stat-card"><div class="stat-label">本月銷售總額</div><div class="stat-value" style="font-size:20px">${fmtMoney(totalRevenue)}</div></div>
+      <div class="stat-card"><div class="stat-label">銷貨單數量</div><div class="stat-value">${totalOrders}</div><div class="stat-sub">張</div></div>
+      <div class="stat-card"><div class="stat-label">平均每單金額</div><div class="stat-value" style="font-size:18px">${fmtMoney(Math.round(avgOrder))}</div></div>
+    </div>
+    <div class="report-grid">
+      <div class="card">
+        <div class="card-header"><h2>品項銷量排行</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>品項</th><th>數量</th><th>金額</th></tr></thead>
+            <tbody>
+              ${matList.length === 0 ? `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:24px">無資料</td></tr>` :
+                matList.map(([name, v]) => `<tr><td>${name}</td><td>${v.qty} ${v.unit}</td><td>${fmtMoney(v.amount)}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h2>客戶消費統計</h2></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>客戶</th><th>訂單數</th><th>消費金額</th></tr></thead>
+            <tbody>
+              ${custList.length === 0 ? `<tr><td colspan="3" style="text-align:center;color:var(--text-muted);padding:24px">無資料</td></tr>` :
+                custList.map(([name, v]) => `<tr><td>${name}</td><td>${v.count} 張</td><td>${fmtMoney(v.amount)}</td></tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:20px">
+      <div class="card-header"><h2>本月銷貨明細</h2></div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>單號</th><th>客戶</th><th>日期</th><th>金額</th><th>狀態</th></tr></thead>
+          <tbody>
+            ${(!orders||orders.length===0) ? `<tr><td colspan="5" style="text-align:center;color:var(--text-muted);padding:24px">本月無銷貨單</td></tr>` :
+              orders.map(o => `<tr>
+                <td><strong>${o.order_no}</strong></td>
+                <td>${o.customers?.name || '-'}</td>
+                <td>${fmtDate(o.order_date)}</td>
+                <td>${fmtMoney(o.total_amount)}</td>
+                <td>${statusBadge(o.status)}</td>
+              </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ─── Auth ───
+async function initAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    showApp(session.user.email);
+  } else {
+    document.getElementById('auth-screen').style.display = 'flex';
+  }
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN') showApp(session.user.email);
+    if (event === 'SIGNED_OUT') {
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.querySelector('.sidebar').style.display = 'none';
+      document.querySelector('.main').style.display = 'none';
+    }
+  });
+}
+
+function showApp(email) {
+  document.getElementById('auth-screen').style.display = 'none';
+  document.querySelector('.sidebar').style.display = 'flex';
+  document.querySelector('.main').style.display = 'flex';
+  document.getElementById('sidebar-user-email').textContent = email || '';
+  navigate('dashboard');
+}
+
+async function doLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  const errEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+  errEl.textContent = '';
+  if (!email || !password) { errEl.textContent = '請填寫 Email 與密碼'; return; }
+  btn.textContent = '登入中...';
+  btn.disabled = true;
+  const { error } = await sb.auth.signInWithPassword({ email, password });
+  btn.textContent = '登入';
+  btn.disabled = false;
+  if (error) { errEl.textContent = '登入失敗：Email 或密碼錯誤'; }
+}
+
+async function doLogout() {
+  if (!confirm('確定要登出？')) return;
+  await sb.auth.signOut();
+}
+
+async function doChangePassword() {
+  const np = document.getElementById('new-password').value;
+  const cp = document.getElementById('confirm-password').value;
+  const errEl = document.getElementById('pw-error');
+  errEl.textContent = '';
+  if (!np) { errEl.textContent = '請輸入新密碼'; return; }
+  if (np.length < 6) { errEl.textContent = '密碼至少需要 6 個字元'; return; }
+  if (np !== cp) { errEl.textContent = '兩次密碼不一致'; return; }
+  const { error } = await sb.auth.updateUser({ password: np });
+  if (error) { errEl.textContent = '修改失敗：' + error.message; return; }
+  showToast('密碼已更新', 'success');
+  closeModal('change-pw-modal');
+  document.getElementById('new-password').value = '';
+  document.getElementById('confirm-password').value = '';
+}
+
+// ─── Init ───
+document.querySelector('.sidebar').style.display = 'none';
+document.querySelector('.main').style.display = 'none';
+initAuth();
+</script>
+</body>
+</html>
