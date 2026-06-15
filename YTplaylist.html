@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Darlene's Watch List</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+/* IonexOS WebKit 1.8 — Light Mode Tokens */
+:root {
+  --b:   #FEFEFE; --sf: #FAFBFD; --bar: #E6F6FD; --pp: #EBF1F8;
+  --th:  #384C8A; --tm: #8A8FA7; --tl:  #BABDCF;
+  --pr:  #00A0E9; --pd: #0092D4; --pl:  #B0E2F8; --ps: #E6F6FD;
+  --bd:  #EAEDF0;
+  --ai-bg: #E6F6FD; --ai-t: #0072A5;
+  --ds-bg: #F0F3FF; --ds-t: #4863B2;
+  --fi-bg: #E7F9F4; --fi-t: #0FB184;
+  --tc-bg: #FFF6EE; --tc-t: #E4924C;
+  --hi-bg: #F2EBFE; --hi-t: #752EDB;
+  /* IonexOS spacing */
+  --sp-xs: 8px; --sp-sm: 12px; --sp-base: 16px; --sp-md: 20px; --sp-lg: 24px;
+  /* IonexOS radii */
+  --r-sm: 4px; --r-base: 8px; --r-lg: 16px; --r-lg2: 24px; --r-rnd: 999px;
+}
+/* Dark Mode — manual toggle via [data-theme="dark"] on <html> */
+[data-theme="dark"] {
+  --b:  #141E38; --sf: #121B33; --bar: #0E162C; --pp: #080F24;
+  --th: #EAEDF0; --tm: #8A8FA7; --tl:  #545665;
+  --pr: #668BFA; --pd: #5D7EE4; --pl:  #85A2FB; --ps: #243D8B;
+  --bd: #2A3966;
+  --ai-bg: #1a2e5a; --ai-t: #B0E2F8;
+  --ds-bg: #26316a; --ds-t: #D0DBFD;
+  --fi-bg: #0a2e22; --fi-t: #60D6B5;
+  --tc-bg: #301500; --tc-t: #FBB376;
+  --hi-bg: #180036; --hi-t: #AB76F6;
+}
+/* Dark Mode — auto-follow system when user has no manual preference */
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    --b:  #141E38; --sf: #121B33; --bar: #0E162C; --pp: #080F24;
+    --th: #EAEDF0; --tm: #8A8FA7; --tl:  #545665;
+    --pr: #668BFA; --pd: #5D7EE4; --pl:  #85A2FB; --ps: #243D8B;
+    --bd: #2A3966;
+    --ai-bg: #1a2e5a; --ai-t: #B0E2F8;
+    --ds-bg: #26316a; --ds-t: #D0DBFD;
+    --fi-bg: #0a2e22; --fi-t: #60D6B5;
+    --tc-bg: #301500; --tc-t: #FBB376;
+    --hi-bg: #180036; --hi-t: #AB76F6;
+  }
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 14px; }
+body {
+  font-family: 'Roboto', sans-serif;
+  background: var(--sf);
+  color: var(--th);
+  min-height: 100vh;
+  transition: background .3s, color .3s;
+}
+/* Smooth token transitions across key surfaces */
+.sn, .main-hd, .vcard, .list-box, .thumb-w,
+.list-head, .li, .card-body, .cat-tag {
+  transition: background .3s, border-color .3s, color .3s;
+}
+/* ── APP SHELL ── */
+.app { display: flex; min-height: 100vh; }
+
+/* ── SIDE NAV ── */
+.sn {
+  width: 200px; flex-shrink: 0;
+  background: var(--b);
+  border-right: 1px solid var(--bd);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.sn-hd {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--bd);
+}
+.sn-logo { display: flex; align-items: center; gap: 10px; }
+.sn-icon {
+  width: 34px; height: 34px;
+  background: var(--pr); border-radius: var(--r-base);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sn-title { font-size: 15px; font-weight: 700; color: var(--th); letter-spacing: .15px; }
+.sn-sub { font-size: 11px; color: var(--tm); margin-top: 2px; letter-spacing: .4px; }
+.sn-body { flex: 1; padding: 12px 0 8px; }
+.sn-section { padding: 8px 16px 4px; font-size: 10px; font-weight: 500; color: var(--tl); letter-spacing: .8px; text-transform: uppercase; }
+.ni {
+  width: 100%; display: flex; align-items: center; gap: 8px;
+  padding: 9px 16px;
+  background: none; border: none; cursor: pointer;
+  font-family: 'Roboto', sans-serif; font-size: 13px; font-weight: 500;
+  color: var(--tm); text-align: left;
+  transition: background .15s, color .15s;
+}
+.ni:hover:not(:disabled) { background: var(--sf); color: var(--th); }
+.ni.on { background: var(--ps); color: var(--pr); }
+.ni:disabled { opacity: .35; cursor: default; }
+.ni i { font-size: 17px; flex-shrink: 0; }
+.ni-label { flex: 1; }
+.ni-count {
+  font-size: 11px; font-weight: 500;
+  background: var(--pp); color: var(--tm);
+  border-radius: var(--r-rnd); padding: 1px 7px;
+  min-width: 22px; text-align: center;
+}
+.ni.on .ni-count { background: var(--pl); color: var(--pd); }
+.sn-divider { height: 1px; background: var(--bd); margin: 6px 16px; }
+.sn-foot {
+  padding: 12px 16px; border-top: 1px solid var(--bd);
+  font-size: 11px; color: var(--tl);
+  display: flex; align-items: center; gap: 6px;
+}
+
+/* ── MAIN ── */
+.main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.main-hd {
+  padding: 14px 24px; background: var(--b);
+  border-bottom: 1px solid var(--bd);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  position: sticky; top: 0; z-index: 10;
+}
+.mhd-l h1 { font-size: 16px; font-weight: 500; color: var(--th); letter-spacing: .15px; }
+.mhd-l p  { font-size: 11px; color: var(--tm); margin-top: 3px; letter-spacing: .4px; }
+.vc-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 500;
+  background: var(--ps); color: var(--pd);
+  border-radius: var(--r-rnd); padding: 4px 10px;
+  white-space: nowrap; letter-spacing: .3px;
+  transition: background .3s, color .3s;
+}
+.vc-pill i { font-size: 13px; }
+.content { padding: var(--sp-lg) var(--sp-lg) var(--sp-lg); }
+
+/* ── SECTION HEADING ── */
+.sec-hd {
+  display: flex; align-items: baseline; gap: 8px;
+  margin-bottom: var(--sp-sm);
+}
+.sec-hd h2 { font-size: 18px; font-weight: 500; color: var(--th); letter-spacing: .17px; }
+.sec-hd span { font-size: 12px; color: var(--tm); letter-spacing: .4px; }
+
+/* ── VIDEO GRID ── */
+.v-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--sp-base);
+  margin-bottom: var(--sp-xl, 32px);
+}
+
+/* ── VIDEO CARD ── */
+.vcard {
+  background: var(--b);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1px solid var(--bd);
+  text-decoration: none;
+  display: flex; flex-direction: column;
+  transition: transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s, border-color .22s;
+}
+.vcard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(56,76,138,.14);
+  border-color: var(--pl);
+}
+.thumb-w {
+  position: relative; aspect-ratio: 16/9;
+  background: var(--pp); overflow: hidden;
+}
+.thumb-w img {
+  width: 100%; height: 100%; object-fit: cover; display: block;
+  transition: transform .3s;
+}
+.vcard:hover .thumb-w img { transform: scale(1.05); }
+.t-ov {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .22s;
+}
+.vcard:hover .t-ov { background: rgba(0,160,233,.2); }
+.play-btn {
+  width: 44px; height: 44px;
+  background: rgba(255,255,255,.94); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; transform: scale(.75);
+  transition: all .22s cubic-bezier(.2,.8,.2,1);
+  box-shadow: 0 4px 12px rgba(0,0,0,.18);
+}
+.vcard:hover .play-btn { opacity: 1; transform: scale(1); }
+.card-body {
+  padding: var(--sp-sm);
+  flex: 1; display: flex; flex-direction: column; gap: 5px;
+}
+.cat-tag {
+  display: inline-flex; align-items: center;
+  padding: 2px 7px; border-radius: var(--r-rnd);
+  font-size: 10px; font-weight: 500; letter-spacing: .4px;
+  width: fit-content;
+}
+.ct-ai      { background: var(--ai-bg); color: var(--ai-t); }
+.ct-design  { background: var(--ds-bg); color: var(--ds-t); }
+.ct-finance { background: var(--fi-bg); color: var(--fi-t); }
+.ct-tech    { background: var(--tc-bg); color: var(--tc-t); }
+.ct-history { background: var(--hi-bg); color: var(--hi-t); }
+.card-title {
+  font-size: 13px; font-weight: 500; color: var(--th);
+  line-height: 1.45; flex: 1;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.card-meta { display: flex; align-items: center; gap: 6px; }
+.card-date { font-size: 11px; color: var(--tm); letter-spacing: .3px; }
+.card-sep  { font-size: 11px; color: var(--tl); }
+.card-vc   { font-size: 11px; font-weight: 500; color: var(--pr); }
+
+/* ── LIST ── */
+.list-box {
+  background: var(--b);
+  border-radius: var(--r-lg2);
+  border: 1px solid var(--bd);
+  overflow: hidden;
+}
+.list-head {
+  display: grid; grid-template-columns: 36px 1fr 90px 80px 70px;
+  gap: var(--sp-sm); padding: 8px var(--sp-base);
+  background: var(--bar); border-bottom: 1px solid var(--pl);
+}
+.list-head span { font-size: 10px; font-weight: 500; color: var(--tm); letter-spacing: .5px; text-transform: uppercase; }
+.li {
+  display: grid; grid-template-columns: 36px 1fr 90px 80px 70px;
+  gap: var(--sp-sm); padding: 10px var(--sp-base);
+  border-bottom: 1px solid var(--bd);
+  text-decoration: none; align-items: center;
+  transition: background .15s;
+}
+.li:last-child { border-bottom: none; }
+.li:hover { background: var(--sf); }
+.l-num  { font-size: 13px; color: var(--tl); text-align: center; }
+.l-title { font-size: 12px; color: var(--th); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; transition: color .15s; }
+.li:hover .l-title { color: var(--pr); }
+.l-date { font-size: 11px; color: var(--tm); letter-spacing: .3px; }
+.l-vc   { font-size: 11px; font-weight: 500; color: var(--pr); text-align: right; }
+
+/* ── THEME TOGGLE BUTTON ── */
+.theme-btn {
+  width: 34px; height: 34px; flex-shrink: 0;
+  background: var(--pp); border: 1px solid var(--bd);
+  border-radius: var(--r-base);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--tm);
+  transition: background .2s, color .2s, border-color .2s;
+}
+.theme-btn:hover { background: var(--ps); color: var(--pr); border-color: var(--pl); }
+.theme-btn i { font-size: 16px; }
+.hd-right { display: flex; align-items: center; gap: 8px; }
+
+/* ── EMPTY / LOADING ── */
+.empty { text-align: center; padding: 60px 20px; font-size: 13px; color: var(--tm); }
+@keyframes blink { 0%,100%{opacity:.3;} 50%{opacity:1;} }
+.blink { animation: blink 1.4s ease-in-out infinite; color: var(--tl); }
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- Side Navigation -->
+  <aside class="sn" role="navigation" aria-label="影片分類">
+    <div class="sn-hd">
+      <div class="sn-logo">
+        <div class="sn-icon" aria-hidden="true">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <polygon points="8,1.5 2.5,14.5 13.5,14.5" fill="white" opacity=".9"/>
+            <polygon points="8,6.5 5.5,12.5 10.5,12.5" fill="white"/>
+          </svg>
+        </div>
+        <div>
+          <div class="sn-title">Watch List</div>
+          <div class="sn-sub">by Darlene</div>
+        </div>
+      </div>
+    </div>
+    <div class="sn-body">
+      <div class="sn-section">分類</div>
+      <nav id="sidenav">
+        <button class="ni on" data-cat="all"><i class="ti ti-layout-grid" aria-hidden="true"></i><span class="ni-label">全部</span><span class="ni-count">14</span></button>
+        <button class="ni" data-cat="ai"><i class="ti ti-cpu" aria-hidden="true"></i><span class="ni-label">AI</span><span class="ni-count">5</span></button>
+        <button class="ni" data-cat="design"><i class="ti ti-palette" aria-hidden="true"></i><span class="ni-label">設計</span><span class="ni-count">6</span></button>
+        <button class="ni" data-cat="finance"><i class="ti ti-chart-bar" aria-hidden="true"></i><span class="ni-label">財經</span><span class="ni-count">3</span></button>
+      </nav>
+      <div class="sn-divider"></div>
+      <div class="sn-section" style="opacity:.5">即將收錄</div>
+      <nav>
+        <button class="ni" disabled><i class="ti ti-device-laptop" aria-hidden="true"></i><span class="ni-label">科技</span><span class="ni-count">0</span></button>
+        <button class="ni" disabled><i class="ti ti-clock-history" aria-hidden="true"></i><span class="ni-label">歷史</span><span class="ni-count">0</span></button>
+      </nav>
+    </div>
+    <div class="sn-foot">
+      <i class="ti ti-calendar-check" aria-hidden="true"></i>
+      更新 2026.06.15
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main" role="main">
+    <div class="main-hd">
+      <div class="mhd-l">
+        <h1>精選播放清單</h1>
+        <p>設計 · AI · 歷史 · 財經 · 科技</p>
+      </div>
+      <div class="hd-right">
+        <span class="vc-pill" id="vcPill">
+          <i class="ti ti-loader-2 blink" aria-hidden="true"></i>
+          觀看數查詢中…
+        </span>
+        <button class="theme-btn" id="themeBtn" aria-label="切換 Light / Dark 模式" title="切換主題模式">
+          <i class="ti ti-moon" id="themeIcon" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    <div class="content" id="content">
+      <div class="empty"><span class="blink">載入中…</span></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const CAT = { ai: 'AI', design: '設計', finance: '財經', tech: '科技', history: '歷史' };
+const VIDEOS = [
+  { id:'6JInQYdSWAc', t:'Best AI Tools for Graphic Design in 2026 (Full Ranking)', c:'ai', d:'Jun 2026' },
+  { id:'Qx1ZfkPC7Io', t:'3 AI Trends That Will Define 2026 (You\'re Not Ready)', c:'ai', d:'May 2026' },
+  { id:'cLk9oOSemag', t:'This Is What OpenAI Predicts for AI in 2026', c:'ai', d:'Apr 2026' },
+  { id:'FwxXFKqGoFQ', t:'Top 5 Financial Tech Trends That Will Change Money Forever (2026)', c:'finance', d:'Apr 2026' },
+  { id:'oS6yrgwSIqc', t:'5 BIGGEST UI/UX Design Trends Of 2026', c:'design', d:'Mar 2026' },
+  { id:'dry_rIRsDl8', t:'Design in Tech Report SXSW 2026: UX to AX', c:'design', d:'Mar 2026' },
+  { id:'qvgCptczRg8', t:'The ONLY Design Video You Need To Stop Looking Like AI (2026)', c:'design', d:'Mar 2026' },
+  { id:'7IJsx51N9YA', t:'The State of UX in 2026 — My Honest Opinion', c:'design', d:'Feb 2026' },
+  { id:'tJS_ycc2lNs', t:'The 9 AI Trends That Will Define 2026 (Researched & Ranked)', c:'ai', d:'Feb 2026' },
+  { id:'XRIh-m23-DM', t:'Video & Motion Design Trends 2026: AI, Craft, and Chaos', c:'design', d:'Feb 2026' },
+  { id:'OnEOoo9KQiQ', t:'3 Investing Themes to Watch in 2026 | J.P. Morgan', c:'finance', d:'Jan 2026' },
+  { id:'B23W1gRT9eY', t:'Top 6 AI Trends That Will Define 2026 (Backed by Data)', c:'ai', d:'Jan 2026' },
+  { id:'VprzCoClVDY', t:'If We Started UX Design in 2026, We\'d Do This', c:'design', d:'Jan 2026' },
+  { id:'aizSsghjzM4', t:'2026 Market Outlook: Stocks, Bonds, and Crypto Trends', c:'finance', d:'Dec 2025' },
+];
+
+const YU = 'https://www.youtube.com/watch?v=';
+const TH = 'https://img.youtube.com/vi/';
+let cur = 'all', vc = {};
+
+function vcEl(id, card) {
+  const v = vc[id];
+  if (v === undefined) return `<span class="blink" style="font-size:11px;color:var(--tl)">…</span>`;
+  if (!v || v === 'N/A') return `<span style="font-size:11px;color:var(--tl)">—</span>`;
+  return `<span class="${card ? 'card-vc' : 'l-vc'}">${v}</span>`;
+}
+
+function render() {
+  const list = cur === 'all' ? VIDEOS : VIDEOS.filter(v => v.c === cur);
+  const top = list.slice(0, 12), rest = list.slice(12);
+  const el = document.getElementById('content');
+  if (!list.length) { el.innerHTML = '<div class="empty">此分類暫無影片。</div>'; return; }
+
+  let h = `<div class="sec-hd"><h2>精選推薦</h2><span>${top.length} 部影片</span></div><div class="v-grid">`;
+  top.forEach(v => {
+    h += `<a class="vcard" href="${YU}${v.id}" target="_blank" rel="noopener noreferrer">
+      <div class="thumb-w">
+        <img src="${TH}${v.id}/hqdefault.jpg" alt="${v.t}" loading="lazy"
+             onerror="this.src='${TH}${v.id}/mqdefault.jpg'">
+        <div class="t-ov"><div class="play-btn" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 2.5l7 4.5-7 4.5V2.5z" fill="#00A0E9"/></svg>
+        </div></div>
+      </div>
+      <div class="card-body">
+        <span class="cat-tag ct-${v.c}">${CAT[v.c]}</span>
+        <p class="card-title">${v.t}</p>
+        <div class="card-meta">
+          <span class="card-date">${v.d}</span>
+          <span class="card-sep">·</span>
+          <span id="cv_${v.id}">${vcEl(v.id, true)}</span>
+        </div>
+      </div>
+    </a>`;
+  });
+  h += '</div>';
+
+  if (rest.length) {
+    h += `<div class="sec-hd" style="margin-top:20px"><h2>更多影片</h2><span>${rest.length} 部影片</span></div>
+    <div class="list-box">
+      <div class="list-head">
+        <span>#</span><span>標題</span><span>分類</span><span>發布日期</span>
+        <span style="text-align:right">觀看數</span>
+      </div>`;
+    rest.forEach((v, i) => {
+      h += `<a class="li" href="${YU}${v.id}" target="_blank" rel="noopener noreferrer">
+        <span class="l-num">${i + 13}</span>
+        <span class="l-title">${v.t}</span>
+        <span><span class="cat-tag ct-${v.c}">${CAT[v.c]}</span></span>
+        <span class="l-date">${v.d}</span>
+        <span id="lv_${v.id}" style="text-align:right">${vcEl(v.id, false)}</span>
+      </a>`;
+    });
+    h += '</div>';
+  }
+  el.innerHTML = h;
+}
+
+function patchViewCounts() {
+  VIDEOS.forEach(v => {
+    const a = document.getElementById('cv_' + v.id);
+    const b = document.getElementById('lv_' + v.id);
+    if (a) a.innerHTML = vcEl(v.id, true);
+    if (b) b.innerHTML = vcEl(v.id, false);
+  });
+}
+
+document.getElementById('sidenav').addEventListener('click', e => {
+  const btn = e.target.closest('.ni');
+  if (!btn || btn.disabled) return;
+  cur = btn.dataset.cat;
+  document.querySelectorAll('#sidenav .ni').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+});
+
+async function loadViewCounts() {
+  const pill = document.getElementById('vcPill');
+  const lines = VIDEOS.map(v => `${v.id}: "${v.t.slice(0, 55)}"`).join('\n');
+
+  async function runAPI(msgs) {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6', max_tokens: 1000,
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        system: 'Search YouTube for video statistics. Return ONLY a JSON object. Keys=YouTube video IDs, values=view count strings like "1.2M" or "345K". Use "N/A" if not found. No markdown.',
+        messages: msgs
+      })
+    });
+    return r.json();
+  }
+
+  try {
+    let msgs = [{ role: 'user', content: `Find current YouTube view counts for these videos:\n${lines}\n\nReturn ONLY a JSON object with video IDs as keys.` }];
+    let data = await runAPI(msgs);
+    let iter = 0;
+
+    while (data.stop_reason === 'tool_use' && iter < 5) {
+      iter++;
+      msgs.push({ role: 'assistant', content: data.content });
+      const results = (data.content || [])
+        .filter(b => b.type === 'tool_use')
+        .map(b => ({ type: 'tool_result', tool_use_id: b.id, content: JSON.stringify(b.input || {}) }));
+      msgs.push({ role: 'user', content: results });
+      data = await runAPI(msgs);
+    }
+
+    const txt = (data.content || []).filter(b => b.type === 'text').map(b => b.text).join('');
+    const match = txt.match(/\{[\s\S]*\}/);
+    if (match) {
+      vc = JSON.parse(match[0]);
+      patchViewCounts();
+      const found = Object.values(vc).filter(v => v && v !== 'N/A').length;
+      pill.innerHTML = `<i class="ti ti-eye"></i> 已取得 ${found}/${VIDEOS.length} 筆觀看數`;
+      pill.style.cssText = 'background:var(--fi-bg);color:var(--fi-t);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:500;display:inline-flex;align-items:center;gap:5px;';
+    } else throw new Error('no JSON');
+
+  } catch (e) {
+    VIDEOS.forEach(v => vc[v.id] = 'N/A');
+    patchViewCounts();
+    pill.innerHTML = '<i class="ti ti-info-circle"></i> 需要 YouTube Data API 取得觀看數';
+    pill.style.cssText = 'background:var(--pp);color:var(--tm);border-radius:999px;padding:4px 10px;font-size:11px;font-weight:500;display:inline-flex;align-items:center;gap:5px;';
+  }
+}
+
+// ── Theme Toggle ──────────────────────────────────────────
+(function () {
+  const html = document.documentElement;
+  const btn  = document.getElementById('themeBtn');
+  const icon = document.getElementById('themeIcon');
+  const KEY  = 'ionex-watch-theme';
+  const sys  = () => window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
+  function apply(theme) {
+    html.setAttribute('data-theme', theme);
+    // Sun = currently dark → click → go Light  |  Moon = currently light → click → go Dark
+    icon.className = (theme === 'dark') ? 'ti ti-sun' : 'ti ti-moon';
+    btn.setAttribute('aria-label', theme === 'dark' ? '切換至 Light Mode' : '切換至 Dark Mode');
+    localStorage.setItem(KEY, theme);
+  }
+
+  // Initialise: saved preference → system default
+  apply(localStorage.getItem(KEY) || sys());
+
+  btn.addEventListener('click', () => {
+    apply(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+  });
+
+  // Keep in sync if system preference changes (e.g. OS switching auto Dark Mode)
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (!localStorage.getItem(KEY)) apply(e.matches ? 'dark' : 'light');
+  });
+}());
+
+render();
+loadViewCounts();
+</script>
+</body>
+</html>
