@@ -96,36 +96,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ===== Form Validation and Submission =====
+    // ===== Contact Form — opens mailto with pre-filled content =====
     const contactForm = document.getElementById('contact-form');
-    
+    const submitBtn = contactForm ? contactForm.querySelector('button[type="submit"]') : null;
+
     if (contactForm) {
         contactForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            // Get form values
+
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const message = document.getElementById('message').value.trim();
-            
-            // Basic validation
-            if (name === '' || email === '' || message === '') {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            // Email validation
+
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
                 alert('Please enter a valid email address');
                 return;
             }
-            
-            // Success message (in real app, this would send data to server)
-            alert('Thank you for your message! I will get back to you soon.');
-            
-            // Reset form
-            contactForm.reset();
+
+            const subject = encodeURIComponent('Portfolio Contact from ' + name);
+            const body = encodeURIComponent(
+                'Name: ' + name + '\n' +
+                'Email: ' + email + '\n\n' +
+                'Message:\n' + message
+            );
+
+            window.location.href = 'mailto:ludarlene@gmail.com?subject=' + subject + '&body=' + body;
+
+            submitBtn.textContent = 'Opening your email client...';
+            setTimeout(() => {
+                submitBtn.textContent = 'Send Message';
+                contactForm.reset();
+            }, 3000);
         });
     }
     
@@ -151,7 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // ===== Add Typing Effect to Hero Title (Optional Enhancement) =====
     const heroTitle = document.querySelector('#home h1 span');
     if (heroTitle) {
-        const originalText = heroTitle.textContent;
         const roles = ['UIUX Designer', 'Planner', 'Idea Incubator'];
         let roleIndex = 0;
         let charIndex = 0;

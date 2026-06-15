@@ -828,6 +828,38 @@ body {
   <div class="hw-btn" id="btn-right"></div>
 </div>
 
+<!-- ══ INCOMING CALL OVERLAY ══ -->
+<div id="call-overlay">
+  <div id="call-body">
+    <div id="call-avatar">👤</div>
+    <div id="call-info">
+      <div id="call-name">Adie</div>
+      <div id="call-number">+91 98736 87536</div>
+      <div id="call-status">Calling...</div>
+      <div id="call-btns">
+        <button class="call-btn accept" id="call-accept">📞</button>
+        <button class="call-btn decline" id="call-decline">📵</button>
+      </div>
+    </div>
+  </div>
+  <div style="position:absolute;bottom:40px;left:0;right:0;height:56px;
+       background:var(--surface);border-top:1px solid var(--border);
+       display:flex;align-items:center;z-index:501;">
+    <div class="ic"><div class="race-badge">RACE</div></div>
+    <div class="ic"><div class="iv" id="call-rpm">0</div><div class="il">RPM</div></div>
+    <div class="ic"><div class="iv" id="call-time">--:--</div><div class="il">TIME</div></div>
+    <div class="ic"><div class="iv" id="call-gear">N</div><div class="il">GEAR</div></div>
+    <div class="ic"><div style="width:44px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;width:65%;background:var(--accent)"></div></div><div class="il">FUEL</div></div>
+    <div class="ic"><div class="iv" id="call-speed">0</div><div class="il">KM/H</div></div>
+  </div>
+  <div style="position:absolute;bottom:0;left:0;right:0;height:40px;
+       background:var(--footer-bg);border-top:1px solid #1a1a1a;display:flex;z-index:501;">
+    <div class="call-foot-btn red" id="call-btn-l">◄ 不接聽</div>
+    <div class="call-foot-btn green" id="call-btn-c">● 接聽</div>
+    <div class="call-foot-btn red" id="call-btn-r">不接聽 ►</div>
+  </div>
+</div>
+
 <script>
 /* ── wireBtn: 600ms threshold for long press ── */
 function wireBtn(id, shortFn, longFn) {
@@ -1180,37 +1212,5 @@ function runBoot() {
 showScreen(0);
 runBoot();
 </script>
-
-<!-- ══ INCOMING CALL OVERLAY ══ -->
-<div id="call-overlay">
-  <div id="call-body">
-    <div id="call-avatar">👤</div>
-    <div id="call-info">
-      <div id="call-name">Adie</div>
-      <div id="call-number">+91 98736 87536</div>
-      <div id="call-status">Calling...</div>
-      <div id="call-btns">
-        <button class="call-btn accept" id="call-accept">📞</button>
-        <button class="call-btn decline" id="call-decline">📵</button>
-      </div>
-    </div>
-  </div>
-  <div style="position:absolute;bottom:40px;left:0;right:0;height:56px;
-       background:var(--surface);border-top:1px solid var(--border);
-       display:flex;align-items:center;z-index:501;">
-    <div class="ic"><div class="race-badge">RACE</div></div>
-    <div class="ic"><div class="iv" id="call-rpm">0</div><div class="il">RPM</div></div>
-    <div class="ic"><div class="iv" id="call-time">--:--</div><div class="il">TIME</div></div>
-    <div class="ic"><div class="iv" id="call-gear">N</div><div class="il">GEAR</div></div>
-    <div class="ic"><div style="width:44px;height:4px;background:var(--border);border-radius:2px;overflow:hidden"><div style="height:100%;width:65%;background:var(--accent)"></div></div><div class="il">FUEL</div></div>
-    <div class="ic"><div class="iv" id="call-speed">0</div><div class="il">KM/H</div></div>
-  </div>
-  <div style="position:absolute;bottom:0;left:0;right:0;height:40px;
-       background:var(--footer-bg);border-top:1px solid #1a1a1a;display:flex;z-index:501;">
-    <div class="call-foot-btn red" id="call-btn-l">◄ 不接聽</div>
-    <div class="call-foot-btn green" id="call-btn-c">● 接聽</div>
-    <div class="call-foot-btn red" id="call-btn-r">不接聽 ►</div>
-  </div>
-</div>
 </body>
 </html>
