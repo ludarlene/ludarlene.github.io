@@ -169,6 +169,97 @@
   .auth-error { font-size: 12px; color: var(--danger); margin-top: 10px; min-height: 18px; }
   .user-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
   .user-email { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  /* ── HAMBURGER BUTTON (mobile only) ── */
+  .menu-btn {
+    display: none;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--text-secondary);
+    transition: background .12s;
+    padding: 0;
+  }
+  .menu-btn:hover { background: var(--bg); color: var(--text); }
+  .menu-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
+
+  /* ── SIDEBAR OVERLAY ── */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.28);
+    z-index: 99;
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+  }
+  .sidebar-overlay.open { display: block; }
+
+  /* ── RWD: TABLET (≤ 1023px) ── */
+  @media (max-width: 1023px) {
+    :root { --sidebar-w: 200px; }
+    .content { padding: 20px 24px; }
+    .topbar { padding: 0 24px; }
+  }
+
+  /* ── RWD: MOBILE (≤ 767px) ── */
+  @media (max-width: 767px) {
+    .menu-btn { display: flex; }
+
+    /* Sidebar becomes a fixed drawer */
+    .sidebar {
+      transform: translateX(-100%);
+      transition: transform .28s cubic-bezier(.2,.8,.2,1);
+    }
+    .sidebar.open {
+      transform: translateX(0);
+      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+    }
+
+    .main { margin-left: 0 !important; }
+    .topbar { padding: 0 14px; gap: 10px; }
+    .content { padding: 14px; }
+
+    /* Stats: 2×2 on mobile */
+    .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
+    .stat-value { font-size: 20px; }
+
+    /* Form grids collapse to 1 column */
+    .form-grid,
+    .form-grid.cols-3 { grid-template-columns: 1fr; }
+
+    /* Report layout: stack */
+    .report-grid { grid-template-columns: 1fr; gap: 14px; }
+
+    /* Month picker stack */
+    .month-picker { flex-wrap: wrap; gap: 8px; }
+
+    /* Topbar actions spacing */
+    .topbar-actions { gap: 6px; }
+
+    /* Toast full-width at bottom */
+    .toast { bottom: 16px; right: 16px; left: 16px; text-align: center; }
+  }
+
+  /* ── RWD: SMALL MOBILE (≤ 479px) ── */
+  @media (max-width: 479px) {
+    .stats-grid { gap: 8px; }
+    .stat-card { padding: 14px 16px; }
+
+    /* Auth card full width */
+    .auth-screen { align-items: flex-start; padding-top: 60px; padding-left: 16px; padding-right: 16px; }
+    .auth-card { width: 100%; padding: 32px 24px; }
+
+    /* Topbar title smaller */
+    .topbar-title { font-size: 13px; }
+    .topbar-actions .btn { padding: 6px 12px; font-size: 12px; }
+  }
 </style>
 </head>
 <body>
@@ -216,6 +307,8 @@
   </div>
 </div>
 
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
 <!-- Sidebar -->
 <nav class="sidebar">
   <div class="sidebar-logo">
@@ -259,6 +352,9 @@
 <!-- Main Content -->
 <main class="main">
   <header class="topbar">
+    <button class="menu-btn" id="menu-btn" aria-label="開啟選單">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
     <span class="topbar-title" id="topbar-title">總覽</span>
     <div class="topbar-actions" id="topbar-actions"></div>
   </header>
@@ -429,6 +525,28 @@ let orderItems = [];
 let allMaterials = [];
 let allCustomers = [];
 
+// ─── Mobile Sidebar ───
+(function () {
+  const sidebar = document.querySelector('.sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const menuBtn = document.getElementById('menu-btn');
+
+  function openSidebar() {
+    sidebar.classList.add('open');
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  window._closeSidebar = function () {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  menuBtn.addEventListener('click', openSidebar);
+  overlay.addEventListener('click', window._closeSidebar);
+}());
+
 // ─── Navigation ───
 function navigate(page) {
   currentPage = page;
@@ -436,6 +554,7 @@ function navigate(page) {
   document.querySelector(`[data-page="${page}"]`).classList.add('active');
   const titles = { dashboard:'總覽', customers:'客戶管理', materials:'建材管理', orders:'銷貨單管理', reports:'每月報表' };
   document.getElementById('topbar-title').textContent = titles[page];
+  if (window.innerWidth < 768 && window._closeSidebar) window._closeSidebar();
   renderPage(page);
 }
 
