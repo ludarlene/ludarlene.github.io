@@ -1028,7 +1028,15 @@
       try {
         const res = await fetch('videos.json');
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        VIDEOS = await res.json();
+        const data = await res.json();
+        VIDEOS = data.videos ?? data;  // 相容舊的純陣列格式
+
+        // 更新左下角更新時間
+        if (data.updated) {
+          const foot = document.querySelector('.sn-foot');
+          if (foot) foot.innerHTML =
+            `<i class="ti ti-calendar-check" aria-hidden="true"></i> 更新 ${data.updated}`;
+        }
       } catch (e) {
         console.error('Failed to load videos.json:', e);
         document.getElementById('content').innerHTML = '<div class="empty">影片清單載入失敗，請稍後重試。</div>';

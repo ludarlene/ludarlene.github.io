@@ -84,8 +84,13 @@ def sort_key(v):
 videos.sort(key=sort_key, reverse=True)
 videos = videos[:MAX_TOTAL]
 
+output = {
+    "updated": datetime.now(timezone.utc).strftime("%Y.%m.%d"),
+    "videos":  videos,
+}
+
 out_path = os.path.join(os.path.dirname(__file__), "..", "videos.json")
 with open(out_path, "w", encoding="utf-8") as f:
-    json.dump(videos, f, ensure_ascii=False, indent=2)
+    json.dump(output, f, ensure_ascii=False, indent=2)
 
-print(f"✓ Wrote {len(videos)} videos to videos.json")
+print(f"✓ Wrote {len(videos)} videos to videos.json (updated: {output['updated']})")
