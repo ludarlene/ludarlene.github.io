@@ -644,10 +644,137 @@
       animation: blink 1.4s ease-in-out infinite;
       color: var(--tl);
     }
+
+    /* ── HAMBURGER BUTTON (mobile only) ── */
+    .menu-btn {
+      display: none;
+      width: 34px;
+      height: 34px;
+      flex-shrink: 0;
+      background: var(--pp);
+      border: 1px solid var(--bd);
+      border-radius: var(--r-base);
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--tm);
+      transition: background .2s, color .2s, border-color .2s;
+    }
+
+    .menu-btn:hover {
+      background: var(--ps);
+      color: var(--pr);
+      border-color: var(--pl);
+    }
+
+    .menu-btn i {
+      font-size: 18px;
+    }
+
+    /* ── SIDE NAV OVERLAY ── */
+    .sn-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 15, 36, .48);
+      z-index: 99;
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .sn-overlay.open {
+      display: block;
+    }
+
+    /* ── RWD: TABLET (≤ 1023px) ── */
+    @media (max-width: 1023px) {
+      .sn {
+        width: 180px;
+      }
+    }
+
+    /* ── RWD: MOBILE (≤ 767px) ── */
+    @media (max-width: 767px) {
+      .menu-btn {
+        display: flex;
+      }
+
+      /* Side nav becomes a fixed drawer */
+      .sn {
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        height: 100%;
+        width: 220px;
+        z-index: 100;
+        transform: translateX(-100%);
+        transition: transform .28s cubic-bezier(.2, .8, .2, 1), background .3s, border-color .3s;
+      }
+
+      .sn.open {
+        transform: translateX(0);
+        box-shadow: 4px 0 28px rgba(8, 15, 36, .2);
+      }
+
+      .main-hd {
+        padding: 10px 14px;
+        gap: 8px;
+      }
+
+      .mhd-l h1 {
+        font-size: 14px;
+      }
+
+      .mhd-l p {
+        display: none;
+      }
+
+      .content {
+        padding: var(--sp-base);
+      }
+
+      .v-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+      }
+
+      /* List table: show title + viewcount only */
+      .list-head,
+      .li {
+        grid-template-columns: 1fr auto;
+      }
+
+      .list-head > span:nth-child(1),
+      .list-head > span:nth-child(3),
+      .list-head > span:nth-child(4),
+      .li > span:nth-child(1),
+      .li > span:nth-child(3),
+      .li > span:nth-child(4) {
+        display: none;
+      }
+    }
+
+    /* ── RWD: SMALL MOBILE (≤ 479px) ── */
+    @media (max-width: 479px) {
+      .vc-pill {
+        display: none;
+      }
+
+      .v-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .card-body {
+        padding: 8px;
+      }
+    }
   </style>
 </head>
 
 <body>
+  <div class="sn-overlay" id="snOverlay"></div>
   <div class="app">
     <!-- Side Navigation -->
     <aside class="sn" role="navigation" aria-label="影片分類">
@@ -695,6 +822,9 @@
     <!-- Main Content -->
     <main class="main" role="main">
       <div class="main-hd">
+        <button class="menu-btn" id="menuBtn" aria-label="開啟選單">
+          <i class="ti ti-menu-2" aria-hidden="true"></i>
+        </button>
         <div class="mhd-l">
           <h1>精選播放清單</h1>
           <p>設計 · AI · 歷史 · 財經 · 科技</p>
@@ -879,6 +1009,33 @@
       // Keep in sync if system preference changes (e.g. OS switching auto Dark Mode)
       window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
         if (!localStorage.getItem(KEY)) apply(e.matches ? 'dark' : 'light');
+      });
+    }());
+
+    // ── Mobile Nav ──────────────────────────────────────────
+    (function () {
+      const sn = document.querySelector('.sn');
+      const overlay = document.getElementById('snOverlay');
+      const menuBtn = document.getElementById('menuBtn');
+
+      function openNav() {
+        sn.classList.add('open');
+        overlay.classList.add('open');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeNav() {
+        sn.classList.remove('open');
+        overlay.classList.remove('open');
+        document.body.style.overflow = '';
+      }
+
+      menuBtn.addEventListener('click', openNav);
+      overlay.addEventListener('click', closeNav);
+
+      // Close drawer when a nav item is picked on mobile
+      document.getElementById('sidenav').addEventListener('click', e => {
+        if (window.innerWidth < 768 && e.target.closest('.ni')) closeNav();
       });
     }());
 
