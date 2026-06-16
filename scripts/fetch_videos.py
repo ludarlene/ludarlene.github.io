@@ -38,7 +38,7 @@ def month_str(iso_date):
 
 # 只抓過去 1 個月的影片
 published_after = (
-    datetime.now(timezone.utc) - timedelta(days=30)
+    datetime.now(timezone.utc) - timedelta(days=365)
 ).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 seen   = set()
