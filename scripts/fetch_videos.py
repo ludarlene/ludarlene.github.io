@@ -7,7 +7,10 @@ import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta, timezone
 
-API_KEY = os.environ["YT_API_KEY"]
+API_KEY = os.environ.get("YT_API_KEY", "")
+if not API_KEY:
+    raise SystemExit("[ERROR] YT_API_KEY environment variable is not set.")
+
 YT_BASE = "https://www.googleapis.com/youtube/v3"
 
 # 每個分類對應的搜尋關鍵字（可自行調整）
@@ -27,8 +30,12 @@ MAX_TOTAL      = 30  # 全部上限
 def yt_request(endpoint, params):
     params["key"] = API_KEY
     url = f"{YT_BASE}/{endpoint}?" + urllib.parse.urlencode(params)
-    with urllib.request.urlopen(url, timeout=15) as r:
-        return json.loads(r.read().decode())
+    try:
+        with urllib.request.urlopen(url, timeout=15) as r:
+            return json.loads(r.read().decode())
+    except urllib.error.HTTPError as e:
+        body = e.read().decode()
+        raise RuntimeError(f"HTTP {e.code} {e.reason} — {body}") from e
 
 
 def month_str(iso_date):
