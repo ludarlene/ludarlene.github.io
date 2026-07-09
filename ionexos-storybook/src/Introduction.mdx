@@ -1,0 +1,86 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Introduction" />
+
+# IonexOS WebKit Design System
+
+**版本：v1.8**
+**狀態：完整 6 批次 + 基礎建設補強（Icon System、Light Theme）已交付**
+
+這是 ionexOS WebKit Design System 的 Storybook 實作，與 Figma 設計檔同步維護。
+
+## 已交付批次
+
+### Batch 1 - Foundations & 示範元件
+- **Colors**：原始色階（11 個色系）+ 語意化 tokens（10 個語意分組）
+- **Typography**：完整字型階層（H1-H6、Subtitle、Body、Button、Caption）
+- **Shadows**：8 個層級（含 hero、head 特殊用途）
+- **Layout**：Breakpoints、Spacing、Radius
+- **Button**：3 sizes × 4 variants
+- **Badge**：6 variants × 2 sizes × 2 shapes
+
+### Batch 2 - 表單基礎元件
+- **Input** 完整狀態系統（含 viewOnly、badge）
+- **TextArea** 含字數計數
+- **Checkbox** 含 Indeterminate、ParentChild 範例
+- **Radio + RadioGroup** Context-based 整合
+- **Switch** 含 labelPlacement
+- **Select** 單選、多選、搜尋、鍵盤導航
+- **DatePicker** 月曆網格、自訂格式、min/max
+
+### Batch 3 - 反饋元件
+- **StatusIndicator** 8 種狀態（含 pulse 動畫）
+- **Spinner + ProgressBar**（determinate / indeterminate）
+- **Notification (Inline)** 4 種 status，自動切換 Short / Long
+- **Tooltip** 4 方位、含 title/footer、portal 渲染
+- **Modal** 3 種 type、ESC + 背景關閉、scroll lock
+- **Toast** + `ToastProvider` + `useToast()` hook 完整系統
+
+### Batch 4 - 導航與結構
+- **Title + Text** 工具元件對應整套 typography
+- **Card** + Header/Body/Footer，3 種 variant、interactive 模式
+- **Tabs** underline / pill / enclosed 三型，含鍵盤導航
+- **Stepper** horizontal + vertical，自動狀態推導
+- **SideNav + TopBar + Breadcrumbs** 完整導覽系統
+
+### Batch 5 - 資料顯示
+- **Table** primitive 組合元件（Thead / Tbody / Tr / Th / Td / CellText / TableEmpty）
+- **Pagination** 兩種 mode（default / page），含 RowsPerPage selector
+- **DataTable** column-based 配置，整合排序、選取、Toolbar、Pagination
+- **DragDropList** 6 狀態、原生 HTML5 drag API、可拖拉排序
+
+### Batch 6 - 進階與佈局
+- **Drawer** 4 方位側出面板，含 backdrop、ESC、scroll lock
+- **Popover** 8 種 placement、click/hover 觸發
+- **ScrollArea** 4px 細軌道，覆蓋 WebKit + Firefox
+- **Map 系列**：MapContainer + MapPin（4 種類型）+ MapPinTip
+- **OrganizationPicker** single / multiple、含搜尋
+- **PageLayout 系列**：PageLayout + PageHeader + PageSection + PageGrid，含 Dashboard/Details/List 範本
+
+### 基礎建設補強
+- **Icon System**：統一 `<Icon name="..." />` 元件，強型別 IconName，5 個分組（system/bullet/nav/24pt/16pt），約 100 個常用圖示，含搜尋 gallery
+- **Light Theme**：`semanticColorsLight` + `lightTheme`，Storybook toolbar 一鍵切換，包含 dark/light 並排對照故事
+
+## 後續批次規劃（依優先序）
+
+**Batch 2 - 表單基礎元件**
+Input/Textfield、Checkbox/Radiobox、Switch、Dropdown、Datetime
+
+**Batch 3 - 反饋元件**
+Toast、Modal、Notification、Tooltip、Status Indicator、Loading
+
+**Batch 4 - 導航與結構**
+Navigation、Tabs、Stepper、Title/CardHeader
+
+**Batch 5 - 資料顯示**
+Table、Data Table、Drag & Drop
+
+**Batch 6 - 進階元件**
+Map、Pin、Organization Picker、Overlay、Page Template
+
+## 設計原則
+
+1. **Token-first**：所有元件樣式必須引用 theme tokens，不寫死值
+2. **Semantic over Primitive**：元件內優先使用語意化 tokens
+3. **狀態統一**：所有互動元件遵循 enable/hover/active/focus/disabled 五態
+4. **TypeScript 嚴格模式**：所有 props 完整型別標註
