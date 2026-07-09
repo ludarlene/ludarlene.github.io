@@ -161,105 +161,14 @@
   .cust-opt:hover { background: var(--primary-light); }
 
   /* Auth */
-  .auth-screen { position: fixed; inset: 0; background: var(--bg); z-index: 500; display: flex; align-items: center; justify-content: center; }
-  .auth-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; width: 380px; padding: 40px 36px; }
+  .auth-screen { position: fixed; inset: 0; z-index: 500; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; transition: background-image 0.4s ease; }
+  .auth-card { position: relative; z-index: 1; background: rgba(255,255,255,0.92); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.4); border-radius: 20px; width: 380px; padding: 40px 36px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
   .auth-logo { font-family: 'Anton', sans-serif; font-size: 32px; font-weight: 400; background: linear-gradient(90deg, #f4f269, #5cb270); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 6px; }
   .auth-sub { font-size: 12px; color: var(--text-muted); margin-bottom: 32px; }
   .auth-card .form-group { margin-bottom: 14px; }
   .auth-error { font-size: 12px; color: var(--danger); margin-top: 10px; min-height: 18px; }
   .user-badge { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-muted); }
   .user-email { max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-
-  /* ── HAMBURGER BUTTON (mobile only) ── */
-  .menu-btn {
-    display: none;
-    width: 32px;
-    height: 32px;
-    flex-shrink: 0;
-    background: transparent;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    color: var(--text-secondary);
-    transition: background .12s;
-    padding: 0;
-  }
-  .menu-btn:hover { background: var(--bg); color: var(--text); }
-  .menu-btn svg { width: 15px; height: 15px; flex-shrink: 0; }
-
-  /* ── SIDEBAR OVERLAY ── */
-  .sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.28);
-    z-index: 99;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
-  }
-  .sidebar-overlay.open { display: block; }
-
-  /* ── RWD: TABLET (≤ 1023px) ── */
-  @media (max-width: 1023px) {
-    :root { --sidebar-w: 200px; }
-    .content { padding: 20px 24px; }
-    .topbar { padding: 0 24px; }
-  }
-
-  /* ── RWD: MOBILE (≤ 767px) ── */
-  @media (max-width: 767px) {
-    .menu-btn { display: flex; }
-
-    /* Sidebar becomes a fixed drawer */
-    .sidebar {
-      transform: translateX(-100%);
-      transition: transform .28s cubic-bezier(.2,.8,.2,1);
-    }
-    .sidebar.open {
-      transform: translateX(0);
-      box-shadow: 4px 0 24px rgba(0,0,0,0.15);
-    }
-
-    .main { margin-left: 0 !important; }
-    .topbar { padding: 0 14px; gap: 10px; }
-    .content { padding: 14px; }
-
-    /* Stats: 2×2 on mobile */
-    .stats-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px; }
-    .stat-value { font-size: 20px; }
-
-    /* Form grids collapse to 1 column */
-    .form-grid,
-    .form-grid.cols-3 { grid-template-columns: 1fr; }
-
-    /* Report layout: stack */
-    .report-grid { grid-template-columns: 1fr; gap: 14px; }
-
-    /* Month picker stack */
-    .month-picker { flex-wrap: wrap; gap: 8px; }
-
-    /* Topbar actions spacing */
-    .topbar-actions { gap: 6px; }
-
-    /* Toast full-width at bottom */
-    .toast { bottom: 16px; right: 16px; left: 16px; text-align: center; }
-  }
-
-  /* ── RWD: SMALL MOBILE (≤ 479px) ── */
-  @media (max-width: 479px) {
-    .stats-grid { gap: 8px; }
-    .stat-card { padding: 14px 16px; }
-
-    /* Auth card full width */
-    .auth-screen { align-items: flex-start; padding-top: 60px; padding-left: 16px; padding-right: 16px; }
-    .auth-card { width: 100%; padding: 32px 24px; }
-
-    /* Topbar title smaller */
-    .topbar-title { font-size: 13px; }
-    .topbar-actions .btn { padding: 6px 12px; font-size: 12px; }
-  }
 </style>
 </head>
 <body>
@@ -307,8 +216,6 @@
   </div>
 </div>
 
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
-
 <!-- Sidebar -->
 <nav class="sidebar">
   <div class="sidebar-logo">
@@ -352,9 +259,6 @@
 <!-- Main Content -->
 <main class="main">
   <header class="topbar">
-    <button class="menu-btn" id="menu-btn" aria-label="開啟選單">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-    </button>
     <span class="topbar-title" id="topbar-title">總覽</span>
     <div class="topbar-actions" id="topbar-actions"></div>
   </header>
@@ -525,28 +429,6 @@ let orderItems = [];
 let allMaterials = [];
 let allCustomers = [];
 
-// ─── Mobile Sidebar ───
-(function () {
-  const sidebar = document.querySelector('.sidebar');
-  const overlay = document.getElementById('sidebar-overlay');
-  const menuBtn = document.getElementById('menu-btn');
-
-  function openSidebar() {
-    sidebar.classList.add('open');
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  window._closeSidebar = function () {
-    sidebar.classList.remove('open');
-    overlay.classList.remove('open');
-    document.body.style.overflow = '';
-  };
-
-  menuBtn.addEventListener('click', openSidebar);
-  overlay.addEventListener('click', window._closeSidebar);
-}());
-
 // ─── Navigation ───
 function navigate(page) {
   currentPage = page;
@@ -554,7 +436,6 @@ function navigate(page) {
   document.querySelector(`[data-page="${page}"]`).classList.add('active');
   const titles = { dashboard:'總覽', customers:'客戶管理', materials:'建材管理', orders:'銷貨單管理', reports:'每月報表' };
   document.getElementById('topbar-title').textContent = titles[page];
-  if (window.innerWidth < 768 && window._closeSidebar) window._closeSidebar();
   renderPage(page);
 }
 
@@ -1150,7 +1031,28 @@ async function loadReport(ym) {
 }
 
 // ─── Auth ───
+const FOREST_IMAGES = [
+  'https://images.unsplash.com/photo-1448375240586-882707db888b?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1507041957456-9c397ce39c97?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1503435980610-a51f3ddfee50?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1511497584788-876760111969?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1470115636492-6d2b56f9146d?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1542202229-7d93c33f5d07?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1473448912268-2022ce9509d8?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1440581572325-0bea30075d9d?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1440342359743-84fcb8c21f21?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1476231682828-37e571bc172f?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1426170042593-200f250dfdaf?q=80&w=1600&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1519821172144-4f87d85de2a1?q=80&w=1600&auto=format&fit=crop'
+];
+
+function setRandomForestBg() {
+  const url = FOREST_IMAGES[Math.floor(Math.random() * FOREST_IMAGES.length)];
+  document.getElementById('auth-screen').style.backgroundImage = `url('${url}')`;
+}
+
 async function initAuth() {
+  setRandomForestBg();
   const { data: { session } } = await sb.auth.getSession();
   if (session) {
     showApp(session.user.email);
@@ -1160,6 +1062,7 @@ async function initAuth() {
   sb.auth.onAuthStateChange((event, session) => {
     if (event === 'SIGNED_IN') showApp(session.user.email);
     if (event === 'SIGNED_OUT') {
+      setRandomForestBg();
       document.getElementById('auth-screen').style.display = 'flex';
       document.querySelector('.sidebar').style.display = 'none';
       document.querySelector('.main').style.display = 'none';
