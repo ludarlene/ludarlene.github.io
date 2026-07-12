@@ -153,13 +153,13 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: -0.02em;
 }
 
-/* Orbits mark — three overlapping rings, the middle one ultramarine */
+/* Signature mark — one flowing handwritten "d" with a floating blue dot */
 .wordmark::before {
   content: "";
-  width: 27px;
-  height: 18px;
+  width: 21px;
+  height: 22px;
   flex-shrink: 0;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='7 15 50 34'%3E%3Ccircle cx='24' cy='32' r='15' fill='none' stroke='%230b0b0e' stroke-width='3.5'/%3E%3Ccircle cx='32' cy='32' r='15' fill='none' stroke='%233457f0' stroke-width='3.5'/%3E%3Ccircle cx='40' cy='32' r='15' fill='none' stroke='%230b0b0e' stroke-width='3.5'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='10 2 54 60'%3E%3Cpath d='M44 10 C46 24 46 38 43 50 C42 54 36 56 31 55 C22 53 18 46 20 39 C22 31 31 28 38 31 C41 32 43 34 44 37 M43 50 C45 53 50 54 55 51' fill='none' stroke='%230b0b0e' stroke-width='5.5' stroke-linecap='round'/%3E%3Ccircle cx='57' cy='44' r='4.5' fill='%233457f0'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;

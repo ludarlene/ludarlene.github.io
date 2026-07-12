@@ -17,31 +17,31 @@
         /* ---- Hero ---- */
         .home-hero { text-align: center; padding: clamp(5.5rem, 12vw, 9.5rem) 0 clamp(4.5rem, 9vw, 7rem); }
 
-        .orbits {
-            width: 150px;
-            height: 96px;
-            margin: 0 auto 2.2rem;
-            position: relative;
+        /* Signature mark — writes itself on load */
+        .sig-mark { margin: 0 auto 1.8rem; width: 118px; }
+
+        .sig-mark .sig-stroke {
+            stroke-dasharray: 100;
+            stroke-dashoffset: 100;
+            animation: sig-draw 1.7s cubic-bezier(0.45, 0, 0.3, 1) 0.3s forwards;
         }
 
-        .orbits span {
-            position: absolute;
-            top: 0; bottom: 0;
-            width: 96px;
-            border: 1px solid rgba(11, 11, 14, 0.5);
-            border-radius: 50%;
+        .sig-mark .sig-dot {
+            opacity: 0;
+            animation: sig-dot 0.5s ease 1.9s forwards;
         }
 
-        .orbits span:nth-child(1) { left: 0; }
-        .orbits span:nth-child(2) { left: 27px; animation: breathe 4s ease-in-out infinite; }
-        .orbits span:nth-child(3) { left: 54px; }
+        @keyframes sig-draw { to { stroke-dashoffset: 0; } }
 
-        @keyframes breathe {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.06); }
+        @keyframes sig-dot {
+            from { opacity: 0; transform: translateY(-6px); }
+            to { opacity: 1; transform: none; }
         }
 
-        @media (prefers-reduced-motion: reduce) { .orbits span { animation: none; } }
+        @media (prefers-reduced-motion: reduce) {
+            .sig-mark .sig-stroke { animation: none; stroke-dashoffset: 0; }
+            .sig-mark .sig-dot { animation: none; opacity: 1; }
+        }
 
         .home-hero .eyebrow {
             font-family: var(--font-mono);
@@ -366,7 +366,14 @@
         <section class="mesh-hero">
             <div class="mesh" aria-hidden="true"></div>
             <div class="page home-hero">
-                <div class="orbits" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div class="sig-mark" aria-hidden="true">
+                    <svg width="118" height="118" viewBox="4 0 60 64">
+                        <path class="sig-stroke" pathLength="100"
+                              d="M44 10 C46 24 46 38 43 50 C42 54 36 56 31 55 C22 53 18 46 20 39 C22 31 31 28 38 31 C41 32 43 34 44 37 M43 50 C45 53 50 54 55 51"
+                              fill="none" stroke="#0b0b0e" stroke-width="4" stroke-linecap="round"/>
+                        <circle class="sig-dot" cx="57" cy="44" r="3.5" fill="#3457f0"/>
+                    </svg>
+                </div>
                 <p class="eyebrow reveal">UI/UX design for EV energy platforms, vehicle HMI &amp; design systems.</p>
                 <h1 class="display reveal">Calm Interfaces for <i>Complex</i> Systems.</h1>
                 <p class="lede reveal">
