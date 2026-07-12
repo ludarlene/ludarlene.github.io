@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iEnergy 2026 — Darlene.Design</title>
-    <meta name="description" content="iEnergy 2026 — the next-generation management console for EV battery-swap networks. A case study by Darlene Lu.">
+    <meta name="description"
+        content="iEnergy 2026 — the next-generation management console for EV battery-swap networks. A case study by Darlene Lu.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/darlene.css">
 
@@ -45,8 +48,15 @@
         }
 
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.35; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
         }
 
         .kpi-row {
@@ -80,10 +90,21 @@
             line-height: 1.1;
         }
 
-        .kpi .k-delta { font-size: 0.72rem; margin-top: 0.35rem; color: #11c291; }
-        .kpi .k-delta.warn { color: #fd5463; }
+        .kpi .k-delta {
+            font-size: 0.72rem;
+            margin-top: 0.35rem;
+            color: #11c291;
+        }
 
-        .event-list { display: flex; flex-direction: column; gap: 0.5rem; }
+        .kpi .k-delta.warn {
+            color: #fd5463;
+        }
+
+        .event-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
 
         .event {
             display: flex;
@@ -98,13 +119,35 @@
             color: #9fb0d8;
         }
 
-        .event .dot { width: 6px; height: 6px; border-radius: 50%; background: #00a0e9; box-shadow: 0 0 6px #00a0e9; flex-shrink: 0; }
-        .event.error { border-color: rgba(253, 84, 99, 0.35); color: #fd8b95; }
-        .event.error .dot { background: #fd5463; box-shadow: 0 0 6px #fd5463; }
-        .event .time { margin-left: auto; color: #667; flex-shrink: 0; }
+        .event .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00a0e9;
+            box-shadow: 0 0 6px #00a0e9;
+            flex-shrink: 0;
+        }
+
+        .event.error {
+            border-color: rgba(253, 84, 99, 0.35);
+            color: #fd8b95;
+        }
+
+        .event.error .dot {
+            background: #fd5463;
+            box-shadow: 0 0 6px #fd5463;
+        }
+
+        .event .time {
+            margin-left: auto;
+            color: #667;
+            flex-shrink: 0;
+        }
 
         @media (max-width: 860px) {
-            .kpi-row { grid-template-columns: repeat(2, 1fr); }
+            .kpi-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -330,7 +373,8 @@
                 </p>
             </div>
 
-            <div class="console-mock reveal" role="img" aria-label="Simplified recreation of the iEnergy 2026 live dashboard">
+            <div class="console-mock reveal" role="img"
+                aria-label="Simplified recreation of the iEnergy 2026 live dashboard">
                 <div class="titlebar">
                     <span class="live-dot"></span>
                     <span>iEnergy 2026 — Network Overview · Live</span>
@@ -461,9 +505,10 @@
         <div class="bar">
             <span>© 2026 Darlene.Design</span>
             <a href="./index.html" class="u-link">Index</a>
-            <a href="#" class="u-link" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top ↑</a>
+            <a href="#" class="u-link" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top
+                ↑</a>
         </div>
-        <div class="giant-mark" aria-hidden="true">Darlene</div>
+
     </footer>
 
     <script src="assets/js/darlene.js"></script>

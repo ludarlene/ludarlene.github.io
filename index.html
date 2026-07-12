@@ -5,20 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Darlene.Design — UI/UX Designer</title>
-    <meta name="description" content="Darlene Lu — a UI/UX designer crafting calm interfaces for complex systems: EV energy platforms, vehicle HMI, and design systems.">
+    <meta name="description"
+        content="Darlene Lu — a UI/UX designer crafting calm interfaces for complex systems: EV energy platforms, vehicle HMI, and design systems.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/darlene.css">
 
     <style>
         /* ---- Hero ---- */
-        .home-hero { text-align: center; padding: clamp(5.5rem, 12vw, 9.5rem) 0 clamp(4.5rem, 9vw, 7rem); }
+        .home-hero {
+            text-align: center;
+            padding: clamp(5.5rem, 12vw, 9.5rem) 0 clamp(4.5rem, 9vw, 7rem);
+        }
 
         /* Signature mark — writes itself on load */
-        .sig-mark { margin: 0 auto 1.8rem; width: 118px; }
+        .sig-mark {
+            margin: 0 auto 1.8rem;
+            width: 118px;
+        }
 
         .sig-mark .sig-stroke {
             stroke-dasharray: 100;
@@ -31,16 +40,34 @@
             animation: sig-dot 0.5s ease 1.9s forwards;
         }
 
-        @keyframes sig-draw { to { stroke-dashoffset: 0; } }
+        @keyframes sig-draw {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
 
         @keyframes sig-dot {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: none; }
+            from {
+                opacity: 0;
+                transform: translateY(-6px);
+            }
+
+            to {
+                opacity: 1;
+                transform: none;
+            }
         }
 
         @media (prefers-reduced-motion: reduce) {
-            .sig-mark .sig-stroke { animation: none; stroke-dashoffset: 0; }
-            .sig-mark .sig-dot { animation: none; opacity: 1; }
+            .sig-mark .sig-stroke {
+                animation: none;
+                stroke-dashoffset: 0;
+            }
+
+            .sig-mark .sig-dot {
+                animation: none;
+                opacity: 1;
+            }
         }
 
         .home-hero .eyebrow {
@@ -64,7 +91,12 @@
             margin: 0 auto 2.4rem;
         }
 
-        .hero-cta { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
 
         .btn-line {
             display: inline-flex;
@@ -81,10 +113,16 @@
             transition: transform 0.3s var(--ease-out), border-color 0.3s;
         }
 
-        .btn-line:hover { transform: translateY(-2px); border-color: var(--ink); }
+        .btn-line:hover {
+            transform: translateY(-2px);
+            border-color: var(--ink);
+        }
 
         /* ---- Centered intro ---- */
-        .center-intro { text-align: center; padding: clamp(4rem, 8vw, 6rem) 0 0; }
+        .center-intro {
+            text-align: center;
+            padding: clamp(4rem, 8vw, 6rem) 0 0;
+        }
 
         .center-intro h2 {
             font-family: var(--font-display);
@@ -95,11 +133,24 @@
             margin: 1.2rem auto 1rem;
         }
 
-        .center-intro h2 i { color: var(--accent); }
+        .center-intro h2 i {
+            color: var(--accent);
+        }
 
-        .center-intro .sub { color: var(--ink-soft); font-size: 0.95rem; max-width: 46ch; margin: 0 auto; }
+        .center-intro .sub {
+            color: var(--ink-soft);
+            font-size: 0.95rem;
+            max-width: 46ch;
+            margin: 0 auto;
+        }
 
-        .pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1.8rem; }
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1.8rem;
+        }
 
         .pill {
             font-size: 0.78rem;
@@ -111,7 +162,11 @@
             padding: 0.42rem 1rem;
         }
 
-        .pill.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+        .pill.on {
+            background: var(--ink);
+            border-color: var(--ink);
+            color: #fff;
+        }
 
         /* ---- Work cards ---- */
         .work-grid {
@@ -132,10 +187,18 @@
             min-height: 380px;
         }
 
-        .work-card:hover { transform: translateY(-5px); box-shadow: 0 30px 60px -32px rgba(11, 11, 14, 0.35); }
+        .work-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px -32px rgba(11, 11, 14, 0.35);
+        }
 
-        .work-card.span-3 { grid-column: span 3; }
-        .work-card.span-2 { grid-column: span 2; }
+        .work-card.span-3 {
+            grid-column: span 3;
+        }
+
+        .work-card.span-2 {
+            grid-column: span 2;
+        }
 
         .work-card .wc-no {
             font-family: var(--font-mono);
@@ -154,7 +217,12 @@
             margin-bottom: 0.5rem;
         }
 
-        .work-card .wc-desc { font-size: 0.84rem; line-height: 1.6; opacity: 0.82; max-width: 34ch; }
+        .work-card .wc-desc {
+            font-size: 0.84rem;
+            line-height: 1.6;
+            opacity: 0.82;
+            max-width: 34ch;
+        }
 
         .work-card .wc-tags {
             display: flex;
@@ -185,7 +253,9 @@
             transition: transform 0.9s var(--ease-out);
         }
 
-        .work-card:hover .wc-visual img { transform: scale(1.04); }
+        .work-card:hover .wc-visual img {
+            transform: scale(1.04);
+        }
 
         .work-card .wc-go {
             position: absolute;
@@ -202,16 +272,42 @@
             transition: transform 0.35s var(--ease-out), opacity 0.35s;
         }
 
-        .work-card:hover .wc-go { transform: rotate(-45deg); opacity: 1; }
+        .work-card:hover .wc-go {
+            transform: rotate(-45deg);
+            opacity: 1;
+        }
 
         /* card palettes */
-        .wc-blue { background: var(--accent); color: #fff; }
-        .wc-ink { background: var(--ink); color: #fff; }
-        .wc-pink { background: var(--m-pink); color: #571640; }
-        .wc-cyan { background: #7fd8f0; color: #073d4d; }
-        .wc-tan { background: #dfb98a; color: #4a2f0c; }
+        .wc-blue {
+            background: var(--accent);
+            color: #fff;
+        }
 
-        .wc-pink .wc-visual, .wc-cyan .wc-visual, .wc-tan .wc-visual { border-color: rgba(0, 0, 0, 0.14); }
+        .wc-ink {
+            background: var(--ink);
+            color: #fff;
+        }
+
+        .wc-pink {
+            background: var(--m-pink);
+            color: #571640;
+        }
+
+        .wc-cyan {
+            background: #7fd8f0;
+            color: #073d4d;
+        }
+
+        .wc-gray {
+            background: #dcdcdc;
+            color: #1f1f24;
+        }
+
+        .wc-pink .wc-visual,
+        .wc-cyan .wc-visual,
+        .wc-gray .wc-visual {
+            border-color: rgba(0, 0, 0, 0.14);
+        }
 
         /* IonexOS token strip visual */
         .token-strip {
@@ -257,7 +353,12 @@
                 linear-gradient(180deg, #fdfbff, #f4f0fb);
         }
 
-        .about-split .portrait img { width: 76%; height: auto; margin: 0 auto; padding: 2rem 0; }
+        .about-split .portrait img {
+            width: 76%;
+            height: auto;
+            margin: 0 auto;
+            padding: 2rem 0;
+        }
 
         .about-split h2 {
             font-family: var(--font-display);
@@ -267,9 +368,16 @@
             margin-bottom: 1.2rem;
         }
 
-        .about-split h2 i { color: var(--accent); }
+        .about-split h2 i {
+            color: var(--accent);
+        }
 
-        .skill-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.6rem; }
+        .skill-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 1.6rem;
+        }
 
         .skill-chips span {
             font-size: 0.76rem;
@@ -301,10 +409,10 @@
             height: 90%;
             transform: translateX(-50%);
             background: radial-gradient(50% 90% at 50% 100%,
-                rgba(247, 184, 224, 0.5) 0%,
-                rgba(158, 197, 245, 0.35) 40%,
-                rgba(52, 87, 240, 0.22) 65%,
-                transparent 100%);
+                    rgba(247, 184, 224, 0.5) 0%,
+                    rgba(158, 197, 245, 0.35) 40%,
+                    rgba(52, 87, 240, 0.22) 65%,
+                    transparent 100%);
             filter: blur(10px);
             pointer-events: none;
         }
@@ -318,9 +426,16 @@
             margin: 0 auto 1.1rem;
         }
 
-        .cta-panel h2 i { color: var(--m-sky); }
+        .cta-panel h2 i {
+            color: var(--m-sky);
+        }
 
-        .cta-panel .sub { color: rgba(255, 255, 255, 0.72); font-size: 0.95rem; max-width: 46ch; margin: 0 auto 2.2rem; }
+        .cta-panel .sub {
+            color: rgba(255, 255, 255, 0.72);
+            font-size: 0.95rem;
+            max-width: 46ch;
+            margin: 0 auto 2.2rem;
+        }
 
         .btn-ghost {
             display: inline-flex;
@@ -337,12 +452,24 @@
             transition: transform 0.3s var(--ease-out);
         }
 
-        .btn-ghost:hover { transform: translateY(-2px); }
+        .btn-ghost:hover {
+            transform: translateY(-2px);
+        }
 
         @media (max-width: 900px) {
-            .work-grid { grid-template-columns: 1fr; }
-            .work-card.span-3, .work-card.span-2 { grid-column: span 1; min-height: 340px; }
-            .about-split { grid-template-columns: 1fr; }
+            .work-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .work-card.span-3,
+            .work-card.span-2 {
+                grid-column: span 1;
+                min-height: 340px;
+            }
+
+            .about-split {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -369,9 +496,9 @@
                 <div class="sig-mark" aria-hidden="true">
                     <svg width="118" height="118" viewBox="4 0 60 64">
                         <path class="sig-stroke" pathLength="100"
-                              d="M44 10 C46 24 46 38 43 50 C42 54 36 56 31 55 C22 53 18 46 20 39 C22 31 31 28 38 31 C41 32 43 34 44 37 M43 50 C45 53 50 54 55 51"
-                              fill="none" stroke="#0b0b0e" stroke-width="4" stroke-linecap="round"/>
-                        <circle class="sig-dot" cx="57" cy="44" r="3.5" fill="#3457f0"/>
+                            d="M44 10 C46 24 46 38 43 50 C42 54 36 56 31 55 C22 53 18 46 20 39 C22 31 31 28 38 31 C41 32 43 34 44 37 M43 50 C45 53 50 54 55 51"
+                            fill="none" stroke="#0b0b0e" stroke-width="4" stroke-linecap="round" />
+                        <circle class="sig-dot" cx="57" cy="44" r="3.5" fill="#3457f0" />
                     </svg>
                 </div>
                 <p class="eyebrow reveal">UI/UX design for EV energy platforms, vehicle HMI &amp; design systems.</p>
@@ -431,8 +558,10 @@
                     <h3>iEnergy 2026</h3>
                     <p class="wc-desc">The next-generation console for EV battery-swap networks —
                         dashboard, assets, swap ops, customer care, and billing in one place.</p>
-                    <div class="wc-tags"><span>B2B Platform</span><span>Design Lead</span><span>Data-dense UI</span></div>
-                    <div class="wc-visual"><img src="./img/ev_platform.png" alt="iEnergy 2026 console" loading="lazy"></div>
+                    <div class="wc-tags"><span>B2B Platform</span><span>Design Lead</span><span>Data-dense UI</span>
+                    </div>
+                    <div class="wc-visual"><img src="./img/ev_platform.png" alt="iEnergy 2026 console" loading="lazy">
+                    </div>
                 </a>
 
                 <a class="work-card wc-pink span-2 reveal" href="./project1.html">
@@ -441,7 +570,8 @@
                     <h3>Navigation on Scooter</h3>
                     <p class="wc-desc">A rider-first navigation dashboard — glanceable and safe at speed.</p>
                     <div class="wc-tags"><span>Vehicle HMI</span><span>UX Research</span></div>
-                    <div class="wc-visual"><img src="./img/HeroImage.png" alt="Scooter navigation dashboard" loading="lazy"></div>
+                    <div class="wc-visual"><img src="./img/HeroImage.png" alt="Scooter navigation dashboard"
+                            loading="lazy"></div>
                 </a>
 
                 <a class="work-card wc-cyan span-2 reveal" href="./project2.html">
@@ -450,16 +580,18 @@
                     <h3>Motorcycle Dashboard</h3>
                     <p class="wc-desc">Co-creating a next-generation instrument cluster with riders and engineers.</p>
                     <div class="wc-tags"><span>Vehicle HMI</span><span>Co-design</span></div>
-                    <div class="wc-visual"><img src="./img/HeroImage2.png" alt="Motorcycle dashboard" loading="lazy"></div>
+                    <div class="wc-visual"><img src="./img/HeroImage2.png" alt="Motorcycle dashboard" loading="lazy">
+                    </div>
                 </a>
 
-                <a class="work-card wc-tan span-2 reveal" href="./project3.html">
+                <a class="work-card wc-gray span-2 reveal" href="./project3.html">
                     <span class="wc-go">→</span>
                     <div class="wc-no">NO. 05</div>
                     <h3>Smart City Console</h3>
                     <p class="wc-desc">One management console for thousands of city IoT devices.</p>
                     <div class="wc-tags"><span>SaaS Console</span><span>IA</span><span>Data Viz</span></div>
-                    <div class="wc-visual"><img src="./img/citybg.png" alt="Smart city web console" loading="lazy"></div>
+                    <div class="wc-visual"><img src="./img/citybg.png" alt="Smart city web console" loading="lazy">
+                    </div>
                 </a>
             </div>
         </section>
@@ -507,7 +639,8 @@
                 <h2>Let's make something <i>calm</i> &amp; considered.</h2>
                 <p class="sub">Ideas, collaborations, or just a good design conversation — I'd love to
                     hear from you.</p>
-                <a class="btn-ghost" href="https://www.linkedin.com/in/ludarlene/" target="_blank" rel="noopener">Connect on LinkedIn&nbsp;↗</a>
+                <a class="btn-ghost" href="https://www.linkedin.com/in/ludarlene/" target="_blank"
+                    rel="noopener">Connect on LinkedIn&nbsp;↗</a>
             </div>
         </section>
     </main>
@@ -515,10 +648,10 @@
     <footer class="site-footer">
         <div class="bar">
             <span>© 2026 Darlene.Design</span>
-            <span>Designed &amp; built with care in Taipei</span>
+
             <a href="#top" class="u-link">Back to top ↑</a>
         </div>
-        <div class="giant-mark" aria-hidden="true">Darlene</div>
+
     </footer>
 
     <script src="assets/js/darlene.js"></script>

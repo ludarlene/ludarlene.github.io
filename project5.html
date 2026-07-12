@@ -5,11 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IonexOS Design System — Darlene.Design</title>
-    <meta name="description" content="IonexOS Design System — one design language across every Ionex product. Tokens from Figma Variables, 30+ React components, documented in Storybook. A case study by Darlene Lu.">
+    <meta name="description"
+        content="IonexOS Design System — one design language across every Ionex product. Tokens from Figma Variables, 30+ React components, documented in Storybook. A case study by Darlene Lu.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="assets/css/darlene.css">
 
@@ -34,8 +37,25 @@
             font-family: "Roboto", "Noto Sans TC", var(--font-text);
         }
 
-        .specimen.light { --sp-bg: #ebf1f8; --sp-surface: #fafbfd; --sp-text: #1c2430; --sp-muted: #6b7280; --sp-primary: #00a0e9; --sp-border: #dfe1e2; background: var(--sp-bg); }
-        .specimen.dark  { --sp-bg: #080f24; --sp-surface: #141e38; --sp-text: #fafbfd; --sp-muted: #989db8; --sp-primary: #668bfa; --sp-border: #2a3558; background: var(--sp-bg); }
+        .specimen.light {
+            --sp-bg: #ebf1f8;
+            --sp-surface: #fafbfd;
+            --sp-text: #1c2430;
+            --sp-muted: #6b7280;
+            --sp-primary: #00a0e9;
+            --sp-border: #dfe1e2;
+            background: var(--sp-bg);
+        }
+
+        .specimen.dark {
+            --sp-bg: #080f24;
+            --sp-surface: #141e38;
+            --sp-text: #fafbfd;
+            --sp-muted: #989db8;
+            --sp-primary: #668bfa;
+            --sp-border: #2a3558;
+            background: var(--sp-bg);
+        }
 
         .specimen .sp-label {
             font-family: var(--font-mono);
@@ -45,7 +65,12 @@
             color: var(--sp-muted);
         }
 
-        .sp-btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+        .sp-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            align-items: center;
+        }
 
         .sp-btn {
             font-family: inherit;
@@ -58,13 +83,36 @@
             transition: filter 0.2s, background 0.2s;
         }
 
-        .sp-btn:hover { filter: brightness(1.08); }
-        .sp-btn.primary { background: var(--sp-primary); color: #fff; }
-        .sp-btn.outline { background: transparent; color: var(--sp-primary); border-color: var(--sp-primary); }
-        .sp-btn.ghost { background: transparent; color: var(--sp-text); }
-        .sp-btn.destructive { background: #fd5463; color: #fff; }
+        .sp-btn:hover {
+            filter: brightness(1.08);
+        }
 
-        .sp-badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .sp-btn.primary {
+            background: var(--sp-primary);
+            color: #fff;
+        }
+
+        .sp-btn.outline {
+            background: transparent;
+            color: var(--sp-primary);
+            border-color: var(--sp-primary);
+        }
+
+        .sp-btn.ghost {
+            background: transparent;
+            color: var(--sp-text);
+        }
+
+        .sp-btn.destructive {
+            background: #fd5463;
+            color: #fff;
+        }
+
+        .sp-badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
 
         .sp-badge {
             font-size: 0.68rem;
@@ -82,8 +130,16 @@
             color: var(--sp-text);
         }
 
-        .sp-card .sp-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
-        .sp-card .sp-sub { font-size: 0.75rem; color: var(--sp-muted); }
+        .sp-card .sp-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.2rem;
+        }
+
+        .sp-card .sp-sub {
+            font-size: 0.75rem;
+            color: var(--sp-muted);
+        }
 
         .sp-input {
             display: flex;
@@ -132,8 +188,14 @@
             background: var(--card);
         }
 
-        .token .chip { height: 64px; display: flex; }
-        .token .chip span { flex: 1; }
+        .token .chip {
+            height: 64px;
+            display: flex;
+        }
+
+        .token .chip span {
+            flex: 1;
+        }
 
         .token .meta {
             padding: 0.7rem 0.8rem;
@@ -144,7 +206,10 @@
             color: var(--ink-soft);
         }
 
-        .token .meta .name { color: var(--ink); display: block; }
+        .token .meta .name {
+            color: var(--ink);
+            display: block;
+        }
 
         /* ---- Spacing / radius scales ---- */
 
@@ -156,7 +221,9 @@
             margin-top: 1.6rem;
         }
 
-        .scale-item { text-align: center; }
+        .scale-item {
+            text-align: center;
+        }
 
         .scale-item .bar {
             background: var(--accent-soft);
@@ -185,8 +252,14 @@
             margin-top: 2.2rem;
         }
 
-        .pipeline .step { padding: 1.6rem 1.4rem; position: relative; }
-        .pipeline .step + .step { border-left: 1px solid var(--line); }
+        .pipeline .step {
+            padding: 1.6rem 1.4rem;
+            position: relative;
+        }
+
+        .pipeline .step+.step {
+            border-left: 1px solid var(--line);
+        }
 
         .pipeline .step .s-no {
             font-family: var(--font-display);
@@ -196,8 +269,18 @@
             margin-bottom: 0.6rem;
         }
 
-        .pipeline .step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; }
-        .pipeline .step p { font-size: 0.85rem; line-height: 1.6; color: var(--ink-soft); }
+        .pipeline .step h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 0.35rem;
+        }
+
+        .pipeline .step p {
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--ink-soft);
+        }
+
         .pipeline .step code {
             font-family: var(--font-mono);
             font-size: 0.72rem;
@@ -217,15 +300,38 @@
             color: var(--ink-soft);
         }
 
-        .component-index li { list-style: none; border-bottom: 1px dotted var(--line-strong); }
-        .component-index li::before { content: "·"; color: var(--accent); margin-right: 0.6em; }
+        .component-index li {
+            list-style: none;
+            border-bottom: 1px dotted var(--line-strong);
+        }
+
+        .component-index li::before {
+            content: "·";
+            color: var(--accent);
+            margin-right: 0.6em;
+        }
 
         @media (max-width: 860px) {
-            .specimen-duo { grid-template-columns: 1fr; }
-            .token-grid { grid-template-columns: repeat(2, 1fr); }
-            .pipeline { grid-template-columns: 1fr; }
-            .pipeline .step + .step { border-left: 0; border-top: 1px solid var(--line); }
-            .component-index { columns: 2; }
+            .specimen-duo {
+                grid-template-columns: 1fr;
+            }
+
+            .token-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .pipeline {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline .step+.step {
+                border-left: 0;
+                border-top: 1px solid var(--line);
+            }
+
+            .component-index {
+                columns: 2;
+            }
         }
     </style>
 </head>
@@ -273,7 +379,8 @@
 
         <!-- Live specimen cover -->
         <section>
-            <div class="specimen-duo reveal" role="img" aria-label="IonexOS components rendered in light and dark themes">
+            <div class="specimen-duo reveal" role="img"
+                aria-label="IonexOS components rendered in light and dark themes">
                 <div class="specimen light">
                     <span class="sp-label">Theme / Light</span>
                     <div class="sp-btn-row">
@@ -325,7 +432,8 @@
                     </div>
                 </div>
             </div>
-            <p class="kicker reveal" style="margin-top: 0.8rem;">Live HTML specimens rendered with real IonexOS tokens — not screenshots</p>
+            <p class="kicker reveal" style="margin-top: 0.8rem;">Live HTML specimens rendered with real IonexOS tokens —
+                not screenshots</p>
         </section>
 
         <!-- 01 Why -->
@@ -345,7 +453,7 @@
                 <p>
                     Every new feature paid a redundancy tax — designers redrew basics, engineers
                     re-implemented them, and QA re-tested them. <strong>IonexOS is the shared
-                    foundation that ended that tax</strong>: one set of tokens, one component library,
+                        foundation that ended that tax</strong>: one set of tokens, one component library,
                     one place where the truth lives.
                 </p>
             </div>
@@ -369,19 +477,23 @@
 
             <div class="token-grid reveal">
                 <div class="token">
-                    <div class="chip"><span style="background:#00a0e9"></span><span style="background:#668bfa"></span></div>
+                    <div class="chip"><span style="background:#00a0e9"></span><span style="background:#668bfa"></span>
+                    </div>
                     <div class="meta"><span class="name">--color-primary</span>#00a0e9 / #668bfa</div>
                 </div>
                 <div class="token">
-                    <div class="chip"><span style="background:#ebf1f8"></span><span style="background:#080f24"></span></div>
+                    <div class="chip"><span style="background:#ebf1f8"></span><span style="background:#080f24"></span>
+                    </div>
                     <div class="meta"><span class="name">--color-bg</span>#ebf1f8 / #080f24</div>
                 </div>
                 <div class="token">
-                    <div class="chip"><span style="background:#fafbfd"></span><span style="background:#141e38"></span></div>
+                    <div class="chip"><span style="background:#fafbfd"></span><span style="background:#141e38"></span>
+                    </div>
                     <div class="meta"><span class="name">--color-surface</span>#fafbfd / #141e38</div>
                 </div>
                 <div class="token">
-                    <div class="chip"><span style="background:#dfe1e2"></span><span style="background:#2a3558"></span></div>
+                    <div class="chip"><span style="background:#dfe1e2"></span><span style="background:#2a3558"></span>
+                    </div>
                     <div class="meta"><span class="name">--color-border</span>#dfe1e2 / #2a3558</div>
                 </div>
                 <div class="token">
@@ -404,16 +516,39 @@
 
             <h3 class="reveal">Spacing &amp; radius scales</h3>
             <div class="scale-row reveal" aria-label="Spacing scale from 4 to 48 pixels">
-                <div class="scale-item"><div class="bar" style="width:4px;height:4px"></div><span class="t">4</span></div>
-                <div class="scale-item"><div class="bar" style="width:8px;height:8px"></div><span class="t">8</span></div>
-                <div class="scale-item"><div class="bar" style="width:12px;height:12px"></div><span class="t">12</span></div>
-                <div class="scale-item"><div class="bar" style="width:16px;height:16px"></div><span class="t">16</span></div>
-                <div class="scale-item"><div class="bar" style="width:24px;height:24px"></div><span class="t">24</span></div>
-                <div class="scale-item"><div class="bar" style="width:32px;height:32px"></div><span class="t">32</span></div>
-                <div class="scale-item"><div class="bar" style="width:48px;height:48px"></div><span class="t">48</span></div>
-                <div class="scale-item" style="margin-left:1.5rem"><div class="bar" style="width:48px;height:24px;border-radius:4px"></div><span class="t">r-sm 4</span></div>
-                <div class="scale-item"><div class="bar" style="width:48px;height:24px;border-radius:8px"></div><span class="t">r-md 8</span></div>
-                <div class="scale-item"><div class="bar" style="width:48px;height:24px;border-radius:999px"></div><span class="t">r-pill</span></div>
+                <div class="scale-item">
+                    <div class="bar" style="width:4px;height:4px"></div><span class="t">4</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:8px;height:8px"></div><span class="t">8</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:12px;height:12px"></div><span class="t">12</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:16px;height:16px"></div><span class="t">16</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:24px;height:24px"></div><span class="t">24</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:32px;height:32px"></div><span class="t">32</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:48px;height:48px"></div><span class="t">48</span>
+                </div>
+                <div class="scale-item" style="margin-left:1.5rem">
+                    <div class="bar" style="width:48px;height:24px;border-radius:4px"></div><span class="t">r-sm
+                        4</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:48px;height:24px;border-radius:8px"></div><span class="t">r-md
+                        8</span>
+                </div>
+                <div class="scale-item">
+                    <div class="bar" style="width:48px;height:24px;border-radius:999px"></div><span
+                        class="t">r-pill</span>
+                </div>
             </div>
             <div class="prose reveal" style="margin-top:1.6rem;">
                 <p>
@@ -600,9 +735,10 @@
         <div class="bar">
             <span>© 2026 Darlene.Design</span>
             <a href="./index.html" class="u-link">Index</a>
-            <a href="#" class="u-link" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top ↑</a>
+            <a href="#" class="u-link" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top
+                ↑</a>
         </div>
-        <div class="giant-mark" aria-hidden="true">Darlene</div>
+
     </footer>
 
     <script src="assets/js/darlene.js"></script>
