@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IonexOS Design System — Darlene.Design</title>
+    <meta name="description" content="IonexOS Design System — one design language across every Ionex product. Tokens from Figma Variables, 30+ React components, documented in Storybook. A case study by Darlene Lu.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/darlene.css">
+
+    <style>
+        /* ---- Live specimens: the system rendered in-page, not screenshots ---- */
+
+        .specimen-duo {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 2.5rem;
+        }
+
+        .specimen {
+            padding: clamp(1.5rem, 3.5vw, 2.5rem);
+            display: flex;
+            flex-direction: column;
+            gap: 1.1rem;
+            font-family: "Roboto", "Noto Sans TC", var(--font-text);
+        }
+
+        .specimen.light { --sp-bg: #ebf1f8; --sp-surface: #fafbfd; --sp-text: #1c2430; --sp-muted: #6b7280; --sp-primary: #00a0e9; --sp-border: #dfe1e2; background: var(--sp-bg); }
+        .specimen.dark  { --sp-bg: #080f24; --sp-surface: #141e38; --sp-text: #fafbfd; --sp-muted: #989db8; --sp-primary: #668bfa; --sp-border: #2a3558; background: var(--sp-bg); }
+
+        .specimen .sp-label {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--sp-muted);
+        }
+
+        .sp-btn-row { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; }
+
+        .sp-btn {
+            font-family: inherit;
+            font-size: 0.82rem;
+            font-weight: 500;
+            padding: 0.5rem 1.1rem;
+            border-radius: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: filter 0.2s, background 0.2s;
+        }
+
+        .sp-btn:hover { filter: brightness(1.08); }
+        .sp-btn.primary { background: var(--sp-primary); color: #fff; }
+        .sp-btn.outline { background: transparent; color: var(--sp-primary); border-color: var(--sp-primary); }
+        .sp-btn.ghost { background: transparent; color: var(--sp-text); }
+        .sp-btn.destructive { background: #fd5463; color: #fff; }
+
+        .sp-badge-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+        .sp-badge {
+            font-size: 0.68rem;
+            font-weight: 500;
+            padding: 0.22rem 0.65rem;
+            border-radius: 999px;
+            color: #fff;
+        }
+
+        .sp-card {
+            background: var(--sp-surface);
+            border: 1px solid var(--sp-border);
+            border-radius: 8px;
+            padding: 1rem 1.1rem;
+            color: var(--sp-text);
+        }
+
+        .sp-card .sp-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.2rem; }
+        .sp-card .sp-sub { font-size: 0.75rem; color: var(--sp-muted); }
+
+        .sp-input {
+            display: flex;
+            align-items: center;
+            background: var(--sp-surface);
+            border: 1px solid var(--sp-border);
+            border-radius: 6px;
+            padding: 0.55rem 0.85rem;
+            font-size: 0.82rem;
+            color: var(--sp-muted);
+        }
+
+        .sp-switch {
+            width: 34px;
+            height: 20px;
+            border-radius: 999px;
+            background: var(--sp-primary);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .sp-switch::after {
+            content: "";
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+        }
+
+        /* ---- Token tables ---- */
+
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-top: 2.2rem;
+        }
+
+        .token {
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--card);
+        }
+
+        .token .chip { height: 64px; display: flex; }
+        .token .chip span { flex: 1; }
+
+        .token .meta {
+            padding: 0.7rem 0.8rem;
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            letter-spacing: 0.04em;
+            line-height: 1.7;
+            color: var(--ink-soft);
+        }
+
+        .token .meta .name { color: var(--ink); display: block; }
+
+        /* ---- Spacing / radius scales ---- */
+
+        .scale-row {
+            display: flex;
+            align-items: flex-end;
+            gap: 0.9rem;
+            flex-wrap: wrap;
+            margin-top: 1.6rem;
+        }
+
+        .scale-item { text-align: center; }
+
+        .scale-item .bar {
+            background: var(--accent-soft);
+            border: 1px solid var(--accent);
+            border-radius: 3px;
+            margin: 0 auto 0.5rem;
+        }
+
+        .scale-item .t {
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.06em;
+            color: var(--ink-faint);
+        }
+
+        /* ---- Pipeline steps ---- */
+
+        .pipeline {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--card);
+            margin-top: 2.2rem;
+        }
+
+        .pipeline .step { padding: 1.6rem 1.4rem; position: relative; }
+        .pipeline .step + .step { border-left: 1px solid var(--line); }
+
+        .pipeline .step .s-no {
+            font-family: var(--font-display);
+            font-style: italic;
+            color: var(--accent);
+            display: block;
+            margin-bottom: 0.6rem;
+        }
+
+        .pipeline .step h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; }
+        .pipeline .step p { font-size: 0.85rem; line-height: 1.6; color: var(--ink-soft); }
+        .pipeline .step code {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            color: var(--accent);
+        }
+
+        /* ---- Component index ---- */
+
+        .component-index {
+            columns: 3;
+            column-gap: 2.5rem;
+            margin-top: 2rem;
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            letter-spacing: 0.03em;
+            line-height: 2.2;
+            color: var(--ink-soft);
+        }
+
+        .component-index li { list-style: none; border-bottom: 1px dotted var(--line-strong); }
+        .component-index li::before { content: "·"; color: var(--accent); margin-right: 0.6em; }
+
+        @media (max-width: 860px) {
+            .specimen-duo { grid-template-columns: 1fr; }
+            .token-grid { grid-template-columns: repeat(2, 1fr); }
+            .pipeline { grid-template-columns: 1fr; }
+            .pipeline .step + .step { border-left: 0; border-top: 1px solid var(--line); }
+            .component-index { columns: 2; }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="bar">
+            <a href="./index.html" class="wordmark">DDesign<span class="dot">.</span></a>
+            <nav class="site-nav">
+                <a href="./index.html#work" class="u-link">← All work</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="page">
+
+        <!-- Hero -->
+        <section class="case-hero">
+            <p class="kicker reveal">Case Study <em>·</em> Ionex Energy</p>
+            <h1 class="display reveal">IonexOS <i>Design System</i></h1>
+            <p class="lede reveal">
+                One design language across every Ionex product — design tokens sourced from Figma
+                Variables, 30+ React components, and living documentation in Storybook.
+            </p>
+
+            <dl class="case-meta reveal">
+                <div>
+                    <dt>Role</dt>
+                    <dd>Design System Lead — tokens, components, documentation &amp; governance</dd>
+                </div>
+                <div>
+                    <dt>Timeline</dt>
+                    <dd>2024 → 2026, ongoing</dd>
+                </div>
+                <div>
+                    <dt>Stack</dt>
+                    <dd>Figma Variables · React + TypeScript · Styled Components · Storybook</dd>
+                </div>
+                <div>
+                    <dt>Scale</dt>
+                    <dd>30+ components · light &amp; dark themes · adopted by iEnergy, iFleet &amp; FOTA console</dd>
+                </div>
+            </dl>
+        </section>
+
+        <!-- Live specimen cover -->
+        <section>
+            <div class="specimen-duo reveal" role="img" aria-label="IonexOS components rendered in light and dark themes">
+                <div class="specimen light">
+                    <span class="sp-label">Theme / Light</span>
+                    <div class="sp-btn-row">
+                        <span class="sp-btn primary">Primary</span>
+                        <span class="sp-btn outline">Outline</span>
+                        <span class="sp-btn ghost">Ghost</span>
+                        <span class="sp-btn destructive">Delete</span>
+                    </div>
+                    <div class="sp-badge-row">
+                        <span class="sp-badge" style="background:#11c291">Success</span>
+                        <span class="sp-badge" style="background:#fbb376">Warning</span>
+                        <span class="sp-badge" style="background:#fd5463">Error</span>
+                        <span class="sp-badge" style="background:#989db8">Info</span>
+                    </div>
+                    <div class="sp-input">Search stations…</div>
+                    <div class="sp-card">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem;">
+                            <div>
+                                <div class="sp-title">Station GX-042</div>
+                                <div class="sp-sub">Online · 8 batteries ready</div>
+                            </div>
+                            <span class="sp-switch" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="specimen dark">
+                    <span class="sp-label">Theme / Dark</span>
+                    <div class="sp-btn-row">
+                        <span class="sp-btn primary">Primary</span>
+                        <span class="sp-btn outline">Outline</span>
+                        <span class="sp-btn ghost">Ghost</span>
+                        <span class="sp-btn destructive">Delete</span>
+                    </div>
+                    <div class="sp-badge-row">
+                        <span class="sp-badge" style="background:#11c291">Success</span>
+                        <span class="sp-badge" style="background:#fbb376">Warning</span>
+                        <span class="sp-badge" style="background:#fd5463">Error</span>
+                        <span class="sp-badge" style="background:#989db8">Info</span>
+                    </div>
+                    <div class="sp-input">Search stations…</div>
+                    <div class="sp-card">
+                        <div style="display:flex; align-items:center; justify-content:space-between; gap:1rem;">
+                            <div>
+                                <div class="sp-title">Station GX-042</div>
+                                <div class="sp-sub">Online · 8 batteries ready</div>
+                            </div>
+                            <span class="sp-switch" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="kicker reveal" style="margin-top: 0.8rem;">Live HTML specimens rendered with real IonexOS tokens — not screenshots</p>
+        </section>
+
+        <!-- 01 Why -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">01 — Why</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">Five products, five shades of blue, zero shared parts</h2>
+            <div class="prose reveal">
+                <p>
+                    By 2024, Ionex was shipping web consoles and apps for energy operations, fleet
+                    rental, riders, field maintenance, and dealers. Each team had drifted: the same
+                    button existed in five codebases with five paddings, and "primary blue" meant a
+                    slightly different hex everywhere.
+                </p>
+                <p>
+                    Every new feature paid a redundancy tax — designers redrew basics, engineers
+                    re-implemented them, and QA re-tested them. <strong>IonexOS is the shared
+                    foundation that ended that tax</strong>: one set of tokens, one component library,
+                    one place where the truth lives.
+                </p>
+            </div>
+        </section>
+
+        <!-- 02 Foundations -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">02 — Foundations</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">Tokens first: semantic names, two themes, one source</h2>
+            <div class="prose reveal">
+                <p>
+                    Colors are defined as primitives, then mapped to semantic tokens
+                    (<strong>primary, surface, success, error…</strong>) that resolve differently in
+                    light and dark themes. Products never touch raw hex values — they speak in meaning,
+                    and the theme decides the color.
+                </p>
+            </div>
+
+            <div class="token-grid reveal">
+                <div class="token">
+                    <div class="chip"><span style="background:#00a0e9"></span><span style="background:#668bfa"></span></div>
+                    <div class="meta"><span class="name">--color-primary</span>#00a0e9 / #668bfa</div>
+                </div>
+                <div class="token">
+                    <div class="chip"><span style="background:#ebf1f8"></span><span style="background:#080f24"></span></div>
+                    <div class="meta"><span class="name">--color-bg</span>#ebf1f8 / #080f24</div>
+                </div>
+                <div class="token">
+                    <div class="chip"><span style="background:#fafbfd"></span><span style="background:#141e38"></span></div>
+                    <div class="meta"><span class="name">--color-surface</span>#fafbfd / #141e38</div>
+                </div>
+                <div class="token">
+                    <div class="chip"><span style="background:#dfe1e2"></span><span style="background:#2a3558"></span></div>
+                    <div class="meta"><span class="name">--color-border</span>#dfe1e2 / #2a3558</div>
+                </div>
+                <div class="token">
+                    <div class="chip"><span style="background:#11c291"></span></div>
+                    <div class="meta"><span class="name">--color-success</span>#11c291</div>
+                </div>
+                <div class="token">
+                    <div class="chip"><span style="background:#fbb376"></span></div>
+                    <div class="meta"><span class="name">--color-warning</span>#fbb376</div>
+                </div>
+                <div class="token">
+                    <div class="chip"><span style="background:#fd5463"></span></div>
+                    <div class="meta"><span class="name">--color-error</span>#fd5463</div>
+                </div>
+                <div class="token">
+                    <div class="chip"><span style="background:#989db8"></span></div>
+                    <div class="meta"><span class="name">--color-info</span>#989db8</div>
+                </div>
+            </div>
+
+            <h3 class="reveal">Spacing &amp; radius scales</h3>
+            <div class="scale-row reveal" aria-label="Spacing scale from 4 to 48 pixels">
+                <div class="scale-item"><div class="bar" style="width:4px;height:4px"></div><span class="t">4</span></div>
+                <div class="scale-item"><div class="bar" style="width:8px;height:8px"></div><span class="t">8</span></div>
+                <div class="scale-item"><div class="bar" style="width:12px;height:12px"></div><span class="t">12</span></div>
+                <div class="scale-item"><div class="bar" style="width:16px;height:16px"></div><span class="t">16</span></div>
+                <div class="scale-item"><div class="bar" style="width:24px;height:24px"></div><span class="t">24</span></div>
+                <div class="scale-item"><div class="bar" style="width:32px;height:32px"></div><span class="t">32</span></div>
+                <div class="scale-item"><div class="bar" style="width:48px;height:48px"></div><span class="t">48</span></div>
+                <div class="scale-item" style="margin-left:1.5rem"><div class="bar" style="width:48px;height:24px;border-radius:4px"></div><span class="t">r-sm 4</span></div>
+                <div class="scale-item"><div class="bar" style="width:48px;height:24px;border-radius:8px"></div><span class="t">r-md 8</span></div>
+                <div class="scale-item"><div class="bar" style="width:48px;height:24px;border-radius:999px"></div><span class="t">r-pill</span></div>
+            </div>
+            <div class="prose reveal" style="margin-top:1.6rem;">
+                <p>
+                    Typography pairs <strong>Roboto</strong> for latin text with
+                    <strong>Noto Sans TC</strong> for Traditional Chinese — one type ramp shared by
+                    every product, tuned so mixed-script UI copy sits on the same rhythm.
+                </p>
+            </div>
+        </section>
+
+        <!-- 03 Pipeline -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">03 — Pipeline</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">From Figma Variables to shipped code, without a game of telephone</h2>
+            <div class="prose reveal">
+                <p>
+                    The system's credibility depends on design and code never drifting apart. Tokens
+                    are authored once in Figma Variables and flow downstream mechanically:
+                </p>
+            </div>
+            <div class="pipeline reveal">
+                <div class="step">
+                    <span class="s-no">1.</span>
+                    <h4>Figma Variables</h4>
+                    <p>Designers manage primitives and semantic tokens with light/dark modes in the
+                        IonexOS WebKit library.</p>
+                </div>
+                <div class="step">
+                    <span class="s-no">2.</span>
+                    <h4>Token files</h4>
+                    <p>Variables sync into <code>src/tokens/*.ts</code> — colors, typography, shadows,
+                        spacing, radius.</p>
+                </div>
+                <div class="step">
+                    <span class="s-no">3.</span>
+                    <h4>Themed components</h4>
+                    <p>Components read only from the theme — <code>theme.semantic.*</code> — hardcoded
+                        values are banned by convention and review.</p>
+                </div>
+                <div class="step">
+                    <span class="s-no">4.</span>
+                    <h4>Storybook docs</h4>
+                    <p>Every component ships with autodocs, a Playground story, and an AllVariants
+                        overview — the docs are the contract.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 04 Components -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">04 — Components</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">30+ components, built in the order products needed them</h2>
+            <div class="prose reveal">
+                <p>
+                    Rather than building an encyclopedia up front, the library grew in phases driven by
+                    real product demand — foundations first, then forms, feedback, navigation, and
+                    finally the data-heavy patterns that consoles like
+                    <a href="./project4.html" class="u-link">iEnergy 2026</a> live on.
+                </p>
+            </div>
+            <ul class="component-index reveal">
+                <li>Button</li>
+                <li>Badge</li>
+                <li>Input / Textfield</li>
+                <li>TextArea</li>
+                <li>Checkbox</li>
+                <li>Radio + RadioGroup</li>
+                <li>Switch</li>
+                <li>Select / Dropdown</li>
+                <li>DatePicker</li>
+                <li>Toast</li>
+                <li>Notification</li>
+                <li>Modal</li>
+                <li>Drawer</li>
+                <li>Popover</li>
+                <li>Tooltip</li>
+                <li>Loading</li>
+                <li>Tabs</li>
+                <li>Stepper</li>
+                <li>Pagination</li>
+                <li>Navigation</li>
+                <li>PageLayout</li>
+                <li>Table</li>
+                <li>DataTable</li>
+                <li>Card</li>
+                <li>StatusIndicator</li>
+                <li>OrganizationPicker</li>
+                <li>Map</li>
+                <li>ScrollArea</li>
+                <li>DragDrop</li>
+                <li>Icon</li>
+                <li>Title</li>
+            </ul>
+            <div class="pull-quote reveal">
+                <blockquote>
+                    Every component follows the same anatomy: exported prop types, states drawn from
+                    the theme, a Playground story, and autodocs. Learn one, and you've learned them all.
+                </blockquote>
+                <cite>Component development guideline, IonexOS</cite>
+            </div>
+        </section>
+
+        <!-- 05 Governance -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">05 — Governance</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">A system is a product with two audiences</h2>
+            <div class="item-grid reveal">
+                <div class="item-card">
+                    <span class="idx">a.</span>
+                    <h4>For designers</h4>
+                    <p>The Figma library mirrors the code library one-to-one — variants, states, and
+                        tokens included — so a mock-up is already a spec.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">b.</span>
+                    <h4>For engineers</h4>
+                    <p>Strict TypeScript, one folder per component, styles only from theme values.
+                        Storybook is both workbench and documentation.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">c.</span>
+                    <h4>Contribution loop</h4>
+                    <p>Product teams propose patterns from real needs; validated ones graduate into
+                        the system — the library grows from evidence, not speculation.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">d.</span>
+                    <h4>Versioned releases</h4>
+                    <p>WebKit versions (v1.8 and counting) keep Figma and code in lockstep, with a
+                        roadmap tracking every phase from foundations to data patterns.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 06 Impact -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">06 — Impact</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">The quiet infrastructure behind every Ionex screen</h2>
+            <div class="stat-grid reveal">
+                <div class="stat-cell">
+                    <div class="num">30<sup>+</sup></div>
+                    <div class="lbl">Production components</div>
+                </div>
+                <div class="stat-cell">
+                    <div class="num">2</div>
+                    <div class="lbl">Themes from one semantic token set</div>
+                </div>
+                <div class="stat-cell">
+                    <div class="num">1</div>
+                    <div class="lbl">Source of truth, Figma to code</div>
+                </div>
+            </div>
+            <div class="prose reveal" style="margin-top:2.2rem;">
+                <p>
+                    The real measure is what stopped happening: no more redrawing buttons, no more
+                    "which blue?", no more spec hand-offs that rot. New product surfaces now start
+                    from a living library — <strong>design debates moved from paddings to problems.</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- Next -->
+        <div class="next-project reveal">
+            <a href="./project1.html">
+                <span class="kicker">Next case study</span>
+                <span class="title">Navigation on Scooter<span class="arrow">→</span></span>
+            </a>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="bar">
+            <span>© 2026 Darlene.Design</span>
+            <a href="./index.html" class="u-link">Index</a>
+            <a href="#" class="u-link" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top ↑</a>
+        </div>
+        <div class="giant-mark" aria-hidden="true">Darlene</div>
+    </footer>
+
+    <script src="assets/js/darlene.js"></script>
+</body>
+
+</html>

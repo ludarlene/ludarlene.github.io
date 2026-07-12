@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinSage — Data-Powered Investment Strategies</title>
+    <meta name="description" content="FinSage — 24/7 AI-driven market insights for stocks, ETFs, crypto, and forex.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --ink: #0b0b0e;
+            --ink-soft: #4b4b55;
+            --ink-faint: #8a8a94;
+            --bg: #ffffff;
+            --line: #e8e8ec;
+            --card: #f6f6f8;
+            --blue: #3457f0;
+            --pink: #f7b8e0;
+            --sky: #9ec5f5;
+            --lav: #c9c2f2;
+            --peach: #f8d8c4;
+            --mint: #d9f2e4;
+            --terminal: #101014;
+
+            --font-display: "Instrument Serif", serif;
+            --font-ui: "Schibsted Grotesk", sans-serif;
+            --font-mono: "Fragment Mono", monospace;
+
+            --r-lg: 20px;
+            --r-md: 12px;
+            --ease: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-ui);
+            background: var(--bg);
+            color: var(--ink);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; display: block; }
+        ::selection { background: var(--ink); color: #fff; }
+
+        .wrap { max-width: 1200px; margin: 0 auto; padding: 0 clamp(1.25rem, 4vw, 2.5rem); }
+
+        /* ============ Ticker bar ============ */
+        .ticker {
+            border-bottom: 1px solid var(--line);
+            overflow: hidden;
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            letter-spacing: 0.04em;
+            background: #fff;
+            position: relative;
+            z-index: 60;
+        }
+
+        .ticker-track {
+            display: flex;
+            gap: 3.5rem;
+            width: max-content;
+            padding: 0.55rem 0;
+            animation: tick 36s linear infinite;
+        }
+
+        .ticker:hover .ticker-track { animation-play-state: paused; }
+
+        @keyframes tick {
+            to { transform: translateX(-50%); }
+        }
+
+        .tk { display: flex; gap: 0.5em; white-space: nowrap; color: var(--ink-soft); }
+        .tk .up { color: #0a8a4d; }
+        .tk .down { color: #d43a4f; }
+
+        /* ============ Header ============ */
+        .site-head {
+            position: absolute;
+            top: 32px;
+            left: 0;
+            right: 0;
+            z-index: 50;
+        }
+
+        .site-head .wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding-top: 1.5rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 700;
+            font-size: 1.05rem;
+            letter-spacing: -0.02em;
+        }
+
+        .logo .mark {
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: var(--ink);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .logo .mark::after {
+            content: "";
+            position: absolute;
+            inset: 4px 4px 4px 9px;
+            border-radius: 0 50% 50% 0;
+            background: #fff;
+        }
+
+        .head-nav {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.15rem;
+            font-size: 0.78rem;
+            font-weight: 500;
+        }
+
+        .head-nav a {
+            position: relative;
+            padding-bottom: 1px;
+            color: var(--ink-soft);
+            transition: color 0.25s;
+        }
+
+        .head-nav a:hover { color: var(--ink); }
+        .head-nav a.active { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+        /* ============ Hero ============ */
+        .hero {
+            position: relative;
+            padding: clamp(7rem, 14vw, 10rem) 0 clamp(5rem, 9vw, 7rem);
+            text-align: center;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .hero-mesh {
+            position: absolute;
+            inset: -20% -10%;
+            z-index: -2;
+            background:
+                radial-gradient(42% 55% at 18% 30%, var(--pink) 0%, transparent 70%),
+                radial-gradient(48% 60% at 85% 22%, var(--sky) 0%, transparent 70%),
+                radial-gradient(50% 55% at 70% 85%, var(--lav) 0%, transparent 72%),
+                radial-gradient(45% 50% at 25% 88%, var(--peach) 0%, transparent 70%),
+                radial-gradient(35% 45% at 55% 50%, var(--mint) 0%, transparent 75%),
+                linear-gradient(180deg, #fdfbff 0%, #f4f0fb 100%);
+            filter: saturate(1.05);
+            animation: mesh-drift 18s ease-in-out infinite alternate;
+        }
+
+        @keyframes mesh-drift {
+            from { transform: translate3d(-1.5%, 0, 0) scale(1); }
+            to { transform: translate3d(1.5%, -2%, 0) scale(1.05); }
+        }
+
+        /* grain over the mesh */
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+        }
+
+        .orbits {
+            width: 150px;
+            height: 96px;
+            margin: 0 auto 2.2rem;
+            position: relative;
+        }
+
+        .orbits span {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 96px;
+            border: 1px solid rgba(11, 11, 14, 0.5);
+            border-radius: 50%;
+        }
+
+        .orbits span:nth-child(1) { left: 0; }
+        .orbits span:nth-child(2) { left: 27px; animation: breathe 4s ease-in-out infinite; }
+        .orbits span:nth-child(3) { left: 54px; }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        .hero .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+            color: var(--ink-soft);
+            margin-bottom: 1rem;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(2.6rem, 6.5vw, 4.4rem);
+            line-height: 1.04;
+            letter-spacing: -0.01em;
+            max-width: 15ch;
+            margin: 0 auto 2.6rem;
+        }
+
+        .ask-box {
+            width: min(520px, 90%);
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(11, 11, 14, 0.12);
+            border-radius: 16px;
+            padding: 0.6rem;
+            box-shadow: 0 20px 50px -20px rgba(60, 40, 120, 0.25);
+            text-align: left;
+        }
+
+        .ask-box input {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            font-family: var(--font-ui);
+            font-size: 0.95rem;
+            padding: 0.7rem 0.8rem 0.9rem;
+            color: var(--ink);
+            outline: none;
+        }
+
+        .ask-box input::placeholder { color: var(--ink-faint); }
+
+        .btn-ink {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5em;
+            width: 100%;
+            background: var(--ink);
+            color: #fff;
+            border: 0;
+            border-radius: 11px;
+            font-family: var(--font-ui);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.85rem 1.5rem;
+            cursor: pointer;
+            transition: transform 0.3s var(--ease), box-shadow 0.3s;
+        }
+
+        .btn-ink:hover { transform: translateY(-1px); box-shadow: 0 12px 24px -12px rgba(11, 11, 14, 0.5); }
+
+        /* ============ Shared section bits ============ */
+        section { padding: clamp(4rem, 8vw, 6.5rem) 0; }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            letter-spacing: 0.08em;
+            color: var(--ink-soft);
+            margin-bottom: 1.4rem;
+        }
+
+        .tag::before { content: "●"; font-size: 0.55em; color: var(--ink); }
+
+        h2 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(1.9rem, 4vw, 2.9rem);
+            line-height: 1.08;
+            letter-spacing: -0.005em;
+        }
+
+        .sub { color: var(--ink-soft); font-size: 0.98rem; }
+
+        .center { text-align: center; }
+        .center h2 { max-width: 22ch; margin-inline: auto; }
+        .center .sub { max-width: 44ch; margin: 1rem auto 0; }
+
+        /* pill tabs */
+        .pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 2rem;
+        }
+
+        .pill {
+            font-family: var(--font-ui);
+            font-size: 0.8rem;
+            font-weight: 500;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--ink-soft);
+            border-radius: 999px;
+            padding: 0.45rem 1.05rem;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .pill:hover { border-color: var(--ink); color: var(--ink); }
+        .pill.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+        /* ============ Signals split ============ */
+        .split {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+            gap: clamp(2rem, 6vw, 5rem);
+            align-items: center;
+        }
+
+        .split h2 { max-width: 16ch; margin-bottom: 1.1rem; }
+        .split .sub { max-width: 40ch; margin-bottom: 1.8rem; }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin-top: 1.6rem;
+        }
+
+        .chip-row .lbl {
+            width: 100%;
+            font-family: var(--font-mono);
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.1rem;
+        }
+
+        .chip {
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 0.3rem 0.8rem;
+            color: var(--ink-soft);
+        }
+
+        .btn-ink.fit { width: auto; }
+
+        /* pipeline card */
+        .pipeline-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--r-lg);
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.9rem;
+        }
+
+        .p-step {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: var(--r-md);
+            padding: 1.1rem 1.3rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: transform 0.35s var(--ease), box-shadow 0.35s;
+        }
+
+        .p-step:hover { transform: translateY(-2px); box-shadow: 0 14px 30px -18px rgba(11, 11, 14, 0.25); }
+
+        .p-step .t { font-weight: 600; font-size: 0.92rem; }
+        .p-step .d { font-size: 0.76rem; color: var(--ink-faint); margin-top: 0.1rem; }
+
+        .status {
+            font-family: var(--font-mono);
+            font-size: 0.64rem;
+            letter-spacing: 0.06em;
+            border-radius: 999px;
+            padding: 0.28rem 0.7rem;
+            white-space: nowrap;
+        }
+
+        .status.done { background: var(--mint); color: #0a6b3f; }
+        .status.run { background: #e4e9ff; color: var(--blue); animation: blink 1.6s ease-in-out infinite; }
+        .status.wait { background: #f1f1f4; color: var(--ink-faint); }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.55; }
+        }
+
+        .p-arrow {
+            text-align: center;
+            color: var(--ink-faint);
+            font-size: 0.8rem;
+            line-height: 0.4;
+        }
+
+        /* ============ Terminal ============ */
+        .challenge-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 2rem;
+            align-items: end;
+            margin-bottom: 2rem;
+        }
+
+        .challenge-head h2 { max-width: 14ch; }
+        .challenge-head .sub { max-width: 42ch; justify-self: end; }
+
+        .term-tabs { display: flex; gap: 0.5rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+
+        .terminal {
+            background: var(--terminal);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            box-shadow: 0 40px 80px -40px rgba(11, 11, 14, 0.55);
+        }
+
+        .term-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.9rem;
+            padding: 0.95rem 1.3rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .term-bar .dots { display: flex; gap: 6px; }
+        .term-bar .dots i { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.18); }
+        .term-bar .dots i:first-child { background: #f26d6d; }
+        .term-bar .dots i:nth-child(2) { background: #f2c94c; }
+        .term-bar .dots i:nth-child(3) { background: #58c986; }
+
+        .term-bar .q { color: #e8e8ee; font-size: 0.85rem; font-weight: 500; }
+
+        .term-body {
+            font-family: var(--font-mono);
+            font-size: 0.78rem;
+            line-height: 1.85;
+            padding: 1.5rem 1.6rem 1.9rem;
+            color: #b9b9c6;
+            overflow-x: auto;
+            white-space: pre;
+        }
+
+        .term-body .c { color: #6f6f80; }
+        .term-body .fn { color: #8ab8ff; }
+        .term-body .ok { color: #58c986; }
+        .term-body .str { color: #f2c94c; }
+        .term-body .num { color: #f7a8d8; }
+
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 15px;
+            background: #58c986;
+            vertical-align: -2px;
+            animation: blink 1s steps(1) infinite;
+        }
+
+        /* ============ Roles ============ */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.1rem;
+            margin-top: 2.8rem;
+            text-align: left;
+        }
+
+        .role-card {
+            border: 1px solid var(--line);
+            border-radius: var(--r-lg);
+            padding: 1.8rem 1.7rem;
+            transition: transform 0.35s var(--ease), box-shadow 0.35s, border-color 0.35s;
+        }
+
+        .role-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--ink);
+            box-shadow: 0 24px 48px -28px rgba(11, 11, 14, 0.3);
+        }
+
+        .role-card .icon {
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: #fff;
+            display: grid;
+            place-items: center;
+            font-size: 1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .role-card h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem; }
+        .role-card p { font-size: 0.85rem; color: var(--ink-soft); }
+
+        /* ============ investGPT banner ============ */
+        .gpt-banner {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            min-height: 380px;
+        }
+
+        .gpt-left {
+            background: #0b0b0e;
+            position: relative;
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+        }
+
+        .gpt-left .halo {
+            position: absolute;
+            width: 340px; height: 340px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(52, 87, 240, 0.55) 0%, rgba(52, 87, 240, 0.12) 45%, transparent 70%);
+            animation: breathe 5s ease-in-out infinite;
+        }
+
+        .gpt-left .ring {
+            position: absolute;
+            width: 240px; height: 240px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.14);
+        }
+
+        .gpt-left .ring.r2 { width: 320px; height: 320px; border-color: rgba(255,255,255,0.07); }
+
+        .gpt-left .star {
+            width: 74px; height: 74px;
+            border-radius: 50%;
+            background: #fff;
+            display: grid;
+            place-items: center;
+            font-size: 1.6rem;
+            box-shadow: 0 0 60px 8px rgba(255, 255, 255, 0.35);
+        }
+
+        .gpt-right {
+            background: var(--blue);
+            color: #fff;
+            padding: clamp(2rem, 5vw, 3.5rem);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gpt-right::after {
+            content: "";
+            position: absolute;
+            right: -10%;
+            top: -30%;
+            width: 60%;
+            height: 160%;
+            background:
+                linear-gradient(115deg, transparent 48%, rgba(255,255,255,0.22) 49%, rgba(255,255,255,0.22) 50%, transparent 51%),
+                linear-gradient(115deg, transparent 63%, rgba(255,255,255,0.14) 64%, rgba(255,255,255,0.14) 65%, transparent 66%),
+                linear-gradient(115deg, transparent 78%, rgba(255,255,255,0.1) 79%, rgba(255,255,255,0.1) 80%, transparent 81%);
+        }
+
+        .gpt-right .tag { color: rgba(255,255,255,0.75); }
+        .gpt-right .tag::before { color: #fff; }
+        .gpt-right h2 { max-width: 15ch; margin-bottom: 1rem; }
+        .gpt-right p.lead { color: rgba(255,255,255,0.85); font-size: 0.95rem; max-width: 38ch; margin-bottom: 1.4rem; }
+
+        .gpt-right ul {
+            list-style: none;
+            font-size: 0.88rem;
+            margin-bottom: 2rem;
+            display: grid;
+            gap: 0.4rem;
+        }
+
+        .gpt-right ul li::before { content: "→ "; opacity: 0.7; }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            width: fit-content;
+            background: #fff;
+            color: var(--ink);
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            padding: 0.75rem 1.5rem;
+            transition: transform 0.3s var(--ease);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-ghost:hover { transform: translateY(-2px); }
+
+        /* ============ Learning cards ============ */
+        .learn-head {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 2rem;
+            align-items: end;
+            margin-bottom: 2.4rem;
+        }
+
+        .learn-head h2 { max-width: 15ch; }
+        .learn-head .sub { max-width: 40ch; justify-self: end; }
+
+        .learn-row {
+            display: grid;
+            grid-auto-flow: column;
+            grid-auto-columns: minmax(240px, 1fr);
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 0.75rem;
+            scroll-snap-type: x mandatory;
+        }
+
+        .learn-card {
+            scroll-snap-align: start;
+            border-radius: var(--r-lg);
+            padding: 1.6rem 1.5rem;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s var(--ease);
+        }
+
+        .learn-card:hover { transform: translateY(-4px); }
+
+        .learn-card h3 { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.5rem; }
+        .learn-card p { font-size: 0.83rem; opacity: 0.8; max-width: 24ch; }
+
+        .learn-card .geo {
+            position: absolute;
+            right: -20px;
+            bottom: 30px;
+            width: 150px;
+            height: 150px;
+            opacity: 0.85;
+            transition: transform 0.5s var(--ease);
+        }
+
+        .learn-card:hover .geo { transform: rotate(8deg) scale(1.04); }
+
+        .learn-card .go {
+            margin-top: auto;
+            font-weight: 600;
+            font-size: 0.85rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .lc-pink { background: var(--pink); color: #571640; }
+        .lc-blue { background: var(--blue); color: #fff; }
+        .lc-cyan { background: #7fd8f0; color: #073d4d; }
+        .lc-tan { background: #dfb98a; color: #4a2f0c; }
+
+        /* ============ CTA ============ */
+        .cta-panel {
+            background: var(--terminal);
+            border-radius: calc(var(--r-lg) + 6px);
+            padding: clamp(3.5rem, 8vw, 6rem) 2rem clamp(4rem, 9vw, 6.5rem);
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-panel::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -60%;
+            width: 130%;
+            height: 90%;
+            transform: translateX(-50%);
+            background: radial-gradient(50% 90% at 50% 100%,
+                rgba(247, 184, 224, 0.5) 0%,
+                rgba(158, 197, 245, 0.35) 40%,
+                rgba(52, 87, 240, 0.2) 65%,
+                transparent 100%);
+            filter: blur(10px);
+            pointer-events: none;
+        }
+
+        .cta-panel h2 { max-width: 18ch; margin: 0 auto 1.2rem; }
+        .cta-panel .sub { color: rgba(255,255,255,0.7); max-width: 52ch; margin: 0 auto 2.2rem; }
+
+        .cta-panel .btn-ghost { margin: 0 auto; }
+
+        /* ============ Footer ============ */
+        footer { padding-top: clamp(3.5rem, 7vw, 5.5rem); border-top: 1px solid var(--line); }
+
+        .foot-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) repeat(3, minmax(0, 2fr));
+            gap: 2.5rem;
+            padding-bottom: 3rem;
+        }
+
+        .foot-col .h {
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--ink-faint);
+            margin-bottom: 0.9rem;
+        }
+
+        .foot-col ul { list-style: none; display: grid; gap: 0.45rem; font-size: 0.85rem; color: var(--ink-soft); }
+        .foot-col a:hover { color: var(--ink); }
+
+        .legal {
+            display: flex;
+            gap: 1.8rem;
+            font-size: 0.75rem;
+            color: var(--ink-faint);
+            padding-bottom: 1rem;
+        }
+
+        .giant-mark {
+            font-family: var(--font-ui);
+            font-weight: 800;
+            font-size: clamp(5rem, 19vw, 17rem);
+            letter-spacing: -0.05em;
+            line-height: 0.78;
+            transform: translateY(0.14em);
+            text-align: center;
+            user-select: none;
+            background: linear-gradient(180deg, var(--ink) 55%, rgba(11, 11, 14, 0.35));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* ============ Reveal ============ */
+        .rv {
+            opacity: 0;
+            transform: translateY(26px);
+            transition: opacity 0.8s var(--ease), transform 0.8s var(--ease);
+        }
+
+        .rv.in { opacity: 1; transform: none; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .rv { opacity: 1; transform: none; transition: none; }
+            .ticker-track, .hero-mesh, .orbits span, .status.run, .cursor, .gpt-left .halo { animation: none; }
+        }
+
+        /* ============ Responsive ============ */
+        @media (max-width: 900px) {
+            .split, .gpt-banner, .challenge-head, .learn-head { grid-template-columns: 1fr; }
+            .challenge-head .sub, .learn-head .sub { justify-self: start; }
+            .roles-grid { grid-template-columns: 1fr; }
+            .foot-grid { grid-template-columns: 1fr 1fr; }
+            .gpt-left { min-height: 280px; }
+            .site-head .wrap { align-items: center; }
+            .head-nav { flex-direction: row; flex-wrap: wrap; justify-content: flex-end; gap: 0.9rem; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Ticker -->
+    <div class="ticker" aria-hidden="true">
+        <div class="ticker-track" id="tickerTrack">
+            <span class="tk">Alphabet <b class="up">▲ +0.85%</b></span>
+            <span class="tk">Amazon <b class="down">▼ −2.85%</b></span>
+            <span class="tk">Meta <b class="up">▲ +1.67%</b></span>
+            <span class="tk">Vanguard <b class="up">▲ +0.90%</b></span>
+            <span class="tk">Apple <b class="down">▼ −0.78%</b></span>
+            <span class="tk">Nvidia <b class="up">▲ +2.34%</b></span>
+            <span class="tk">Tesla <b class="up">▲ +1.12%</b></span>
+            <span class="tk">Microsoft <b class="up">▲ +0.44%</b></span>
+            <span class="tk">Bitcoin <b class="down">▼ −1.05%</b></span>
+            <span class="tk">S&amp;P 500 <b class="up">▲ +0.31%</b></span>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="site-head">
+        <div class="wrap">
+            <a class="logo" href="#"><span class="mark"></span>FinSage</a>
+            <nav class="head-nav">
+                <a href="#" class="active">Favorites</a>
+                <a href="#insights">Market Movers</a>
+                <a href="#signals">AI Picks</a>
+                <a href="#signals">Trade Alerts</a>
+                <a href="#challenges">History</a>
+                <a href="#learning">Explore</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-mesh" aria-hidden="true"></div>
+        <div class="wrap">
+            <div class="orbits" aria-hidden="true"><span></span><span></span><span></span></div>
+            <p class="eyebrow">On-demand AI insights for stocks, ETFs, crypto, and forex.</p>
+            <h1>Data-Powered Investment Strategies.</h1>
+            <form class="ask-box" onsubmit="return false;">
+                <input type="text" placeholder="Type a ticker or question…" aria-label="Ask FinSage AI">
+                <button class="btn-ink" type="submit">Ask AI&nbsp;+</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Insights -->
+    <section id="insights" class="center">
+        <div class="wrap">
+            <span class="tag rv">Insights</span>
+            <h2 class="rv">24/7 AI-Driven Market Insights Team.</h2>
+            <p class="sub rv">Institutional agents analyzing stocks, crypto, forex, and ETFs in real time.</p>
+            <div class="pills rv" role="tablist" aria-label="Insight types">
+                <button class="pill on">Signals</button>
+                <button class="pill">Charts</button>
+                <button class="pill">Valuation</button>
+                <button class="pill">Sentiment</button>
+                <button class="pill">Opportunities</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Signals -->
+    <section id="signals" style="padding-top: 1rem;">
+        <div class="wrap split">
+            <div>
+                <span class="tag rv">Signals</span>
+                <h2 class="rv">Real-Time Trade Signals for Smarter Investment Decisions.</h2>
+                <p class="sub rv">Receive immediate buy/sell recommendations powered by live market data
+                    and AI-driven algorithms.</p>
+                <a class="btn-ink fit rv" href="#">Execute&nbsp;→</a>
+                <div class="chip-row rv">
+                    <span class="lbl">Integrations</span>
+                    <span class="chip">API</span>
+                    <span class="chip">Dashboard</span>
+                    <span class="chip">Excel</span>
+                    <span class="chip">Mobile</span>
+                </div>
+            </div>
+            <div class="pipeline-card rv">
+                <div class="p-step">
+                    <div>
+                        <div class="t">Market Data</div>
+                        <div class="d">Live price feeds, volume &amp; order book</div>
+                    </div>
+                    <span class="status done">Complete</span>
+                </div>
+                <div class="p-arrow">↓</div>
+                <div class="p-step">
+                    <div>
+                        <div class="t">AI Analysis</div>
+                        <div class="d">Technical &amp; fundamental agent review</div>
+                    </div>
+                    <span class="status run">Processing</span>
+                </div>
+                <div class="p-arrow">↓</div>
+                <div class="p-step">
+                    <div>
+                        <div class="t">Trade Signals</div>
+                        <div class="d">Generates buy/sell recommendations</div>
+                    </div>
+                    <span class="status wait">Waiting</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Challenges / Terminal -->
+    <section id="challenges">
+        <div class="wrap">
+            <div class="challenge-head">
+                <div>
+                    <span class="tag rv">Challenges</span>
+                    <h2 class="rv">Instant AI Insights in Seconds.</h2>
+                </div>
+                <p class="sub rv">Institutional-grade AI agents analyze stocks, crypto, forex, and ETFs in
+                    real time, providing actionable insights for quick, informed decisions.</p>
+            </div>
+            <div class="term-tabs rv">
+                <button class="pill on">NVDA</button>
+                <button class="pill">Stocks</button>
+                <button class="pill">Opportunities</button>
+                <button class="pill">Apple</button>
+            </div>
+            <div class="terminal rv">
+                <div class="term-bar">
+                    <span class="dots"><i></i><i></i><i></i></span>
+                    <span class="q">Should I buy NVDA now?</span>
+                </div>
+                <div class="term-body" id="termBody"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roles -->
+    <section id="roles" class="center" style="padding-top: 1rem;">
+        <div class="wrap">
+            <span class="tag rv">Roles</span>
+            <h2 class="rv">Solutions for Every Market Role.</h2>
+            <p class="sub rv">Whether you trade, invest, advise, or research, FinSage seamlessly
+                integrates into your workflow.</p>
+            <div class="roles-grid">
+                <div class="role-card rv">
+                    <div class="icon">◔</div>
+                    <h3>Day Traders</h3>
+                    <p>Live signals and momentum indicators to capture intraday swing opportunities as
+                        they open.</p>
+                </div>
+                <div class="role-card rv">
+                    <div class="icon">◈</div>
+                    <h3>Long-term Investors</h3>
+                    <p>In-depth research and strategic value assessment to create lasting wealth through
+                        time.</p>
+                </div>
+                <div class="role-card rv">
+                    <div class="icon">✦</div>
+                    <h3>Advisors &amp; Planners</h3>
+                    <p>Client-ready reports and portfolio optimization features for superior advisory
+                        outcomes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- investGPT -->
+    <section style="padding-top: 1rem;">
+        <div class="wrap">
+            <div class="gpt-banner rv">
+                <div class="gpt-left" aria-hidden="true">
+                    <span class="halo"></span>
+                    <span class="ring"></span>
+                    <span class="ring r2"></span>
+                    <span class="star">✦</span>
+                </div>
+                <div class="gpt-right">
+                    <span class="tag">investGPT</span>
+                    <h2>AI Tools for Smarter Investing Decisions.</h2>
+                    <p class="lead">Your 24/7 AI analyst for instant market answers.</p>
+                    <ul>
+                        <li>Live data analysis</li>
+                        <li>Tech &amp; fundamental insights</li>
+                        <li>Just ask — get immediate answers</li>
+                    </ul>
+                    <a class="btn-ghost" href="#">Start Chatting&nbsp;→</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Learning -->
+    <section id="learning">
+        <div class="wrap">
+            <div class="learn-head">
+                <div>
+                    <span class="tag rv">Insights &amp; Learning</span>
+                    <h2 class="rv">Expert Insights, AI Tools, Smarter Investing.</h2>
+                </div>
+                <p class="sub rv">Discover expert analysis, AI-driven guidance, and practical resources
+                    designed to help you invest smarter and grow confidently.</p>
+            </div>
+            <div class="learn-row rv">
+                <a class="learn-card lc-pink" href="#">
+                    <h3>Video Tutorials</h3>
+                    <p>How-to videos on AI tools, features, and smarter investing.</p>
+                    <svg class="geo" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M10 90 A80 80 0 0 1 90 10" />
+                        <path d="M10 90 L90 90 L90 10" />
+                        <circle cx="62" cy="62" r="14" />
+                    </svg>
+                    <span class="go">Start Learning →</span>
+                </a>
+                <a class="learn-card lc-blue" href="#">
+                    <h3>Academy</h3>
+                    <p>Learning center with tutorials, glossary, help docs, and expert tips.</p>
+                    <svg class="geo" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                        <circle cx="50" cy="50" r="34" />
+                        <path d="M50 16 V84 M16 50 H84" />
+                        <circle cx="50" cy="50" r="10" />
+                    </svg>
+                    <span class="go">Start Learning →</span>
+                </a>
+                <a class="learn-card lc-cyan" href="#">
+                    <h3>Market Lens</h3>
+                    <p>Actionable ideas and insights across stocks, ETFs, crypto, and forex.</p>
+                    <svg class="geo" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M15 85 Q50 10 85 85" />
+                        <path d="M15 85 H85" />
+                        <circle cx="50" cy="47" r="12" />
+                    </svg>
+                    <span class="go">Start Learning →</span>
+                </a>
+                <a class="learn-card lc-tan" href="#">
+                    <h3>Smart Signals</h3>
+                    <p>Explore AI-driven signals to invest with more confidence.</p>
+                    <svg class="geo" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="1">
+                        <path d="M10 70 L35 45 L55 60 L90 20" />
+                        <circle cx="90" cy="20" r="6" />
+                        <path d="M10 85 H90" />
+                    </svg>
+                    <span class="go">Start Learning →</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="padding-top: 0.5rem;">
+        <div class="wrap">
+            <div class="cta-panel rv">
+                <h2>Trade smarter, let AI handle the market.</h2>
+                <p class="sub">As you navigate through overwhelming data and emotions, our AI agents
+                    provide in-depth research across stocks, crypto, forex, and ETFs. They help you make
+                    confident, rational trading and investment decisions.</p>
+                <a class="btn-ghost" href="#">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="wrap">
+            <div class="foot-grid">
+                <div>
+                    <a class="logo" href="#"><span class="mark"></span>FinSage</a>
+                </div>
+                <div class="foot-col">
+                    <div class="h">Navigation</div>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Discover</a></li>
+                        <li><a href="#">investGPT</a></li>
+                        <li><a href="#">Portfolio Toolbox</a></li>
+                    </ul>
+                </div>
+                <div class="foot-col">
+                    <div class="h">Tools</div>
+                    <ul>
+                        <li><a href="#">Watchlist</a></li>
+                        <li><a href="#">Market Movers</a></li>
+                        <li><a href="#">AI Stock Picker</a></li>
+                        <li><a href="#">Smart Signals</a></li>
+                        <li><a href="#">Stockbit</a></li>
+                    </ul>
+                </div>
+                <div class="foot-col">
+                    <div class="h">Resources</div>
+                    <ul>
+                        <li><a href="#">Affiliate Program</a></li>
+                        <li><a href="#">Academy</a></li>
+                        <li><a href="#">API for Signal DB</a></li>
+                        <li><a href="#">Pricing Plans</a></li>
+                        <li><a href="#">Podcast</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="legal">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Use</a>
+            </div>
+        </div>
+        <div class="giant-mark" aria-hidden="true">FinSage</div>
+    </footer>
+
+    <script>
+        // duplicate ticker content for a seamless loop
+        (function () {
+            var track = document.getElementById('tickerTrack');
+            track.innerHTML += track.innerHTML;
+        })();
+
+        // reveal on scroll
+        (function () {
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var items = document.querySelectorAll('.rv');
+            if (reduce || !('IntersectionObserver' in window)) {
+                items.forEach(function (el) { el.classList.add('in'); });
+                return;
+            }
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+                });
+            }, { threshold: 0.12, rootMargin: '0px 0px -5% 0px' });
+            items.forEach(function (el) { io.observe(el); });
+        })();
+
+        // pill tabs — visual toggle within each group
+        document.querySelectorAll('.pills, .term-tabs').forEach(function (group) {
+            group.addEventListener('click', function (e) {
+                var btn = e.target.closest('.pill');
+                if (!btn) return;
+                group.querySelectorAll('.pill').forEach(function (p) { p.classList.remove('on'); });
+                btn.classList.add('on');
+            });
+        });
+
+        // terminal typing animation
+        (function () {
+            var lines = [
+                ['c', 'def analyze_nvidia():'],
+                ['ok', '  print("[INFO] Starting AI analysis of NVIDIA…")'],
+                ['', ''],
+                ['c', '  # Fundamental Agent Analysis'],
+                ['ok', '  print("[INFO] Analyzing fundamental data…")'],
+                ['n', '  P_E_ratio = 65        <c># P/E ratio for NVIDIA</c>'],
+                ['n', '  sector_avg = 28       <c># Sector average</c>'],
+                ['n', '  if P_E_ratio > sector_avg:'],
+                ['str', '    verdict = "Valuation rich — justified by 94% YoY growth"'],
+                ['', ''],
+                ['c', '  # Technical Agent Analysis'],
+                ['ok', '  print("[INFO] Analyzing technical data…")'],
+                ['n', '  RSI = 72              <c># RSI value</c>'],
+                ['n', '  resistance = 950      <c># Resistance level</c>'],
+                ['n', '  support = 890         <c># Support level</c>'],
+                ['ok', '  signal = "ACCUMULATE on dips toward support"']
+            ];
+            var body = document.getElementById('termBody');
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            function render(line) {
+                var cls = line[0], txt = line[1];
+                var html = txt
+                    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                    .replace(/&lt;c&gt;/g, '<span class="c">').replace(/&lt;\/c&gt;/g, '</span>')
+                    .replace(/"([^"]*)"/g, '<span class="str">"$1"</span>')
+                    .replace(/\b(\d+)\b/g, '<span class="num">$1</span>');
+                if (cls === 'ok') html = '<span class="ok">' + html + '</span>';
+                if (cls === 'c') html = '<span class="fn">' + html + '</span>';
+                return html;
+            }
+
+            if (reduce) {
+                body.innerHTML = lines.map(render).join('\n');
+                return;
+            }
+
+            var i = 0;
+            var cur = '<span class="cursor"></span>';
+            body.innerHTML = cur;
+            var done = [];
+
+            var started = false;
+            var io = new IntersectionObserver(function (entries) {
+                if (!entries[0].isIntersecting || started) return;
+                started = true;
+                io.disconnect();
+                var t = setInterval(function () {
+                    if (i >= lines.length) {
+                        clearInterval(t);
+                        body.innerHTML = done.join('\n') + '\n' + cur;
+                        return;
+                    }
+                    done.push(render(lines[i]));
+                    body.innerHTML = done.join('\n') + '\n' + cur;
+                    i++;
+                }, 160);
+            }, { threshold: 0.35 });
+            io.observe(body);
+        })();
+    </script>
+</body>
+
+</html>

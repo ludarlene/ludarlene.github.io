@@ -1,318 +1,520 @@
-
-<html lang="zh-TW" class="scroll-smooth">
+<!DOCTYPE html>
+<html lang="zh-TW">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Darlene.Design</title>
-    <meta name="description" content="a designer specializing in UIUX design">
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Darlene.Design — UI/UX Designer</title>
+    <meta name="description" content="Darlene Lu — a UI/UX designer crafting calm interfaces for complex systems: EV energy platforms, vehicle HMI, and design systems.">
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
 
-    <!-- Custom Styles -->
-    <link rel="stylesheet" href="assets/css/custom.css">
-    
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/darlene.css">
 
-    <!-- Tailwind Config -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        primary: '#3b82f6',
-                        secondary: '#8b5cf6',
-                    }
-                }
-            }
+    <style>
+        /* ---- Hero ---- */
+        .home-hero { text-align: center; padding: clamp(5.5rem, 12vw, 9.5rem) 0 clamp(4.5rem, 9vw, 7rem); }
+
+        .orbits {
+            width: 150px;
+            height: 96px;
+            margin: 0 auto 2.2rem;
+            position: relative;
         }
-    </script>
+
+        .orbits span {
+            position: absolute;
+            top: 0; bottom: 0;
+            width: 96px;
+            border: 1px solid rgba(11, 11, 14, 0.5);
+            border-radius: 50%;
+        }
+
+        .orbits span:nth-child(1) { left: 0; }
+        .orbits span:nth-child(2) { left: 27px; animation: breathe 4s ease-in-out infinite; }
+        .orbits span:nth-child(3) { left: 54px; }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.06); }
+        }
+
+        @media (prefers-reduced-motion: reduce) { .orbits span { animation: none; } }
+
+        .home-hero .eyebrow {
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            letter-spacing: 0.05em;
+            color: var(--ink-soft);
+            margin-bottom: 1rem;
+        }
+
+        .home-hero h1 {
+            font-size: clamp(2.8rem, 7.5vw, 5.2rem);
+            max-width: 14ch;
+            margin: 0 auto 1.4rem;
+        }
+
+        .home-hero .lede {
+            color: var(--ink-soft);
+            font-size: clamp(0.98rem, 1.6vw, 1.12rem);
+            max-width: 46ch;
+            margin: 0 auto 2.4rem;
+        }
+
+        .hero-cta { display: flex; justify-content: center; gap: 0.8rem; flex-wrap: wrap; }
+
+        .btn-line {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(11, 11, 14, 0.25);
+            color: var(--ink);
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.8rem 1.6rem;
+            transition: transform 0.3s var(--ease-out), border-color 0.3s;
+        }
+
+        .btn-line:hover { transform: translateY(-2px); border-color: var(--ink); }
+
+        /* ---- Centered intro ---- */
+        .center-intro { text-align: center; padding: clamp(4rem, 8vw, 6rem) 0 0; }
+
+        .center-intro h2 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(1.9rem, 4.2vw, 3rem);
+            line-height: 1.08;
+            max-width: 22ch;
+            margin: 1.2rem auto 1rem;
+        }
+
+        .center-intro h2 i { color: var(--accent); }
+
+        .center-intro .sub { color: var(--ink-soft); font-size: 0.95rem; max-width: 46ch; margin: 0 auto; }
+
+        .pills { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; margin-top: 1.8rem; }
+
+        .pill {
+            font-size: 0.78rem;
+            font-weight: 500;
+            border: 1px solid var(--line);
+            background: #fff;
+            color: var(--ink-soft);
+            border-radius: 999px;
+            padding: 0.42rem 1rem;
+        }
+
+        .pill.on { background: var(--ink); border-color: var(--ink); color: #fff; }
+
+        /* ---- Work cards ---- */
+        .work-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 1.1rem;
+            margin-top: 2.6rem;
+        }
+
+        .work-card {
+            border-radius: var(--r-lg);
+            padding: 1.7rem 1.6rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.35s var(--ease-out), box-shadow 0.35s;
+            min-height: 380px;
+        }
+
+        .work-card:hover { transform: translateY(-5px); box-shadow: 0 30px 60px -32px rgba(11, 11, 14, 0.35); }
+
+        .work-card.span-3 { grid-column: span 3; }
+        .work-card.span-2 { grid-column: span 2; }
+
+        .work-card .wc-no {
+            font-family: var(--font-mono);
+            font-size: 0.64rem;
+            letter-spacing: 0.1em;
+            opacity: 0.65;
+            margin-bottom: 0.9rem;
+        }
+
+        .work-card h3 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(1.5rem, 2.6vw, 2rem);
+            line-height: 1.05;
+            letter-spacing: -0.005em;
+            margin-bottom: 0.5rem;
+        }
+
+        .work-card .wc-desc { font-size: 0.84rem; line-height: 1.6; opacity: 0.82; max-width: 34ch; }
+
+        .work-card .wc-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem 0.9rem;
+            font-family: var(--font-mono);
+            font-size: 0.6rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin: 0.8rem 0 1.1rem;
+        }
+
+        .work-card .wc-visual {
+            margin-top: auto;
+            border-radius: var(--r-md);
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            aspect-ratio: 16 / 8.5;
+            background: rgba(0, 0, 0, 0.12);
+        }
+
+        .work-card .wc-visual img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            transition: transform 0.9s var(--ease-out);
+        }
+
+        .work-card:hover .wc-visual img { transform: scale(1.04); }
+
+        .work-card .wc-go {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 1px solid currentColor;
+            display: grid;
+            place-items: center;
+            font-size: 0.85rem;
+            opacity: 0.75;
+            transition: transform 0.35s var(--ease-out), opacity 0.35s;
+        }
+
+        .work-card:hover .wc-go { transform: rotate(-45deg); opacity: 1; }
+
+        /* card palettes */
+        .wc-blue { background: var(--accent); color: #fff; }
+        .wc-ink { background: var(--ink); color: #fff; }
+        .wc-pink { background: var(--m-pink); color: #571640; }
+        .wc-cyan { background: #7fd8f0; color: #073d4d; }
+        .wc-tan { background: #dfb98a; color: #4a2f0c; }
+
+        .wc-pink .wc-visual, .wc-cyan .wc-visual, .wc-tan .wc-visual { border-color: rgba(0, 0, 0, 0.14); }
+
+        /* IonexOS token strip visual */
+        .token-strip {
+            margin-top: auto;
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(2, 54px);
+            gap: 7px;
+        }
+
+        .token-strip i {
+            border-radius: 7px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+        }
+
+        /* ---- About ---- */
+        .about-split {
+            display: grid;
+            grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+            gap: clamp(2rem, 5vw, 4.5rem);
+            align-items: center;
+        }
+
+        .about-split .portrait {
+            border-radius: var(--r-lg);
+            overflow: hidden;
+            position: relative;
+            isolation: isolate;
+            border: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .about-split .portrait .mesh-bg {
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(60% 60% at 25% 30%, var(--m-pink) 0%, transparent 70%),
+                radial-gradient(55% 55% at 80% 25%, var(--m-sky) 0%, transparent 70%),
+                radial-gradient(60% 55% at 60% 85%, var(--m-lav) 0%, transparent 72%),
+                linear-gradient(180deg, #fdfbff, #f4f0fb);
+        }
+
+        .about-split .portrait img { width: 76%; height: auto; margin: 0 auto; padding: 2rem 0; }
+
+        .about-split h2 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(1.9rem, 4vw, 2.9rem);
+            line-height: 1.08;
+            margin-bottom: 1.2rem;
+        }
+
+        .about-split h2 i { color: var(--accent); }
+
+        .skill-chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 1.6rem; }
+
+        .skill-chips span {
+            font-size: 0.76rem;
+            font-weight: 500;
+            color: var(--ink-soft);
+            border: 1px solid var(--line-strong);
+            border-radius: 999px;
+            padding: 0.35rem 0.9rem;
+        }
+
+        /* ---- CTA panel ---- */
+        .cta-panel {
+            background: var(--ink);
+            border-radius: calc(var(--r-lg) + 6px);
+            padding: clamp(3.5rem, 8vw, 6rem) 2rem clamp(4rem, 9vw, 6.5rem);
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden;
+            margin-top: clamp(4rem, 8vw, 6rem);
+        }
+
+        .cta-panel::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            bottom: -60%;
+            width: 130%;
+            height: 90%;
+            transform: translateX(-50%);
+            background: radial-gradient(50% 90% at 50% 100%,
+                rgba(247, 184, 224, 0.5) 0%,
+                rgba(158, 197, 245, 0.35) 40%,
+                rgba(52, 87, 240, 0.22) 65%,
+                transparent 100%);
+            filter: blur(10px);
+            pointer-events: none;
+        }
+
+        .cta-panel h2 {
+            font-family: var(--font-display);
+            font-weight: 400;
+            font-size: clamp(2rem, 5vw, 3.4rem);
+            line-height: 1.08;
+            max-width: 18ch;
+            margin: 0 auto 1.1rem;
+        }
+
+        .cta-panel h2 i { color: var(--m-sky); }
+
+        .cta-panel .sub { color: rgba(255, 255, 255, 0.72); font-size: 0.95rem; max-width: 46ch; margin: 0 auto 2.2rem; }
+
+        .btn-ghost {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5em;
+            background: #fff;
+            color: var(--ink);
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.8rem 1.7rem;
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s var(--ease-out);
+        }
+
+        .btn-ghost:hover { transform: translateY(-2px); }
+
+        @media (max-width: 900px) {
+            .work-grid { grid-template-columns: 1fr; }
+            .work-card.span-3, .work-card.span-2 { grid-column: span 1; min-height: 340px; }
+            .about-split { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 
-<body class="bg-slate-900 text-slate-100 font-sans antialiased">
-    <div class="mouse-gradient"></div>
-    
-    <!-- Navigation -->
-    <nav id="navbar" class="fixed w-full top-0 z-50 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
-                <a href="#home"
-                    class="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                    Darlene.Design
+<body>
+
+    <header class="site-header">
+        <div class="bar">
+            <a href="#top" class="wordmark">DDesign<span class="dot">.</span></a>
+            <nav class="site-nav">
+                <a href="#work" class="u-link">Work</a>
+                <a href="#about" class="u-link">About</a>
+                <a href="#contact" class="u-link">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
+
+        <!-- Hero -->
+        <section class="mesh-hero">
+            <div class="mesh" aria-hidden="true"></div>
+            <div class="page home-hero">
+                <div class="orbits" aria-hidden="true"><span></span><span></span><span></span></div>
+                <p class="eyebrow reveal">UI/UX design for EV energy platforms, vehicle HMI &amp; design systems.</p>
+                <h1 class="display reveal">Calm Interfaces for <i>Complex</i> Systems.</h1>
+                <p class="lede reveal">
+                    I'm Darlene Lu — a Taipei-based designer shaping the software behind electric
+                    mobility. Curiosity-driven, detail-obsessed.
+                </p>
+                <div class="hero-cta reveal">
+                    <a class="btn-ink" href="#work">View Works&nbsp;+</a>
+                    <a class="btn-line" href="#contact">Contact Me</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Work -->
+        <section id="work" class="page center-intro">
+            <span class="kicker reveal">Selected Work</span>
+            <h2 class="reveal">Five case studies, one <i>obsession</i> with clarity.</h2>
+            <p class="sub reveal">From rider dashboards at 60 km/h to consoles managing 500+ energy
+                stations — design that keeps complexity calm.</p>
+            <div class="pills reveal" aria-hidden="true">
+                <span class="pill on">All</span>
+                <span class="pill">Design Systems</span>
+                <span class="pill">B2B Platforms</span>
+                <span class="pill">Vehicle HMI</span>
+                <span class="pill">Smart City</span>
+            </div>
+
+            <div class="work-grid" style="text-align:left;">
+                <a class="work-card wc-blue span-3 reveal" href="./project5.html">
+                    <span class="wc-go">→</span>
+                    <div class="wc-no">NO. 01 — 2024–2026</div>
+                    <h3>IonexOS Design System</h3>
+                    <p class="wc-desc">One design language across every Ionex product — tokens from
+                        Figma Variables, 30+ React components, documented in Storybook.</p>
+                    <div class="wc-tags"><span>Design System</span><span>Tokens</span><span>Storybook</span></div>
+                    <div class="token-strip" aria-hidden="true">
+                        <i style="background:#00a0e9"></i>
+                        <i style="background:#668bfa"></i>
+                        <i style="background:#11c291"></i>
+                        <i style="background:#fbb376"></i>
+                        <i style="background:#fd5463"></i>
+                        <i style="background:#989db8"></i>
+                        <i style="background:#080f24"></i>
+                        <i style="background:#141e38"></i>
+                        <i style="background:#2a3558"></i>
+                        <i style="background:#ebf1f8"></i>
+                        <i style="background:#fafbfd"></i>
+                        <i style="background:linear-gradient(135deg,#00a0e9,#668bfa)"></i>
+                    </div>
                 </a>
 
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8">
-                    <a href="#home" class="nav-link text-slate-300 hover:text-white transition-colors">Home</a>
-                    <a href="#projects" class="nav-link text-slate-300 hover:text-white transition-colors">Works</a>
-                    <a href="#about" class="nav-link text-slate-300 hover:text-white transition-colors">About</a>
-                    <a href="#contact" class="nav-link text-slate-300 hover:text-white transition-colors">Contact</a>
-                </div>
+                <a class="work-card wc-ink span-3 reveal" href="./project4.html">
+                    <span class="wc-go">→</span>
+                    <div class="wc-no">NO. 02 — 2025–2026</div>
+                    <h3>iEnergy 2026</h3>
+                    <p class="wc-desc">The next-generation console for EV battery-swap networks —
+                        dashboard, assets, swap ops, customer care, and billing in one place.</p>
+                    <div class="wc-tags"><span>B2B Platform</span><span>Design Lead</span><span>Data-dense UI</span></div>
+                    <div class="wc-visual"><img src="./img/ev_platform.png" alt="iEnergy 2026 console" loading="lazy"></div>
+                </a>
 
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16"></path>
-                    </svg>
-                </button>
+                <a class="work-card wc-pink span-2 reveal" href="./project1.html">
+                    <span class="wc-go">→</span>
+                    <div class="wc-no">NO. 03</div>
+                    <h3>Navigation on Scooter</h3>
+                    <p class="wc-desc">A rider-first navigation dashboard — glanceable and safe at speed.</p>
+                    <div class="wc-tags"><span>Vehicle HMI</span><span>UX Research</span></div>
+                    <div class="wc-visual"><img src="./img/HeroImage.png" alt="Scooter navigation dashboard" loading="lazy"></div>
+                </a>
+
+                <a class="work-card wc-cyan span-2 reveal" href="./project2.html">
+                    <span class="wc-go">→</span>
+                    <div class="wc-no">NO. 04</div>
+                    <h3>Motorcycle Dashboard</h3>
+                    <p class="wc-desc">Co-creating a next-generation instrument cluster with riders and engineers.</p>
+                    <div class="wc-tags"><span>Vehicle HMI</span><span>Co-design</span></div>
+                    <div class="wc-visual"><img src="./img/HeroImage2.png" alt="Motorcycle dashboard" loading="lazy"></div>
+                </a>
+
+                <a class="work-card wc-tan span-2 reveal" href="./project3.html">
+                    <span class="wc-go">→</span>
+                    <div class="wc-no">NO. 05</div>
+                    <h3>Smart City Console</h3>
+                    <p class="wc-desc">One management console for thousands of city IoT devices.</p>
+                    <div class="wc-tags"><span>SaaS Console</span><span>IA</span><span>Data Viz</span></div>
+                    <div class="wc-visual"><img src="./img/citybg.png" alt="Smart city web console" loading="lazy"></div>
+                </a>
             </div>
-        </div>
+        </section>
 
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-slate-800/95 backdrop-blur-lg">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="#home"
-                    class="mobile-nav-link block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md transition-colors">Home</a>
-                <a href="#projects"
-                    class="mobile-nav-link block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md transition-colors">Works</a>
-                <a href="#about"
-                    class="mobile-nav-link block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md transition-colors">About</a>
-                <a href="#contact"
-                    class="mobile-nav-link block px-3 py-2 text-slate-300 hover:text-white hover:bg-slate-700 rounded-md transition-colors">Contact</a>
+        <!-- About -->
+        <section id="about" class="page case-section">
+            <div class="section-marker reveal">
+                <span class="no">About</span>
+                <span class="rule"></span>
             </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="home" class="min-h-screen flex items-center justify-center pt-16 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl mx-auto text-center">
-            <div class="fade-in">
-                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold mb-6">
-                    Hello, I'm
-                    <span class="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                        UIUX Designer
-                    </span>
-                </h1>
-                <p class="text-xl sm:text-2xl text-slate-400 mb-8 max-w-2xl mx-auto">
-                    Hi, I'm Darlene, a UIUX designer specializing in human-centered design solutions and digital product innovation.
-                </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                    <a href="#projects"
-                        class="btn-primary px-8 py-3 bg-primary hover:bg-blue-600 text-white rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                        View Works
-                    </a>
-                    <a href="#contact"
-                        class="btn-secondary px-8 py-3 border-2 border-primary text-primary hover:bg-primary hover:text-white rounded-lg font-semibold transition-all duration-300">
-                        Contact Me
-                    </a>
+            <div class="about-split">
+                <div class="portrait reveal">
+                    <div class="mesh-bg" aria-hidden="true"></div>
+                    <img src="./img/averta-darlene.png" alt="Portrait illustration of Darlene" loading="lazy">
                 </div>
-            </div>
-
-            <!-- Scroll Indicator -->
-            <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-                <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-                </svg>
-            </div>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/50">
-        <div class="max-w-7xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl sm:text-5xl font-bold mb-4">My Works</h2>
-                <p class="text-xl text-slate-400">Explore my recent projects and creations</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Project Card 1 -->
-                <div
-                    class="project-card glass-card rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
-                    <div class="h-48 bg-cover bg-center" style="background-image: url('./img/HeroImage.png')"></div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-2">Navigation on Scooter</h3>
-                        <p class="text-slate-400 mb-4">Redesign a social dashboard to a navigation dashboard for scooters.</p>
-                        <a href="./project1.html"
-                            class="text-primary hover:text-blue-400 font-semibold inline-flex items-center gap-2">
-                            View Details
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Project Card 2 -->
-                <div
-                    class="project-card glass-card rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
-                    <div class="h-48 bg-cover bg-center" style="background-image: url('./img/HeroImage2.png')"></div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-2">Motorcycle Dashboard</h3>
-                        <p class="text-slate-400 mb-4">A Collaborative Design Process</p>
-                        <a href="./project2.html"
-                            class="text-secondary hover:text-purple-400 font-semibold inline-flex items-center gap-2">
-                            View Details
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Project Card 3 -->
-                <div
-                    class="project-card glass-card rounded-xl overflow-hidden hover:scale-105 transition-transform duration-300">
-                    <div class="h-48 bg-cover bg-center" style="background-image: url('./img/citybg.png')"></div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold mb-2">Web Console for Smart City</h3>
-                        <p class="text-slate-400 mb-4">A management system for the city IoT devices</p>
-                        <a href="./project3.html"
-                            class="text-emerald-400 hover:text-emerald-300 font-semibold inline-flex items-center gap-2">
-                            View Details
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7">
-                                </path>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="py-20 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-6xl mx-auto">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-0 items-center">
-                <!-- About Image -->
-                <div class="order-2 lg:order-1 flex justify-center lg:justify-end" data-aos="fade-right">
-                    <div class="relative">
-                        <img src="./img/averta-darlene.png" alt="Profile" class="w-auto h-auto max-h-[500px] object-contain">
-                    </div>
-                </div>
-
-                <!-- About Content -->
-                <div class="order-1 lg:order-2">
-                    <h2 class="text-4xl sm:text-5xl font-bold mb-6">About Me</h2>
-                    <p class="text-lg text-slate-400 mb-6">
-                        I'm a curiosity-driven design explorer, always eager to understand how things work — and how they could work better. Like a designer-detective, I observe the world with fresh eyes, turning everyday frictions into intuitive, fluid, and beautifully-crafted experiences.
-                    </p>
-                    <p class="text-lg text-slate-400 mb-8">
-                        From futuristic smart scooter interfaces to story-driven cinematic scenes, my work blends innovation with human connection. I don't just solve problems — I seek out better questions to ask. Because to me, design is how we bring people closer to the future.
-                    </p>
-
-                    <!-- Professional Skills -->
-                    <div class="mb-8">
-                        <h3 class="text-2xl font-bold mb-4">Professional Skills</h3>
-                        <p class="text-lg text-slate-400 mb-4">
-                            Cross-platform design expert, specializing in creating consistent and engaging user experiences.
+                <div class="reveal">
+                    <h2>A designer-<i>detective</i> at heart.</h2>
+                    <div class="prose">
+                        <p>
+                            I'm a curiosity-driven design explorer, always eager to understand how things
+                            work — and how they could work better. I observe the world with fresh eyes,
+                            turning everyday frictions into intuitive, fluid, beautifully-crafted experiences.
                         </p>
-                        <div class="flex flex-wrap gap-3">
-                            <span class="px-4 py-2 bg-slate-800 text-slate-200 rounded-full text-sm font-medium">UX Research</span>
-                            <span class="px-4 py-2 bg-slate-800 text-slate-200 rounded-full text-sm font-medium">UI Design</span>
-                            <span class="px-4 py-2 bg-slate-800 text-slate-200 rounded-full text-sm font-medium">Figma</span>
-                            <span class="px-4 py-2 bg-slate-800 text-slate-200 rounded-full text-sm font-medium">Prototyping</span>
-                            <span class="px-4 py-2 bg-slate-800 text-slate-200 rounded-full text-sm font-medium">Design Systems</span>
-                            <span class="px-4 py-2 bg-slate-800 text-slate-200 rounded-full text-sm font-medium">Brainstorming</span>
-                            <span class="px-4 py-2 bg-slate-800 text-slate-200 rounded-full text-sm font-medium">Workshop</span>
-                        </div>
+                        <p>
+                            From smart scooter interfaces to enterprise energy platforms, my work blends
+                            innovation with human connection. I don't just solve problems — I seek out
+                            better questions to ask. To me, design is how we bring people closer to the future.
+                        </p>
+                    </div>
+                    <div class="skill-chips">
+                        <span>UX Research</span>
+                        <span>UI Design</span>
+                        <span>Design Systems</span>
+                        <span>Figma</span>
+                        <span>Prototyping</span>
+                        <span>Workshops</span>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-  
-
-           
-                </div>
+        <!-- Contact CTA -->
+        <section id="contact" class="page">
+            <div class="cta-panel reveal">
+                <h2>Let's make something <i>calm</i> &amp; considered.</h2>
+                <p class="sub">Ideas, collaborations, or just a good design conversation — I'd love to
+                    hear from you.</p>
+                <a class="btn-ghost" href="https://www.linkedin.com/in/ludarlene/" target="_blank" rel="noopener">Connect on LinkedIn&nbsp;↗</a>
             </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="bar">
+            <span>© 2026 Darlene.Design</span>
+            <span>Designed &amp; built with care in Taipei</span>
+            <a href="#top" class="u-link">Back to top ↑</a>
         </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="contact" class="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/50">
-        <div class="max-w-4xl mx-auto">
-            <div class="text-center mb-16">
-                <h2 class="text-4xl sm:text-5xl font-bold mb-4">Contact Me</h2>
-                <p class="text-xl text-slate-400">Any ideas or collaboration opportunities? Please contact me!</p>
-            </div>
-
-            <div class="glass-card rounded-2xl p-8">
-                <form id="contact-form" class="space-y-6">
-                    <!-- Name -->
-                    <div>
-                        <label for="name" class="block text-sm font-semibold mb-2">Name</label>
-                        <input type="text" id="name" name="name" required
-                            class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-primary transition-colors text-white"
-                            placeholder="Your name">
-                    </div>
-
-                    <!-- Email -->
-                    <div>
-                        <label for="email" class="block text-sm font-semibold mb-2">Email</label>
-                        <input type="email" id="email" name="email" required
-                            class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-primary transition-colors text-white"
-                            placeholder="your@email.com">
-                    </div>
-
-                    <!-- Message -->
-                    <div>
-                        <label for="message" class="block text-sm font-semibold mb-2">Message</label>
-                        <textarea id="message" name="message" required rows="5"
-                            class="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg focus:outline-none focus:border-primary transition-colors text-white resize-none"
-                            placeholder="Tell me your ideas..."></textarea>
-                    </div>
-
-                    <!-- Submit Button -->
-                    <button type="submit"
-                        class="w-full px-8 py-3 bg-gradient-to-r from-primary to-secondary hover:from-blue-600 hover:to-purple-600 text-white rounded-lg font-semibold transition-all duration-300 hover:scale-105">
-                        Send Message
-                    </button>
-                </form>
-
-                <!-- Social Links -->
-                <div class="mt-8 pt-8 border-t border-slate-700">
-                    <p class="text-center text-slate-400 mb-4">Or contact me through the following ways</p>
-                    <div class="flex justify-center gap-6">
-                        <a href="https://www.linkedin.com/in/ludarlene/" class="text-slate-400 hover:text-primary transition-colors">
-                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                                <path
-                                    d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="py-8 px-4 sm:px-6 lg:px-8 border-t border-slate-800">
-        <div class="max-w-7xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <p class="text-slate-400 text-center md:text-left">
-                    © 2026 Darlene.Design All rights reserved.
-                </p>
-                <button id="scroll-to-top"
-                    class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg transition-colors">
-                    Back to Top ↑
-                </button>
-            </div>
-        </div>
+        <div class="giant-mark" aria-hidden="true">Darlene</div>
     </footer>
 
-    <!-- AOS Animation Library JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    
-    <!-- Custom JavaScript -->
-    <script src="assets/js/main.js"></script>
+    <script src="assets/js/darlene.js"></script>
 </body>
 
 </html>

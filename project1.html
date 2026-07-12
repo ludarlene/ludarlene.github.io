@@ -2,422 +2,358 @@
 <html lang="zh-TW">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Darlene Lu | Senior UIUX Designer</title>
-  <link rel="stylesheet" href="styles.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navigation on Scooter — Darlene.Design</title>
+    <meta name="description" content="Navigation on Scooter — redesigning a social scooter dashboard into a turn-by-turn navigation dashboard. A case study by Darlene Lu.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Schibsted+Grotesk:ital,wght@0,400..900;1,400..900&family=Fragment+Mono:ital@0;1&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/darlene.css">
 </head>
 
 <body>
-  <div class="mouse-gradient"></div>
-  <div class="container">
-
-    <header>
-      <a href="./index.html"><div class="logo">← Darlene.Design</div></a>
+    <header class="site-header">
+        <div class="bar">
+            <a href="./index.html" class="wordmark">DDesign<span class="dot">.</span></a>
+            <nav class="site-nav">
+                <a href="./index.html#work" class="u-link">← All work</a>
+            </nav>
+        </div>
     </header>
 
-    <div class="bento-grid">
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Hero Image" class="HeroImage"
-          style="align-self: stretch; height: 300px; padding-left: 381px; padding-right: 381px; padding-top: 137px; padding-bottom: 137px; background: linear-gradient(0deg, rgba(0, 0, 0, 0.50) 0%, rgba(0, 0, 0, 0.50) 100%); border-radius: 24px; background-image: url(./img/HeroImage.png); flex-direction: column; justify-content: center; align-items: center; gap: 8px; display: flex">
-          <div data-layer="Project Info" class="ProjectInfo"
-            style="width: 632px; flex-direction: column; justify-content: flex-start; align-items: center; gap: 3px; display: flex">
-            <div data-layer="Project Title" class="ProjectTitle"
-              style="align-self: stretch; position: relative; color: white; font-size: 60px; font-family: Roboto Slab; font-weight: 600; word-wrap: break-word">
-              Navigation on Scooter</div>
-            <div data-layer="Project Subtitle" class="ProjectSubtitle"
-              style="width: 461px; position: relative; text-align: center; color: white; font-size: 24px; font-family: SF Pro; font-weight: 400; line-height: 32px; word-wrap: break-word">
-              Redesign a social dashboard to a navigation dashboard for scooters.</div>
-          </div>
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Frame 427318199" class="Frame427318199"
-          style="align-self: stretch; padding-left: 342px; padding-right: 342px; padding-top: 24px; padding-bottom: 24px; background: white; border-radius: 24px; overflow: hidden; flex-direction: column; justify-content: center; align-items: center; gap: 8px; display: flex">
-          <div data-layer="Content Container" class="ContentContainer"
-            style="width: 757px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div data-layer="Introduction Section" class="IntroductionSection"
-              style="align-self: stretch; height: 383px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 18px; display: flex">
-              <div data-layer="Label" class="Label"
-                style="align-self: stretch; position: relative; color: #A0A0CF; font-size: 14px; font-family: SF Pro; font-weight: 700; text-transform: uppercase; word-wrap: break-word">
-                Introduction</div>
-              <div data-layer="Introduction Title" class="IntroductionTitle"
-                style="align-self: stretch; position: relative; color: #46466E; font-size: 32px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                Navigation on Scooter</div>
-              <div data-layer="Introduction Description" class="IntroductionDescription"
-                style="align-self: stretch; height: 189px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; line-height: 24px; word-wrap: break-word">
-                This is a device dashboard for the scooter. It was developed as a feature with a social purpose. Users
-                can design their creations and sync them to the scooter dashboard. At the same time, they can also share
-                their designs on social platforms.<br />The navigation function is an upgraded version of this
-                dashboard. Therefore, there are a lot of restrictions and limitations to overcome.<br />​<br />My
-                mission was to create a good navigation experience for the user. This dashboard shows turn-by-turn
-                instructions while routing when the phone and scooter are connected via Bluetooth. The challenge is
-                making information simple and letting riders access it safely. I managed the entire UX and UI design
-                from beginning to end.</div>
-            </div>
-            <div data-layer="Mission Container" class="MissionContainer"
-              style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 30px; display: inline-flex">
-              <div data-layer="Mission Info" class="MissionInfo"
-                style="width: 206px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: inline-flex">
-                <div data-layer="Subheading" class="Subheading"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  Mission</div>
-                <div data-layer="Mission Description" class="MissionDescription"
-                  style="align-self: stretch; height: 189px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  Add the navigation feature to the existing scooter dashboard.<br />The goal is to let the rider
-                  understand the next direction with a glance in one second.</div>
-              </div>
-              <div data-layer="Challenge Info" class="ChallengeInfo"
-                style="width: 229px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: inline-flex">
-                <div data-layer="Subheading" class="Subheading"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  Challenge</div>
-                <div data-layer="Challenge Description" class="ChallengeDescription"
-                  style="align-self: stretch; height: 189px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  The navigation function is a crucial selling point for the vehicle. Unfortunately, it can not change
-                  the hardware due to the alpha version already being sold. I need to re-design this structure via
-                  software changes and build a navigation function into it.</div>
-              </div>
-              <div data-layer="Role Info" class="RoleInfo"
-                style="width: 202px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 40px; display: inline-flex">
-                <div data-layer="Subheading" class="Subheading"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  My Role</div>
-                <div data-layer="Role Description" class="RoleDescription"
-                  style="align-self: stretch; height: 189px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  I am responsible for the entire UX and UI design, from defining the problem to delivering the final
-                  product to go to market.<br />​<br />Mar 2018 - Sep 2019</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Frame 427318199" class="Frame427318199"
-          style="align-self: stretch; padding-left: 221px; padding-right: 342px; padding-top: 24px; padding-bottom: 24px; background: white; border-radius: 24px; overflow: hidden; justify-content: center; align-items: center; gap: 8px; display: inline-flex">
-          <div data-layer="Problem Section" class="ProblemSection"
-            style="width: 756.32px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 26px; display: inline-flex">
-            <div data-layer="Subheading" class="Subheading"
-              style="align-self: stretch; position: relative; color: #A0A0CF; font-size: 14px; font-family: SF Pro; font-weight: 700; text-transform: uppercase; word-wrap: break-word">
-              The Problem</div>
-            <div data-layer="Problem Description" class="ProblemDescription"
-              style="align-self: stretch; position: relative; color: #46466E; font-size: 32px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              To Make Route Instruction In A Glance For Riders</div>
-            <img data-layer="brainstorming" class="202301229111"
-              style="align-self: stretch; height: 232px; position: relative" src="./img/brainstorming-1.png" />
-            <div data-layer="Subheading" class="Subheading"
-              style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              Background</div>
-            <div data-layer="Background Description" class="BackgroundDescription"
-              style="align-self: stretch; height: 152px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              On the hardware side, there are only three buttons for interaction, and the bandwidth of Bluetooth is
-              limited. The file size should be small while transferring. From the marketing perspective, adding hardware
-              in the new update is impossible.<br />On the firmware side, It has the original interaction structure in
-              the first version. Considering the user experience will be harmful with a massive update. The navigation
-              function should follow the original architecture.<br />On the app side, the app's information architecture
-              is not proper for navigation usage. Therefore, we should build up another structure to put map purchase,
-              route settings, and navigation.</div>
-            <div data-layer="Finding Title" class="FindingTitle"
-              style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              Finding</div>
-            <div data-layer="Finding Description" class="FindingDescription"
-              style="width: 736px; height: 74px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              Through discovering and brainstorming with the members, we got some possible directions to design the
-              navigation. The limitations: it is a simple device, so the computing of the dashboard is not robust. It is
-              impossible to show the navigation view that google Maps or portable car GPS navigation systems have.<br />
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Frame 427318199" class="Frame427318199"
-          style="align-self: stretch; padding-top: 16px; padding-bottom: 16px; background: white; border-radius: 24px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: flex">
-          <div data-layer="Question Section" class="QuestionSection"
-            style="width: 832.32px; flex-direction: column; justify-content: center; align-items: center; gap: 17px; display: flex">
-            <div data-layer="Question Title" class="QuestionTitle"
-              style="align-self: stretch; position: relative; color: #A0A0CF; font-size: 14px; font-family: SF Pro; font-weight: 700; text-transform: uppercase; word-wrap: break-word">
-              The QUESTION</div>
-            <div data-layer="Question Description" class="QuestionDescription"
-              style="align-self: stretch; position: relative; color: #46466E; font-size: 32px; font-family: SF Pro; font-weight: 700; text-transform: capitalize; word-wrap: break-word">
-              How to Make Riders Know the Right Corner to Turn</div>
-            <div data-layer="Question Description" class="QuestionDescription"
-              style="align-self: stretch; height: 21px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              We got some ideas after several discussions. The ideas are as follows:</div>
-            <div data-layer="Ideas Container" class="IdeasContainer"
-              style="align-self: stretch; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 4px; display: flex">
-              <div data-layer="Idea" class="Idea"
-                style="align-self: stretch; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-                <div data-layer="number1" class="Number1" style="width: 16px; height: 16px; position: relative">
-                  <div data-layer="Number Background" class="NumberBackground"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: relative; background: #A0A0CF; border-radius: 4px">
-                  </div>
-                  <div data-layer="Number" class="Number"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 11px; font-family: SF Pro; font-weight: 510; word-wrap: break-word">
-                    1</div>
-                </div>
-                <div data-layer="Indicator Description" class="IndicatorDescription" style="position: relative"><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">Streetview
-                    Indicator: </span><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">display
-                    the Streetview on-screen before 10 miles of the corner.</span></div>
-              </div>
-              <div data-layer="Idea" class="Idea"
-                style="justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-                <div data-layer="number2" class="Number2" style="width: 16px; height: 16px; position: relative">
-                  <div data-layer="Number Background" class="NumberBackground"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: relative; background: #A0A0CF; border-radius: 4px">
-                  </div>
-                  <div data-layer="Number" class="Number"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 11px; font-family: SF Pro; font-weight: 510; word-wrap: break-word">
-                    2</div>
-                </div>
-                <div data-layer="Indicator Description" class="IndicatorDescription" style="position: relative"><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">Ring
-                    Indicator:</span><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                    display a ring as a countdown timer before the turn.</span></div>
-              </div>
-              <div data-layer="Idea" class="Idea"
-                style="justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-                <div data-layer="number3" class="Number3" style="width: 16px; height: 16px; position: relative">
-                  <div data-layer="Number Background" class="NumberBackground"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: relative; background: #A0A0CF; border-radius: 4px">
-                  </div>
-                  <div data-layer="Number" class="Number"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 11px; font-family: SF Pro; font-weight: 510; word-wrap: break-word">
-                    3</div>
-                </div>
-                <div data-layer="Indicator Description" class="IndicatorDescription" style="position: relative"><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">Number
-                    Indicator:</span><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                    display the distance before the junction.</span></div>
-              </div>
-              <div data-layer="Idea" class="Idea"
-                style="justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-                <div data-layer="number4" class="Number4" style="width: 16px; height: 16px; position: relative">
-                  <div data-layer="Number Background" class="NumberBackground"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: relative; background: #A0A0CF; border-radius: 4px">
-                  </div>
-                  <div data-layer="Number" class="Number"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 11px; font-family: SF Pro; font-weight: 510; word-wrap: break-word">
-                    4</div>
-                </div>
-                <div data-layer="Indicator Description" class="IndicatorDescription" style="position: relative"><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">Background
-                    Indicator 1:</span><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                    decrease the background color for the turning of time.</span></div>
-              </div>
-              <div data-layer="Idea" class="Idea"
-                style="width: 668px; height: 19px; justify-content: flex-start; align-items: center; gap: 4px; display: inline-flex">
-                <div data-layer="number5" class="Number5" style="width: 16px; height: 16px; position: relative">
-                  <div data-layer="Number Background" class="NumberBackground"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: relative; background: #A0A0CF; border-radius: 4px">
-                  </div>
-                  <div data-layer="Number" class="Number"
-                    style="width: 16px; height: 16px; left: 0px; top: 0px; position: absolute; text-align: center; justify-content: center; display: flex; flex-direction: column; color: white; font-size: 11px; font-family: SF Pro; font-weight: 510; word-wrap: break-word">
-                    5</div>
-                </div>
-                <div data-layer="Indicator Description" class="IndicatorDescription"
-                  style="width: 668px; position: relative"><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">Background
-                    Indicator 2:</span><span
-                    style="color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                    notify the user by changing the background color.</span></div>
-              </div>
-            </div>
-          </div>
+    <main class="page">
 
-          <img data-layer="make turn ideas" class="202301229161"
-            style="width: 1164px; height: 309px; position: relative" src="./img/makeTurn.png" />
-          <div data-layer="Testing Section" class="TestingSection"
-            style="width: 773.32px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 28px; display: flex">
-            <div data-layer="Testing Title" class="TestingTitle"
-              style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              Testing</div>
-            <div data-layer="Testing Description" class="TestingDescription"
-              style="align-self: stretch; height: 39px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              We were not sure which one is best for riders, therefore we made rapid prototypes to test if testers could
-              reach the defined destination without verbal instructions. Results are as follows:</div>
-            <div data-layer="Testing Results" class="TestingResults"
-              style="align-self: stretch; justify-content: flex-start; align-items: flex-start; gap: 32px; display: inline-flex; flex-wrap: wrap; align-content: flex-start">
-              <div data-layer="Streetview Indicator" class="StreetviewIndicator"
-                style="width: 369.32px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 28px; display: inline-flex">
-                <div data-layer="Indicator Title" class="IndicatorTitle"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  Streetview Indicator </div>
-                <div data-layer="Indicator Description" class="IndicatorDescription"
-                  style="align-self: stretch; height: 91px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  The screen displays the Street View 10 meters before the corner. The rider cannot carefully read the
-                  details on the map. It is very dangerous for the rider and difficult to notify them to take the next
-                  action.</div>
-              </div>
-              <div data-layer="Ring Indicator" class="RingIndicator"
-                style="width: 369.32px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 28px; display: inline-flex">
-                <div data-layer="Indicator Title" class="IndicatorTitle"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  Ring Indicator</div>
-                <div data-layer="Indicator Description" class="IndicatorDescription"
-                  style="align-self: stretch; height: 127px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  It displays a ring as a countdown timer before the turn. This is an abstract concept for riders. It is
-                  important to provide a clear indication for the rider while driving. Anything that requires them to
-                  think twice introduces danger. Therefore, the ring countdown is not in the selection.</div>
-              </div>
-              <div data-layer="Background Indicator 2" class="BackgroundIndicator2"
-                style="width: 368px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-                <div data-layer="Indicator Title" class="IndicatorTitle"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  ​Background Indicator 2</div>
-                <div data-layer="Indicator Description" class="IndicatorDescription"
-                  style="align-self: stretch; height: 64px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  It notifies the user by changing the background color before the turning corner. The rider said: the
-                  didn’t see it and missed the corner.</div>
-              </div>
-              <div data-layer="Number Indicator" class="NumberIndicator"
-                style="width: 368px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-                <div data-layer="Indicator Title" class="IndicatorTitle"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  Number Indicator</div>
-                <div data-layer="Indicator Description" class="IndicatorDescription"
-                  style="align-self: stretch; height: 72px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  It displays the distance before the junction. The rider mentioned it is very clear for them to know
-                  when to take action, even though it is not the most beautiful visual design among all the prototypes.
+        <!-- Hero -->
+        <section class="case-hero">
+            <p class="kicker reveal">Case Study <em>·</em> Vehicle HMI</p>
+            <h1 class="display reveal">Navigation on <i>Scooter</i></h1>
+            <p class="lede reveal">
+                Redesigning a social scooter dashboard into a turn-by-turn navigation dashboard —
+                information simple enough to read at a glance, safe enough to trust at speed.
+            </p>
+
+            <dl class="case-meta reveal">
+                <div>
+                    <dt>Role</dt>
+                    <dd>End-to-end UX &amp; UI design — from defining the problem to go-to-market</dd>
                 </div>
-              </div>
-              <div data-layer="Background Indicator 1" class="BackgroundIndicator1"
-                style="width: 368px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 24px; display: inline-flex">
-                <div data-layer="Indicator Title" class="IndicatorTitle"
-                  style="align-self: stretch; position: relative; color: #5C6783; font-size: 22px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-                  ​Background Indicator 1</div>
-                <div data-layer="Indicator Description" class="IndicatorDescription"
-                  style="align-self: stretch; height: 65px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                  It decreases the background color for the turning of time. The rider said: the didn’t notify it and
-                  missed the corner.</div>
-              </div>
+                <div>
+                    <dt>Timeline</dt>
+                    <dd>Mar 2018 → Sep 2019</dd>
+                </div>
+                <div>
+                    <dt>Scope</dt>
+                    <dd>Dashboard HMI · Navigation flow · Companion app architecture</dd>
+                </div>
+                <div>
+                    <dt>Platform</dt>
+                    <dd>Embedded scooter dashboard, paired with the phone over Bluetooth</dd>
+                </div>
+            </dl>
+
+            <figure class="case-cover reveal">
+                <img src="./img/HeroImage.png" alt="Navigation on Scooter — dashboard hero image" loading="lazy">
+            </figure>
+        </section>
+
+        <!-- 01 Overview -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">01 — Overview</span>
+                <span class="rule"></span>
             </div>
-          </div>
-          <img data-layer="testing" class="202301229162" style="width: 888px; height: 271px; position: relative"
-            src="./img/testing.png" />
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Solution Image" class="SolutionImage"
-          style="width: 1198px; height: 425px; padding-top: 60px; padding-bottom: 24px; padding-left: 315px; padding-right: 315px; border-radius: 24px; background-image: url(./img/SolutionImage.png); flex-direction: column; justify-content: center; align-items: center; gap: 8px; display: flex">
-          <div data-layer="Solution Info" class="SolutionInfo"
-            style="width: 784.32px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 18px; display: flex">
-            <div data-layer="Solution Title" class="SolutionTitle"
-              style="align-self: stretch; position: relative; color: white; font-size: 14px; font-family: SF Pro; font-weight: 700; text-transform: uppercase; word-wrap: break-word">
-              The Solution</div>
-            <div data-layer="Solution Description" class="SolutionDescription"
-              style="align-self: stretch; position: relative; color: white; font-size: 32px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              The rider cannot be distracted when they are driving. Therefore, the Number Indicator provides the
-              clearest and best instruction for riders.</div>
-            <div data-layer="Solution Description" class="SolutionDescription"
-              style="width: 743px; height: 80px; position: relative; color: white; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              The rider can't get the message we want them to know with subtle indicators. Therefore, the best option is
-              the most specific one—the Number Indicator. It is the clearest for the rider so they can understand the
-              next action in a glance.</div>
-          </div>
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Frame 427318200" class="Frame427318200"
-          style="width: 1198px; padding-top: 24px; background: #F1F7FD; border-radius: 24px; overflow: hidden; flex-direction: column; justify-content: center; align-items: center; gap: 24px; display: flex">
-          <div data-layer="Design Section" class="DesignSection"
-            style="width: 743px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div data-layer="Subheading" class="Subheading"
-              style="align-self: stretch; position: relative; color: #A0A0CF; font-size: 14px; font-family: SF Pro; font-weight: 700; text-transform: uppercase; word-wrap: break-word">
-              the design</div>
-            <div data-layer="Wireframe Title" class="WireframeTitle"
-              style="align-self: stretch; position: relative; color: #46466E; font-size: 32px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              Wireframe & UI Flow</div>
-            <div data-layer="Design Description" class="DesignDescription"
-              style="align-self: stretch; height: 54px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              Using the feedback gathered from testing and discussions with teams, we worked together to create
-              wireframes with proposed solutions for the critical issues. After alignment with teams, we converted the
-              wireframes to UI flows.</div>
-          </div>
-          <img data-layer="Wireframe Container" class="WireframeContainer"
-            style="width: 1198px; height: 639px; position: relative" src="./img/Wireframe.png" />
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Frame 427318199" class="Frame427318199"
-          style="width: 1200px; padding-top: 40px; background: #F1F7FD; border-radius: 24px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: flex">
-          <div data-layer="Design System Section" class="DesignSystemSection"
-            style="width: 743px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div data-layer="Design System Title" class="DesignSystemTitle"
-              style="align-self: stretch; position: relative; color: #46466E; font-size: 32px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              Design System</div>
-            <div data-layer="Design System Description" class="DesignSystemDescription"
-              style="align-self: stretch; height: 32px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              Considering the consistency with scooter brand and the previous version. We decided to keep the app color
-              in the red. The blue and dark gray are the secondary and helping colors.</div>
-          </div>
-          <img data-layer="Color Container" class="ColorContainer"
-            style="width: 1200px; height: 492px; position: relative" src="./img/Color.png" />
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="Frame 427318199" class="Frame427318199"
-          style="width: 1200px; padding-top: 40px; background: #F1F7FD; border-radius: 24px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; gap: 24px; display: flex">
-          <div data-layer="Design System Section" class="DesignSystemSection"
-            style="width: 743px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-            <div data-layer="Design System Title" class="DesignSystemTitle"
-              style="align-self: stretch; position: relative; color: #46466E; font-size: 32px; font-family: SF Pro; font-weight: 700; word-wrap: break-word">
-              Final Design</div>
-            <div data-layer="Design System Description" class="DesignSystemDescription"
-              style="align-self: stretch; height: 80px; position: relative; color: #6B717E; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-              To work with the firmware and software engineering teams, we ran several important iterations to make sure
-              the design was developable. At the same time, we worked with the quality assurance team to ensure the
-              visuals displayed on the scooter dashboard were clean and correct. Finally, we achieved an excellent
-              result as follows.</div>
-          </div>
-          <img data-layer="Color Container" class="ColorContainer"
-            style="width: 1200px; height: 1309px; position: relative" src="./img/finaldesign.png" />
-        </div>
-      </div>
-      <div class="bento-item large-span2 glow-purple ">
-        <div data-layer="App Container" class="AppContainer"
-          style="align-self: stretch; height: 561px; border-radius: 24px; overflow: hidden; flex-direction: column; justify-content: flex-start; align-items: center; display: flex">
-          <div data-layer="End Result Container" class="EndResultContainer"
-            style="align-self: stretch; height: 561px; padding-top: 40px; padding-left: 220px; padding-right: 220px; background: #5C6783; flex-direction: column; justify-content: flex-start; align-items: center; gap: 21px; display: flex">
-            <div data-layer="End Result Info" class="EndResultInfo"
-              style="width: 866px; flex-direction: column; justify-content: flex-start; align-items: flex-start; gap: 12px; display: flex">
-              <div data-layer="Section Title" class="SectionTitle"
-                style="align-self: stretch; position: relative; color: white; font-size: 14px; font-family: SF Pro; font-weight: 700; text-transform: uppercase; word-wrap: break-word">
-                the END RESULT</div>
-              <div data-layer="Section Title" class="SectionTitle"
-                style="align-self: stretch; position: relative; color: white; font-size: 32px; font-family: SF Pro; font-weight: 700; text-transform: capitalize; word-wrap: break-word">
-                Go to market</div>
-              <div data-layer="End Result Description" class="EndResultDescription"
-                style="align-self: stretch; height: 63px; position: relative; color: white; font-size: 16px; font-family: SF Pro; font-weight: 400; word-wrap: break-word">
-                Kymco announced a brain new navigation dashboard for scooter - the noodoe navigation on 2018, It is the
-                first embed scooter navigation system in the world. It archived kymco’s scooter selling rate to up to
-                the top in Taiwan in the next quarter.</div>
+            <h2 class="reveal">From a social canvas to a navigation instrument</h2>
+            <div class="prose reveal">
+                <p>
+                    The device began life as a dashboard with a social purpose: users could design
+                    their own creations, sync them to the scooter dashboard, and share them on social
+                    platforms. The navigation function is an upgraded version of that same dashboard —
+                    which meant <strong>a lot of restrictions and limitations to overcome</strong>.
+                </p>
+                <p>
+                    My mission was to create a good navigation experience for the rider. The dashboard
+                    shows turn-by-turn instructions while routing, with the phone and scooter connected
+                    via Bluetooth. The challenge: make the information simple, and let riders access it
+                    safely. I managed the entire UX and UI design from beginning to end.
+                </p>
             </div>
-            <img data-layer="show" class="202301254211"
-              style="width: 979px; height: 326px; position: relative; border-radius: 16px" src="./img/show.png" />
-          </div>
+            <div class="item-grid reveal">
+                <div class="item-card">
+                    <span class="idx">a.</span>
+                    <h4>Mission</h4>
+                    <p>Add navigation to the existing scooter dashboard — so the rider understands the
+                        next direction with a glance, in one second.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">b.</span>
+                    <h4>Challenge</h4>
+                    <p>Navigation is a crucial selling point for the vehicle, but the hardware could not
+                        change — the alpha version was already sold. The structure had to be redesigned
+                        purely through software.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 02 The Problem -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">02 — The Problem</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">Route instructions readable in a glance</h2>
+            <div class="prose reveal">
+                <p>
+                    Three layers of constraint boxed in the design before a single screen was drawn:
+                </p>
+            </div>
+            <div class="item-grid cols-3 reveal">
+                <div class="item-card">
+                    <span class="idx">i.</span>
+                    <h4>Hardware</h4>
+                    <p>Only three buttons for interaction, and limited Bluetooth bandwidth — every file
+                        transferred had to stay small. Adding hardware in the new update was impossible
+                        from the marketing perspective.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">ii.</span>
+                    <h4>Firmware</h4>
+                    <p>The first version established an interaction structure riders already knew. A
+                        massive update would harm the experience, so navigation had to follow the
+                        original architecture.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">iii.</span>
+                    <h4>App</h4>
+                    <p>The app's information architecture wasn't built for navigation. We had to
+                        construct a new structure to house map purchase, route settings, and
+                        navigation itself.</p>
+                </div>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/brainstorming-1.png" alt="Brainstorming session on navigation directions" loading="lazy"></div>
+                <figcaption>Fig. 1 — Brainstorming possible directions for the navigation experience</figcaption>
+            </figure>
+            <div class="prose reveal" style="margin-top: 2.2rem;">
+                <p>
+                    Through discovery and brainstorming with the team, we found several possible
+                    directions — with one hard limitation: this is a simple device, and its computing
+                    power is not robust. <strong>Showing the map view of Google Maps or a portable car
+                    GPS was simply impossible.</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- 03 Exploration -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">03 — Exploration</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">How do riders know the right corner to turn?</h2>
+            <div class="prose reveal">
+                <p>
+                    After several discussions we landed on five candidate indicators, each a different
+                    answer to the same question:
+                </p>
+            </div>
+            <div class="item-grid reveal">
+                <div class="item-card">
+                    <span class="idx">1.</span>
+                    <h4>Streetview Indicator</h4>
+                    <p>Display the street view on screen before the corner.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">2.</span>
+                    <h4>Ring Indicator</h4>
+                    <p>Display a ring as a countdown timer before the turn.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">3.</span>
+                    <h4>Number Indicator</h4>
+                    <p>Display the remaining distance before the junction.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">4.</span>
+                    <h4>Background Indicator 1</h4>
+                    <p>Decrease the background color as the turn approaches.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">5.</span>
+                    <h4>Background Indicator 2</h4>
+                    <p>Notify the rider by changing the background color.</p>
+                </div>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/makeTurn.png" alt="Five turn-indicator concepts sketched side by side" loading="lazy"></div>
+                <figcaption>Fig. 2 — Five candidate concepts for signalling the turn</figcaption>
+            </figure>
+        </section>
+
+        <!-- 04 Testing -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">04 — Testing</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">Rapid prototypes, real roads, no verbal instructions</h2>
+            <div class="prose reveal">
+                <p>
+                    We weren't sure which concept worked best for riders, so we built rapid prototypes
+                    and tested whether riders could reach a defined destination without any verbal
+                    instructions. The results:
+                </p>
+            </div>
+            <div class="item-grid reveal">
+                <div class="item-card">
+                    <span class="idx">✕</span>
+                    <h4>Streetview Indicator</h4>
+                    <p>The screen displays street view 10 meters before the corner — but a rider cannot
+                        carefully read map details. Very dangerous, and it fails to prompt the next
+                        action.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">✕</span>
+                    <h4>Ring Indicator</h4>
+                    <p>A countdown ring is too abstract. While riding, anything that requires a second
+                        thought introduces danger — the ring never made the shortlist.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">✕</span>
+                    <h4>Background Indicator 1</h4>
+                    <p>Fading the background over time went unnoticed. The rider's verdict: "I didn't
+                        notice it — and missed the corner."</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">✕</span>
+                    <h4>Background Indicator 2</h4>
+                    <p>Changing the background color before the corner met the same fate — riders
+                        didn't see it and missed the turn.</p>
+                </div>
+                <div class="item-card">
+                    <span class="idx">✓</span>
+                    <h4>Number Indicator</h4>
+                    <p>Showing the distance before the junction was, in riders' words, very clear about
+                        when to act — even if it wasn't the most beautiful visual among the prototypes.</p>
+                </div>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/testing.png" alt="Rapid prototype testing of the indicator concepts" loading="lazy"></div>
+                <figcaption>Fig. 3 — Prototype testing: could riders reach the destination without verbal cues?</figcaption>
+            </figure>
+        </section>
+
+        <!-- 05 Solution -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">05 — The Solution</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">The clearest instruction wins: the Number Indicator</h2>
+            <div class="prose reveal">
+                <p>
+                    A rider cannot afford to be distracted while driving, and subtle indicators simply
+                    don't deliver the message. The best option turned out to be the most specific one —
+                    <strong>the Number Indicator</strong>. It is the clearest for the rider, so they
+                    understand the next action in a glance.
+                </p>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/SolutionImage.png" alt="The chosen Number Indicator solution on the dashboard" loading="lazy"></div>
+                <figcaption>Fig. 4 — The Number Indicator: distance-to-turn, readable in one second</figcaption>
+            </figure>
+        </section>
+
+        <!-- 06 Design -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">06 — Design</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">From wireframe to a shippable system</h2>
+            <div class="prose reveal">
+                <p>
+                    Using the feedback gathered from testing and discussions with teams, we created
+                    wireframes proposing solutions for the critical issues. After alignment, we
+                    converted the wireframes into UI flows.
+                </p>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/Wireframe.png" alt="Wireframes and UI flow for the navigation feature" loading="lazy"></div>
+                <figcaption>Fig. 5 — Wireframe &amp; UI flow</figcaption>
+            </figure>
+            <div class="prose reveal" style="margin-top: 2.5rem;">
+                <p>
+                    For the design system, consistency with the scooter brand and the previous version
+                    came first: we kept the app color in red, with blue and dark gray as secondary and
+                    helping colors.
+                </p>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/Color.png" alt="Color system: brand red with blue and dark gray supporting colors" loading="lazy"></div>
+                <figcaption>Fig. 6 — Design system: brand red, supported by blue and dark gray</figcaption>
+            </figure>
+            <div class="prose reveal" style="margin-top: 2.5rem;">
+                <p>
+                    Working with the firmware and software engineering teams, we ran several important
+                    iterations to make sure the design was developable — and with the quality assurance
+                    team to ensure the visuals on the scooter dashboard displayed clean and correct.
+                </p>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/finaldesign.png" alt="Final navigation dashboard design screens" loading="lazy"></div>
+                <figcaption>Fig. 7 — Final design, iterated with firmware, software, and QA teams</figcaption>
+            </figure>
+        </section>
+
+        <!-- 07 Outcome -->
+        <section class="case-section">
+            <div class="section-marker reveal">
+                <span class="no">07 — Outcome</span>
+                <span class="rule"></span>
+            </div>
+            <h2 class="reveal">Go to market</h2>
+            <div class="prose reveal">
+                <p>
+                    In 2018, Kymco announced a brand-new navigation dashboard for scooters — the
+                    <strong>Noodoe Navigation</strong>, the first embedded scooter navigation system in
+                    the world. It helped push Kymco's scooter sales to the top in Taiwan in the
+                    following quarter.
+                </p>
+            </div>
+            <div class="pull-quote reveal">
+                <blockquote>
+                    The rider understands the next direction with a glance — in one second.
+                </blockquote>
+                <cite>Design goal, achieved in production</cite>
+            </div>
+            <figure class="case-figure reveal">
+                <div class="frame"><img src="./img/show.png" alt="Noodoe Navigation announced and shown on production scooters" loading="lazy"></div>
+                <figcaption>Fig. 8 — Noodoe Navigation, shipped on production Kymco scooters</figcaption>
+            </figure>
+        </section>
+
+        <!-- Next -->
+        <div class="next-project reveal">
+            <a href="./project2.html">
+                <span class="kicker">Next case study</span>
+                <span class="title">Motorcycle Dashboard<span class="arrow">→</span></span>
+            </a>
         </div>
-      </div>
-      <div data-layer="Divider" class="Divider"
-        style="width: 1440px; height: 118px; left: 193px; top: 7568px; position: absolute; opacity: 0.30"></div>
-    </div>
-  </div>
-  <!-- Footer -->
-  <div class="bento-item footer">
-    <p>© 2026 Darlene Lu. All rights reserved.</p>
-  </div>
-  </div>
-  <script>
-    document.addEventListener('mousemove', (e) => {
-      const mouseGradient = document.querySelector('.mouse-gradient');
-      mouseGradient.style.left = e.clientX + 'px';
-      mouseGradient.style.top = e.clientY + 'px';
-    });
-  </script>
+    </main>
+
+    <footer class="site-footer">
+        <div class="bar">
+            <span>© 2026 Darlene.Design</span>
+            <a href="./index.html" class="u-link">Index</a>
+            <a href="#" class="u-link" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top ↑</a>
+        </div>
+        <div class="giant-mark" aria-hidden="true">Darlene</div>
+    </footer>
+
+    <script src="assets/js/darlene.js"></script>
 </body>
 
 </html>
