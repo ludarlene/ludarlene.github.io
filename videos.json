@@ -1,12 +1,6 @@
 {
-  "updated": "2026.07.13",
+  "updated": "2026.07.20",
   "videos": [
-    {
-      "id": "UB_Ih9ztEfc",
-      "t": "Dips Don&#39;t Last – 8 Stocks I’m Buying",
-      "c": "finance",
-      "d": "Jul 2026"
-    },
     {
       "id": "bVfmqJXFG0A",
       "t": "🚨BREAKING: 2026 Market Outlook (Expect Major Change in July)",
@@ -16,6 +10,12 @@
     {
       "id": "uXQ0sclOACk",
       "t": "My Outlook for the Second Half of 2026",
+      "c": "finance",
+      "d": "Jul 2026"
+    },
+    {
+      "id": "4pbZs2A22-Q",
+      "t": "Did You Hear That? IBM Just Revealed My Next 7 Stock Picks",
       "c": "finance",
       "d": "Jul 2026"
     },
@@ -32,8 +32,8 @@
       "d": "May 2026"
     },
     {
-      "id": "np6CwvTYTAM",
-      "t": "I Tested 500+ AI Tools, These Will Make You Rich",
+      "id": "tu4rU4YD1Jk",
+      "t": "Updated Essential AI Skills For 2026",
       "c": "ai",
       "d": "May 2026"
     },
@@ -44,15 +44,9 @@
       "d": "May 2026"
     },
     {
-      "id": "SNyi4eNyPCc",
-      "t": "AI Whistleblower WARNS: &quot;You Have No Idea What&#39;s Coming In 2026&quot;",
+      "id": "aCZV2AwqQM0",
+      "t": "Top 5 AI Trends That Will Dominate 2026 🚀 (Don’t Miss #3!) @FameWorldEducationalHub",
       "c": "ai",
-      "d": "Apr 2026"
-    },
-    {
-      "id": "E6ZHlLiLhq4",
-      "t": "These UI UX Design Trends Are Taking Over 2026 (And You&#39;re Missing Them)",
-      "c": "design",
       "d": "Apr 2026"
     },
     {
@@ -68,8 +62,14 @@
       "d": "Mar 2026"
     },
     {
-      "id": "SCLHfhu5ZmM",
-      "t": "Top 15 New Discoveries MADE By AI (2026)",
+      "id": "qJ-jaEe4AaI",
+      "t": "The best AI TOOLS of 2026",
+      "c": "ai",
+      "d": "Feb 2026"
+    },
+    {
+      "id": "tJS_ycc2lNs",
+      "t": "The 9 AI Trends that Will Define 2026 (Researched &amp; Ranked)",
       "c": "ai",
       "d": "Feb 2026"
     },
@@ -80,26 +80,14 @@
       "d": "Feb 2026"
     },
     {
-      "id": "8x8btZoqdYg",
-      "t": "Finance Trends 2026: Can AI be a force for good in corporate sustainability?",
-      "c": "finance",
+      "id": "H48JZ7e100Y",
+      "t": "2026 Graphic Design Trends You Should Know",
+      "c": "design",
       "d": "Feb 2026"
-    },
-    {
-      "id": "zz34VHiq4Uo",
-      "t": "I Tried 100+ AI Tools, These 10 Will Make You Rich in 2026",
-      "c": "ai",
-      "d": "Jan 2026"
     },
     {
       "id": "B23W1gRT9eY",
       "t": "Top 6 AI Trends That Will Define 2026 (backed by data)",
-      "c": "ai",
-      "d": "Jan 2026"
-    },
-    {
-      "id": "wjL7UI7un9M",
-      "t": "AI Trends in 2026: Key Insights for Leaders",
       "c": "ai",
       "d": "Jan 2026"
     },
@@ -110,8 +98,8 @@
       "d": "Jan 2026"
     },
     {
-      "id": "XmJ2YAkzBZU",
-      "t": "Finance Trends 2026: How CFOs are shaping AI adoption strategy | Deloitte Insights",
+      "id": "7x8_edpZNdM",
+      "t": "The stock market playbook for 2026",
       "c": "finance",
       "d": "Jan 2026"
     },
@@ -122,8 +110,8 @@
       "d": "Dec 2025"
     },
     {
-      "id": "FTjTcrX-aGw",
-      "t": "Googles AI Boss Reveals What AI In 2026 Looks Like",
+      "id": "2jU-mLMV8Vw",
+      "t": "Cybersecurity Trends in 2026: Shadow AI, Quantum &amp; Deepfakes",
       "c": "ai",
       "d": "Dec 2025"
     },
@@ -140,26 +128,14 @@
       "d": "Dec 2025"
     },
     {
-      "id": "fTzskfTm1kY",
-      "t": "Morgan Stanley&#39;s Katerina Simonetti talks her 2026 market outlook",
-      "c": "finance",
-      "d": "Dec 2025"
-    },
-    {
       "id": "wp7j_P15juU",
       "t": "Charles Schwab’s Sonders on her outlook for 2026",
       "c": "finance",
       "d": "Dec 2025"
     },
     {
-      "id": "Osz2-EPr3-Y",
-      "t": "Finance Trends 2026: How CFOs can lead through change, growth, and innovation | Deloitte Insights",
-      "c": "finance",
-      "d": "Dec 2025"
-    },
-    {
-      "id": "aizSsghjzM4",
-      "t": "2026 Market outlook: Key trends in stocks, bonds, and crypto for investors to watch",
+      "id": "Y_y39I_5sZI",
+      "t": "Business Lending in 2026: Trends, Products &amp; What’s Actually Getting Approved",
       "c": "finance",
       "d": "Dec 2025"
     },
@@ -170,16 +146,40 @@
       "d": "Dec 2025"
     },
     {
-      "id": "Sp-Z8rkHM5s",
-      "t": "UI-UX 2026 designing trends",
+      "id": "bT1tG_E8g-4",
+      "t": "🚨 Top 6 Design Trends 2026: Flat Design is DEAD",
       "c": "design",
-      "d": "Nov 2025"
+      "d": "Oct 2025"
     },
     {
-      "id": "qgtypvSHCUo",
-      "t": "The Graphic Design TRENDS That Will Define 2026",
+      "id": "OcOQQlfDVsI",
+      "t": "2026 Graphic Design Trends You Should Know",
       "c": "design",
-      "d": "Nov 2025"
+      "d": "Oct 2025"
+    },
+    {
+      "id": "INhSNjokJzM",
+      "t": "Graphic Design Trends 2026. Graphic designers here? 9th Indigo Award is now accepting submissions.",
+      "c": "design",
+      "d": "Oct 2025"
+    },
+    {
+      "id": "xhQzvlL5KBk",
+      "t": "Warren Buffett&#39;s Advice to Investors for 2026",
+      "c": "finance",
+      "d": "Oct 2025"
+    },
+    {
+      "id": "ucUdfiq2KiY",
+      "t": "10 Fintech Trends to Watch in 2026!",
+      "c": "finance",
+      "d": "Oct 2025"
+    },
+    {
+      "id": "0l4BpahFAs4",
+      "t": "My 3 Best Stocks to Buy More of in 2026!",
+      "c": "finance",
+      "d": "Oct 2025"
     }
   ]
 }
