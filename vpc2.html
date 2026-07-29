@@ -268,11 +268,36 @@
   /* Footer */
   .footer-row {
     display: flex;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: space-between;
     gap: 16px;
     padding-top: 32px;
     padding-bottom: 16px;
     flex-wrap: wrap;
+  }
+
+  .footer-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-high);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    accent-color: var(--btn-primary);
+    cursor: pointer;
   }
 
   .status-line {
@@ -313,8 +338,9 @@
     .card { padding: 16px; }
     .header-row h1 { font-size: 22px; line-height: 32px; }
     .btn { padding: 10px 20px; height: 44px; }
-    .footer-row { justify-content: stretch; }
-    .footer-row .btn { flex: 1; }
+    .footer-row { flex-direction: column; align-items: stretch; }
+    .footer-actions { justify-content: stretch; }
+    .footer-actions .btn { flex: 1; }
   }
 </style>
 </head>
@@ -384,8 +410,14 @@
       <div class="status-line" id="statusLine" style="text-align:right;"></div>
 
       <div class="footer-row">
-        <button class="btn btn-outline" id="resetBtn">Reset</button>
-        <button class="btn btn-primary" id="downloadBtn" disabled>Confirm and Download</button>
+        <label class="checkbox-label">
+          <input type="checkbox" id="shadowToggle" checked>
+          <span>With shadow</span>
+        </label>
+        <div class="footer-actions">
+          <button class="btn btn-outline" id="resetBtn">Reset</button>
+          <button class="btn btn-primary" id="downloadBtn" disabled>Confirm and Download</button>
+        </div>
       </div>
 
     </div>
@@ -420,7 +452,7 @@
   shadowImg.src = SHADOW_SRC;
   maskImg.src = MASK_SRC;
 
-  const state = { scale: 1, rotate: 0, x: 0.5, y: 0.5, showMask: true };
+  const state = { scale: 1, rotate: 0, x: 0.5, y: 0.5, showMask: true, showShadow: true };
 
   const scaleSlider = document.getElementById('scaleSlider');
   const rotateSlider = document.getElementById('rotateSlider');
@@ -431,6 +463,7 @@
   const xVal = document.getElementById('xVal');
   const yVal = document.getElementById('yVal');
   const maskToggle = document.getElementById('maskToggle');
+  const shadowToggle = document.getElementById('shadowToggle');
   const downloadBtn = document.getElementById('downloadBtn');
   const statusLine = document.getElementById('statusLine');
   const fileInput = document.getElementById('fileInput');
@@ -456,7 +489,9 @@
 
   function draw() {
     ctx.clearRect(0, 0, CW, CH);
-    ctx.drawImage(shadowImg, 0, 0, CW, CH);
+    if (state.showShadow) {
+      ctx.drawImage(shadowImg, 0, 0, CW, CH);
+    }
 
     if (userImgLoaded && userImg) {
       const cx = CW * state.x;
@@ -502,6 +537,10 @@
   });
   maskToggle.addEventListener('change', () => {
     state.showMask = maskToggle.checked;
+    draw();
+  });
+  shadowToggle.addEventListener('change', () => {
+    state.showShadow = shadowToggle.checked;
     draw();
   });
 
@@ -589,7 +628,9 @@
     outCanvas.height = CH;
     const outCtx = outCanvas.getContext('2d');
 
-    outCtx.drawImage(shadowImg, 0, 0, CW, CH);
+    if (state.showShadow) {
+      outCtx.drawImage(shadowImg, 0, 0, CW, CH);
+    }
 
     const cx = CW * state.x;
     const cy = CH * state.y;
